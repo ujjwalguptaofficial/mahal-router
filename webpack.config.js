@@ -1,10 +1,14 @@
 const path = require('path');
 const MahalPlugin = require('mahal-webpack-loader/lib/plugin');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: './src/index.ts',
     devtool: 'source-map',
     mode: "development",
+    externals: [
+        nodeExternals()
+    ],
     module: {
         rules: [{
             test: /\.mahal?$/,
@@ -28,17 +32,17 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+        extensions: ['.tsx', '.ts']
     },
     output: {
-        library: 'mahal-router',
+        library: 'mahalRouter',
         libraryTarget: "commonjs2",
         filename: 'lib.js',
         path: path.resolve(__dirname, 'dist/')
     },
     plugins: [
-        new MahalPlugin({
-            lang: 'ts'
-        })
+        // new MahalPlugin({
+        //     lang: 'ts'
+        // })
     ]
 };

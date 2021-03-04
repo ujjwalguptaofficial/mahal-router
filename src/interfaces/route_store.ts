@@ -1,7 +1,7 @@
 interface IRouteMap {
-    name: string;
+    name?: string;
     component: string;
-    children: RouteStore;
+    children?: RouteStore;
 }
 
 export type RouteStore = { [path: string]: IRouteMap };
