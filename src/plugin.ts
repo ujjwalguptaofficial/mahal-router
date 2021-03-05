@@ -8,7 +8,7 @@ export class RouterPlugin extends Plugin {
     setup(mahal: typeof MahalModule, router: Router) {
         mahal.App.extend.component("router-view", RouterView);
         mahal.App.extend.component("router-link", RouterLink);
-
+         
         return {
             router: router
         }

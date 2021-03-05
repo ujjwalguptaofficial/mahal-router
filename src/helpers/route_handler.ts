@@ -1,11 +1,12 @@
 import { RouteStore } from "../interfaces";
 import { trimSlash } from "../utils";
+import { Component } from "mahal";
 
 let routeStore: RouteStore = {};
 
 const findComponent = (routes: RouteStore, splittedPath: string[]) => {
-    if (splittedPath.length === 0) return routes["/"];
     const path = splittedPath.shift();
+    if (path.length === 0) return routes["/"].component;
     for (const key in routes) {
         if (key === path) {
             if (splittedPath.length === 0) {
@@ -20,7 +21,7 @@ export class RouteHandler {
         routeStore = val;
     }
 
-    static findComponent(path: string) {
+    static findComponent(path: string) : typeof Component | null {
         path = trimSlash(path);
         return findComponent(routeStore, path.split("/"));
     }

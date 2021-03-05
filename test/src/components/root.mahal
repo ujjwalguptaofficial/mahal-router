@@ -1,12 +1,12 @@
 
 <html>
     <div>
-         <router-view />
+        This is main
     </div>
 </html>
 <script>
 import { Component } from "mahal";
-export default class extends Component{
+export default class Root extends Component{
         
 }
 </script>

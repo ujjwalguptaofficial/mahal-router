@@ -1,6 +1,6 @@
 interface IRouteMap {
     name?: string;
-    component: string;
+    component: any;
     children?: RouteStore;
 }
 

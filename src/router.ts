@@ -9,7 +9,8 @@ export interface IRoute {
 
 export class Router {
 
-
+    private handler_ = RouteHandler;
+    
     constructor(routes: RouteStore) {
         RouteHandler.routes = routes;
     }

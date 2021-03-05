@@ -1,5 +1,4 @@
 const path = require('path');
-const MahalPlugin = require('mahal-webpack-loader/lib/plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
@@ -10,25 +9,17 @@ module.exports = {
         nodeExternals()
     ],
     module: {
-        rules: [{
-            test: /\.mahal?$/,
-            // loader: 'mahal-webpack-loader',
-            use: {
-                loader: require.resolve('mahal-webpack-loader')
-            },
-            exclude: /node_modules/
-        },
-
-        {
-            test: /\.ts?$/,
-            use: {
-                loader: 'ts-loader',
-                options: {
-                    appendTsSuffixTo: [/\.mahal$/],
-                }
-            },
-            exclude: /node_modules/,
-        }
+        rules: [
+            {
+                test: /\.ts?$/,
+                use: {
+                    loader: 'ts-loader',
+                    options: {
+                        appendTsSuffixTo: [/\.mahal$/],
+                    }
+                },
+                exclude: /node_modules/,
+            }
         ]
     },
     resolve: {
