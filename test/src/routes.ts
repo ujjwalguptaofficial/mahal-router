@@ -1,8 +1,18 @@
 import { RouteStore } from "mahal-router";
-import Root from "./components/root.mahal";
+import Start from "./components/start.mahal";
+import User from "./components/user.mahal";
+import Login from "./components/login.mahal";
 
 export const routes: RouteStore = {
     "/": {
-        component: Root
+        component: Start
+    },
+    "/user": {
+        component: User,
+        children: {
+            "/login": {
+                component: Login
+            }
+        }
     }
 }

@@ -1,0 +1,20 @@
+
+<html>
+    <div>
+        This is User
+         <router-view />
+
+        <button on:click="gotoLogin">Login</button>
+    </div>
+</html>
+<script>
+import { Component } from "mahal";
+import { BaseComponent } from "./base";
+export default class extends BaseComponent{
+        gotoLogin(){
+                this.$router.goto({
+                    path:"/user/login"
+                })
+        }
+}
+</script>

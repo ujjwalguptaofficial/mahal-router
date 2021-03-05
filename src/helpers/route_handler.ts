@@ -18,10 +18,23 @@ const findComponent = (routes: RouteStore, splittedPath: string[]) => {
 };
 export class RouteHandler {
     static set routes(val: RouteStore) {
+        const trimSlashFromRoutes = (data: RouteStore) => {
+            for (const key in data) {
+                const newKey = trimSlash(key);
+                if (newKey != key) {
+                    data[newKey] = data[key];
+                    delete data[key];
+                }
+                if (data[newKey].children) {
+                    trimSlashFromRoutes(data[newKey].children);
+                }
+            }
+        }
+        trimSlashFromRoutes(val);
         routeStore = val;
     }
 
-    static findComponent(path: string) : typeof Component | null {
+    static findComponent(path: string): typeof Component | null {
         path = trimSlash(path);
         return findComponent(routeStore, path.split("/"));
     }

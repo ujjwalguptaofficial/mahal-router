@@ -4,6 +4,10 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 console.log("ujjwal");
 module.exports = {
+    devServer: {
+        host: 'localhost',
+        historyApiFallback: true
+    },
     entry: './src/index.ts',
     devtool: 'inline-source-map',
     mode: "development",
@@ -40,7 +44,8 @@ module.exports = {
     },
     output: {
         filename: 'bundles.js',
-        path: path.resolve(__dirname, 'bin/')
+        path: path.resolve(__dirname, 'bin/'),
+        publicPath : '/'
     },
     plugins: [
         new MahalPlugin({
@@ -49,7 +54,7 @@ module.exports = {
         new HtmlWebPackPlugin({
             cache: true,
             hash: true,
-            template: 'src/index.html',
+            template: './src/index.html',
             minify: {
                 collapseWhitespace: true,
                 removeComments: true,

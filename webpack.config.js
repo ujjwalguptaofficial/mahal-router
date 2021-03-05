@@ -28,7 +28,7 @@ module.exports = {
     output: {
         library: 'mahalRouter',
         libraryTarget: "commonjs2",
-        filename: 'lib.js',
+        filename: 'mahal-router.lib.js',
         path: path.resolve(__dirname, 'dist/')
     },
     plugins: [
