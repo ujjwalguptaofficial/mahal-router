@@ -5,12 +5,17 @@ import NotFound from "./404";
 
 const pathVisited = [];
 @Template(`
-<in-place :of="name"/>
+<div>
+    <in-place #if(shouldLoaded) :of="name"/>
+</div>
 `)
 export default class extends BaseComponent {
 
     @Reactive
     name: String;
+
+    @Reactive
+    shouldLoaded = true;
 
     constructor() {
         super();
@@ -18,12 +23,16 @@ export default class extends BaseComponent {
     }
 
     onCreated() {
-        let { key, comp } = RouteHandler.findComponent(this.$route.pathname,
+        this.shouldLoaded = pathVisited.length < (this.$route as any).splittedPath_.length;
+        if (!this.shouldLoaded) return;
+        let result = RouteHandler.findComponent(this.$route.pathname,
             pathVisited);
-        if (key) {
-            pathVisited.push(key);
+        let comp;
+        if (result) {
+            comp = result.comp;
+            pathVisited.push(result.key);
         }
-        if (!comp) {
+        else {
             comp = NotFound;
         }
         const componentName = comp.name;
