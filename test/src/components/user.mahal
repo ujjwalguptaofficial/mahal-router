@@ -3,7 +3,6 @@
     <div>
         This is User
          <router-view />
-
         <button on:click="gotoLogin">Login</button>
     </div>
 </html>

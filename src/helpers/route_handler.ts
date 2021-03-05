@@ -9,10 +9,14 @@ const findComponent = (routes: RouteStore, splittedPath: string[]) => {
     if (path.length === 0) return routes["/"].component;
     for (const key in routes) {
         if (key === path) {
-            if (splittedPath.length === 0) {
-                return routes[key].component;
+            return {
+                key: key,
+                comp: routes[key].component
             }
-            return findComponent(routes[key].children, splittedPath);
+            // if (splittedPath.length === 0) {
+            //     return routes[key].component;
+            // }
+            // return findComponent(routes[key].children, splittedPath);
         }
     }
 };
@@ -34,9 +38,14 @@ export class RouteHandler {
         routeStore = val;
     }
 
-    static findComponent(path: string): typeof Component | null {
-        path = trimSlash(path);
-        return findComponent(routeStore, path.split("/"));
+    static findComponent(path: string, loaded) {
+        const splittePath = trimSlash(path).split("/");
+        let routes = routeStore;
+        loaded.forEach(item => {
+            splittePath.shift();
+            routes = routeStore[item].children;
+        });
+        return findComponent(routes, splittePath);
     }
 
 }

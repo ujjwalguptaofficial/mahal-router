@@ -3,6 +3,7 @@ import { BaseComponent } from "./base";
 import { RouteHandler } from "../helpers/route_handler";
 import NotFound from "./404";
 
+const pathVisited = [];
 @Template(`
 <in-place :of="name"/>
 `)
@@ -17,12 +18,15 @@ export default class extends BaseComponent {
     }
 
     onCreated() {
-        let comp = RouteHandler.findComponent(location.pathname);
+        let { key, comp } = RouteHandler.findComponent(this.$route.pathname,
+            pathVisited);
+        if (key) {
+            pathVisited.push(key);
+        }
         if (!comp) {
             comp = NotFound;
         }
         const componentName = comp.name;
-        debugger;
         this.children = {
             [componentName]: comp
         }

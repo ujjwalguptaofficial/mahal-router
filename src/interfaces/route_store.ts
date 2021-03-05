@@ -1,4 +1,4 @@
-interface IRouteMap {
+export interface IRouteMap {
     name?: string;
     component: any;
     children?: RouteStore;
