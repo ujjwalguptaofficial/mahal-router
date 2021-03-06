@@ -1,19 +1,25 @@
 import { RouteStore } from "./interfaces";
 import { RouteHandler } from "./helpers/route_handler";
 import { ROUTE_EVENT_BUS, ROUTER_EVENT_BUS } from "./constant";
+import { merge } from "mahal";
+
 export interface IRoute {
     path?: string;
     name?: string;
     query?: { [key: string]: any };
     param?: { [key: string]: any };
+    state?: { [key: string]: any }
 }
 
 export class Router {
 
-    private handler_ = RouteHandler;
-
     constructor(routes: RouteStore) {
         RouteHandler.routes = routes;
+        window.addEventListener('popstate', (event) => {
+            console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+            const url = new URL(location.href);
+            this.emit("to", { url });
+        });
     }
 
     goto(route: IRoute) {
@@ -23,8 +29,12 @@ export class Router {
                 url.searchParams.set(key, route.query[key]);
             }
         }
-        this.emit("to", { url, route });
-        window.history.pushState({}, '', url as any);
+        window.history.pushState(
+            merge({ key: performance.now() }, route.state || {}),
+            '',
+            url as any
+        );
+        this.emit("to", { url });
     }
 
     back() {

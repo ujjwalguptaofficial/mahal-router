@@ -25,7 +25,7 @@ export default class extends BaseComponent {
     }
 
     onCreated() {
-        this.$router.on("to", ({ route }) => {
+        this.$router.on("to", _ => {
             const splittedPath: string[] = (this.$route as any).splittedPath_;
             let isRouteFound = false;
             if (this.pathname) {
@@ -43,6 +43,7 @@ export default class extends BaseComponent {
                 if (index >= 0) {
                     pathVisited.splice(index);
                 }
+                this.pathname = null;
                 this.loadComponent();
             }
         });
