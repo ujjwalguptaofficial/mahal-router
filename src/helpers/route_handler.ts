@@ -38,13 +38,16 @@ export class RouteHandler {
         routeStore = val;
     }
 
-    static findComponent(path: string, loaded) {
-        const splittePath = trimSlash(path).split("/");
+    static findComponent(splittePath: string[], loaded) {
+        // immutable array
+        splittePath = Array.from(splittePath);
+
         let routes = routeStore;
         loaded.forEach(item => {
             splittePath.shift();
             routes = routeStore[item].children;
         });
+        
         return findComponent(routes, splittePath);
     }
 

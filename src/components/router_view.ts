@@ -6,7 +6,7 @@ import NotFound from "./404";
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place #if(shouldLoaded) :of="name"/>
+    <in-place #if(shouldLoad) :of="name"/>
 </div>
 `)
 export default class extends BaseComponent {
@@ -15,7 +15,9 @@ export default class extends BaseComponent {
     name: String;
 
     @Reactive
-    shouldLoaded = true;
+    shouldLoad = true;
+
+    pathname: string;
 
     constructor() {
         super();
@@ -23,14 +25,43 @@ export default class extends BaseComponent {
     }
 
     onCreated() {
-        this.shouldLoaded = pathVisited.length < (this.$route as any).splittedPath_.length;
-        if (!this.shouldLoaded) return;
-        let result = RouteHandler.findComponent(this.$route.pathname,
-            pathVisited);
+        this.$router.on("to", ({ route }) => {
+            const splittedPath: string[] = (this.$route as any).splittedPath_;
+            let isRouteFound = false;
+            if (this.pathname) {
+                const thisSplittedPathName = this.pathname.split("/");
+                splittedPath.every(q => {
+                    if (q === this.pathname) {
+                        isRouteFound = true;
+                        return false;
+                    }
+                    return true;
+                })
+            }
+            if (!isRouteFound) {
+                const index = pathVisited.findIndex(q => q === this.pathname);
+                if (index >= 0) {
+                    pathVisited.splice(index);
+                }
+                this.loadComponent();
+            }
+        });
+        this.loadComponent();
+    }
+
+    loadComponent() {
+        const splittedPath = (this.$route as any).splittedPath_;
+        this.shouldLoad = pathVisited.length < splittedPath.length;
+        if (!this.shouldLoad) return;
+        let result = RouteHandler.findComponent(
+            splittedPath,
+            pathVisited
+        );
         let comp;
         if (result) {
             comp = result.comp;
             pathVisited.push(result.key);
+            this.pathname = result.key;
         }
         else {
             comp = NotFound;

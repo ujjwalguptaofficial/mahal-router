@@ -1,4 +1,5 @@
 import { trimSlash } from "./utils";
+import { ROUTE_EVENT_BUS, ROUTER_EVENT_BUS } from "./constant";
 
 export class Route {
     /**
@@ -7,14 +8,21 @@ export class Route {
      * @type {string}
      * @memberof Route
      */
-    pathname: string = location.pathname;
+    pathname: string;
 
-    private splittedPath_ = trimSlash(this.pathname).split("/");
+    private splittedPath_;
 
 
     constructor() {
-        window.addEventListener('popstate', (e) => {
-            console.log("event", e);
-        });
+        this.setProp(location as any);
+        ROUTER_EVENT_BUS.on("to", ({ url }) => {
+            this.setProp(url);
+        })
     }
+
+    setProp(url: URL) {
+        this.pathname = url.pathname;
+        this.splittedPath_ = trimSlash(this.pathname).split("/");
+    }
+
 }
