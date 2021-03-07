@@ -17,6 +17,13 @@ export class Router {
     }
 
     goto(route: IRoute) {
+        const name = route.name;
+        if (name) {
+            route.path = RouteHandler.pathByName(name);
+            if (!route.path) {
+                return console.warn(`No route found with name ${name}`);
+            }
+        }
         const url = new URL(location.origin + route.path);
         if (route.query) {
             for (const key in route.query) {

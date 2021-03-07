@@ -12,7 +12,7 @@ import { BaseComponent } from "./base";
 export default class extends BaseComponent{
         gotoLogin(){
                 this.$router.goto({
-                    path:"/user/login"
+                    name:"user_login"
                 })
         }
 }

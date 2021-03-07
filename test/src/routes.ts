@@ -5,13 +5,16 @@ import Login from "./components/login.mahal";
 
 export const routes: RouteStore = {
     "/": {
-        component: Start
+        component: Start,
+        name: "home"
     },
     "/user": {
         component: User,
+        name: "user",
         children: {
             "/login": {
-                component: Login
+                component: Login,
+                name: "user_login",
             }
         }
     }
