@@ -1,6 +1,6 @@
-import { RouteStore, IRouteMap } from "../interfaces";
 import { trimSlash } from "../utils";
 import { Component } from "mahal";
+import { RouteStore } from "../types";
 
 let routeStore: RouteStore = {};
 
