@@ -1,19 +1,13 @@
-import { RouteStore } from "./interfaces";
+import { RouteStore, IRoute, IRouterOption } from "./interfaces";
 import { RouteHandler } from "./helpers/route_handler";
 import { ROUTE_EVENT_BUS, ROUTER_EVENT_BUS } from "./constant";
 import { merge } from "mahal";
 
-export interface IRoute {
-    path?: string;
-    name?: string;
-    query?: { [key: string]: any };
-    param?: { [key: string]: any };
-    state?: { [key: string]: any }
-}
+
 
 export class Router {
 
-    constructor(routes: RouteStore) {
+    constructor(routes: RouteStore, option: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
             console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));

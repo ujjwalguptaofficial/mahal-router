@@ -1,5 +1,6 @@
 import { trimSlash } from "./utils";
 import { ROUTE_EVENT_BUS, ROUTER_EVENT_BUS } from "./constant";
+import { T_string_string } from "./types";
 
 export class Route {
     /**
@@ -10,11 +11,15 @@ export class Route {
      */
     pathname: string;
 
+    param: T_string_string;
+    query: URLSearchParams;
+    name: string;
+
     private splittedPath_;
 
 
     constructor() {
-        this.setProp(location as any);
+        this.setProp(new URL(location.href));
         ROUTER_EVENT_BUS.on("to", ({ url }) => {
             this.setProp(url);
         })
@@ -23,6 +28,8 @@ export class Route {
     setProp(url: URL) {
         this.pathname = url.pathname;
         this.splittedPath_ = trimSlash(this.pathname).split("/");
+        this.param = {};
+        this.query = url.searchParams;
     }
 
 }

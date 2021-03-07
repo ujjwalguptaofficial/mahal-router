@@ -8,7 +8,6 @@ import "flexboot";
 const router = new Router(routes);
 
 App.extend.plugin(RouterPlugin, router);
-(App as any).createRenderer = createRenderer;
-
+App.extend.renderer = createRenderer;
 
 new App(Root, '#app').create();
