@@ -1,4 +1,4 @@
-import { Template, Reactive } from "mahal";
+import { Template, Reactive, merge } from "mahal";
 import { BaseComponent } from "./base";
 import { RouteHandler } from "../helpers/route_handler";
 import NotFound from "./404";
@@ -50,7 +50,7 @@ export default class extends BaseComponent {
         this.loadComponent();
     }
 
-    async loadComponent() {
+    loadComponent() {
         const splittedPath = (this.$route as any).splittedPath_;
         this.shouldLoad = pathVisited.length < splittedPath.length;
         if (!this.shouldLoad) return;
@@ -63,6 +63,7 @@ export default class extends BaseComponent {
             comp = result.comp;
             pathVisited.push(result.key);
             this.pathname = result.key;
+            this.$route.param = merge({}, result.param);
         }
         else {
             comp = NotFound;

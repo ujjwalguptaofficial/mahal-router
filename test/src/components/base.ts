@@ -1,6 +1,7 @@
 import { Component } from "mahal";
-import { Router } from "mahal-router";
+import { Router, Route } from "mahal-router";
 
 export class BaseComponent extends Component {
     $router: Router;
+    $route: Route;
 }

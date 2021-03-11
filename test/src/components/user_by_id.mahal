@@ -1,0 +1,16 @@
+
+<html>
+    <div>
+        Userid view
+        {{userId}}
+    </div>
+</html>
+<script>
+import { Component } from "mahal";
+import { BaseComponent } from "./base";
+export default class extends BaseComponent{
+    get userId(){
+       return this.$route.param.id;
+    }
+}
+</script>

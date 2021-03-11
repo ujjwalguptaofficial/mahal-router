@@ -1,14 +1,16 @@
 import { trimSlash } from "../utils";
 import { Component } from "mahal";
-import { RouteStore } from "../types";
+import { RouteStore, T_string_string } from "../types";
 
 let routeStore: RouteStore = {};
 
 const nameMap: { [name: string]: string } = {};
+const regex1 = /{(.*)}(?!.)/;
 
 interface IRouteOutput {
     key: string;
-    comp: any
+    comp: any;
+    param?: T_string_string
 }
 
 const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput => {
@@ -28,6 +30,18 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput
             //     return routes[key].component;
             // }
             // return findComponent(routes[key].children, splittedPath);
+        }
+        else {
+            const regMatch1 = key.match(regex1);
+            let params = {};
+            if (regMatch1 != null) {
+                params[regMatch1[1]] = path;
+                return {
+                    key: key,
+                    comp: routes[key].component,
+                    param: params
+                }
+            }
         }
     }
 };
