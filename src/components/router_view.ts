@@ -50,7 +50,7 @@ export default class extends BaseComponent {
         this.loadComponent();
     }
 
-    loadComponent() {
+    async loadComponent() {
         const splittedPath = (this.$route as any).splittedPath_;
         this.shouldLoad = pathVisited.length < splittedPath.length;
         if (!this.shouldLoad) return;
@@ -67,7 +67,7 @@ export default class extends BaseComponent {
         else {
             comp = NotFound;
         }
-        const componentName = comp.name;
+        const componentName = comp.name || "anonymous";
         this.children = {
             [componentName]: comp
         }

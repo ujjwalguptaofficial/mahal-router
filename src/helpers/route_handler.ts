@@ -6,10 +6,19 @@ let routeStore: RouteStore = {};
 
 const nameMap: { [name: string]: string } = {};
 
-const findComponent = (routes: RouteStore, splittedPath: string[]) => {
+interface IRouteOutput {
+    key: string;
+    comp: any
+}
+
+const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput => {
     const path = splittedPath.shift();
-    if (path.length === 0) return routes["/"].component;
-    for (const key in routes) {
+    let key = "";
+    if (path.length === 0) return {
+        key: key,
+        comp: routes[key].component
+    };
+    for (key in routes) {
         if (key === path) {
             return {
                 key: key,
