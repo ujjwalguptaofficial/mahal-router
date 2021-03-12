@@ -17,6 +17,8 @@ export default class extends BaseComponent {
     @Reactive
     shouldLoad = true;
 
+    count = 0;
+
     pathname: string;
 
     constructor() {
@@ -69,9 +71,11 @@ export default class extends BaseComponent {
             comp = NotFound;
         }
         const componentName = comp.name || "anonymous";
+        this.name = null;
         this.children = {
             [componentName]: comp
         }
         this.name = componentName;
+
     }
 }
