@@ -14,34 +14,53 @@ interface IRouteOutput {
 }
 
 const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput => {
-    const path = splittedPath.shift();
-    let key = "";
-    if (path.length === 0) return {
-        key: key,
-        comp: routes[key].component
-    };
-    for (key in routes) {
-        if (key === path) {
-            return {
-                key: key,
-                comp: routes[key].component
+    let route = "";
+    // if (path.length === 0) return {
+    //     key: route,
+    //     comp: routes[route].component
+    // }
+    let param = {};
+    const splittedPathLength = splittedPath.length;
+    let path;
+    let pathIndex;;
+    const resetPath = () => {
+        pathIndex = 0;
+        path = splittedPath[pathIndex];
+    }
+    resetPath();
+    for (route in routes) {
+        const routeslashSplit = route.split("/");
+        if (splittedPathLength < routeslashSplit.length) return;
+        let isRouteFound = false;
+
+        routeslashSplit.every(key => {
+            if (key === path) {
+                isRouteFound = true;
             }
-            // if (splittedPath.length === 0) {
-            //     return routes[key].component;
-            // }
-            // return findComponent(routes[key].children, splittedPath);
-        }
-        else {
-            const regMatch1 = key.match(regex1);
-            let params = {};
-            if (regMatch1 != null) {
-                params[regMatch1[1]] = path;
-                return {
-                    key: key,
-                    comp: routes[key].component,
-                    param: params
+            else {
+                const regMatch1 = key.match(regex1);
+                if (regMatch1 != null) {
+                    param[regMatch1[1]] = path;
+                    isRouteFound = true;
+                }
+                else {
+                    isRouteFound = false;
                 }
             }
+            if (isRouteFound) {
+                path = splittedPath[++pathIndex];
+            }
+            return isRouteFound;
+        })
+        if (isRouteFound) {
+            return {
+                key: route,
+                comp: routes[route].component,
+                param: param
+            }
+        }
+        else {
+            resetPath();
         }
     }
 };

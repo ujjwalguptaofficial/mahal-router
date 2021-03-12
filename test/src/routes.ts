@@ -19,7 +19,7 @@ export const routes: RouteStore = {
                 component: Login,
                 name: "user_login",
             },
-            "/{id}": {
+            "/{userId}/{accountId}": {
                 component: UserById
             }
         }
