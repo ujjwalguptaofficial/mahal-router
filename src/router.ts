@@ -1,6 +1,6 @@
 import { IRoute, IRouterOption } from "./interfaces";
 import { RouteHandler } from "./helpers/route_handler";
-import { ROUTE_EVENT_BUS, ROUTER_EVENT_BUS } from "./constant";
+import { ROUTER_EVENT_BUS } from "./constant";
 import { merge } from "mahal";
 import { RouteStore } from "./types";
 

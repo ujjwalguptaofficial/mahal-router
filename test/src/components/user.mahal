@@ -3,17 +3,21 @@
     <div>
         This is User
          <router-view />
+         name {{name}}
         <button on:click="gotoLogin">Login</button>
     </div>
 </html>
 <script>
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
-export default class extends BaseComponent{
-        gotoLogin(){
-                this.$router.goto({
-                    name:"user_login"
-                })
-        }
+export default class extends BaseComponent {
+    gotoLogin(){
+            this.$router.goto({
+                name:"user_login"
+            })
+    },
+    get name(){
+        return // this.$route.query['name'];
+    }
 }
 </script>
