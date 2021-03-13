@@ -12,12 +12,12 @@ import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent {
     gotoLogin(){
-            this.$router.goto({
-                name:"user_login"
-            })
+        this.$router.goto({
+            name:"user_login"
+        })
     },
     get name(){
-        return // this.$route.query['name'];
+        return this.$route.query['name'];
     }
 }
 </script>

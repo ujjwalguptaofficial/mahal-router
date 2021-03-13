@@ -1,12 +1,13 @@
-import { Template, Reactive, merge } from "mahal";
+import { Template, Reactive, merge, LIFECYCLE_EVENT } from "mahal";
 import { BaseComponent } from "./base";
 import { RouteHandler } from "../helpers/route_handler";
 import NotFound from "./404";
+import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place #if(shouldLoad) :of="name"/>
+    <in-place on:created="onCompCreated" #if(shouldLoad) :of="name"/>
 </div>
 `)
 export default class extends BaseComponent {
@@ -23,33 +24,32 @@ export default class extends BaseComponent {
 
     constructor() {
         super();
-        this.on("created", this.onCreated)
+        this.loadComponent();
+        this.on(LIFECYCLE_EVENT.Created, () => {
+            this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate.bind(this))
+        })
     }
 
-    onCreated() {
-        this.$router.on("to", _ => {
-            const splittedPath: string[] = (this.$route as any).splittedPath_;
-            let isRouteFound = false;
-            if (this.pathname) {
-                const thisSplittedPathName = this.pathname.split("/");
-                splittedPath.every(q => {
-                    if (q === this.pathname) {
-                        isRouteFound = true;
-                        return false;
-                    }
-                    return true;
-                })
-            }
-            if (!isRouteFound) {
-                const index = pathVisited.findIndex(q => q === this.pathname);
-                if (index >= 0) {
-                    pathVisited.splice(index);
+    onNavigate() {
+        const splittedPath: string[] = (this.$route as any).splittedPath_;
+        let isRouteFound = false;
+        if (this.pathname) {
+            splittedPath.every(q => {
+                if (q === this.pathname) {
+                    isRouteFound = true;
+                    return false;
                 }
-                this.pathname = null;
-                this.loadComponent();
+                return true;
+            })
+        }
+        if (!isRouteFound) {
+            const index = pathVisited.findIndex(q => q === this.pathname);
+            if (index >= 0) {
+                pathVisited.splice(index);
             }
-        });
-        this.loadComponent();
+            this.pathname = null;
+            this.loadComponent();
+        }
     }
 
     loadComponent() {
@@ -76,6 +76,10 @@ export default class extends BaseComponent {
             [componentName]: comp
         }
         this.name = componentName;
+        (this.$router as any).emitAfterEach_();
+    }
 
+    onCompCreated() {
+        console.log("component created");
     }
 }

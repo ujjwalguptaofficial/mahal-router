@@ -1,15 +1,15 @@
 import { trimSlash } from "./utils";
-import { ROUTER_EVENT_BUS } from "./constant";
 import { T_string_string } from "./types";
+import { IRoute } from "./interfaces";
 
-export class Route {
+export class Route implements IRoute {
     /**
      * pathaname constains only relative url not querystring
      *
      * @type {string}
      * @memberof Route
      */
-    pathname: string;
+    path: string;
 
     param: T_string_string;
     query: T_string_string;
@@ -17,26 +17,17 @@ export class Route {
 
     private splittedPath_;
 
-
-    constructor() {
-        this.setProp(new URL(location.href));
-        ROUTER_EVENT_BUS.on("to", ({ url }) => {
-            this.setProp(url);
-        })
-    }
-
-    setProp(url: URL) {
-        this.pathname = url.pathname;
-        this.splittedPath_ = trimSlash(this.pathname).split("/");
+    private setProp_(url: URL) {
+        this.path = url.pathname;
+        this.splittedPath_ = trimSlash(this.path).split("/");
         this.param = {};
         this.query = this.parseQuery(url.search);
-
     }
 
     private parseQuery(queryString: string) {
         var query = {};
         var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-        for (var i = 0; i < pairs.length; i++) {
+        for (let i = 0, len = pairs.length; i < len; i++) {
             var pair = pairs[i].split('=');
             query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
         }

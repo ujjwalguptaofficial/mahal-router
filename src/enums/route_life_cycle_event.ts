@@ -1,4 +1,8 @@
-export enum ROUTE_LIFECYCLE_EVENT {
-    Load = "load"
+export enum ROUTER_LIFECYCLE_EVENT {
+    Navigate = "navigate",
+    BeforeEnter = "beforeEnter",
+    AfterEnter = "afterEnter",
+    BeforeEach = "beforeEach",
+    AfterEach = "afterEach",
 }
 

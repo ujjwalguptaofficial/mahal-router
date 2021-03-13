@@ -1,3 +1,3 @@
-import { EventBus } from "mahal";
+import { Route } from "./route";
 
-export const ROUTER_EVENT_BUS = new EventBus();
+export const route = new Route();
