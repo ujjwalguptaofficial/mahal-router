@@ -10,11 +10,21 @@
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent{
+
+    constructor(){
+        super();
+
+        this.on("routeLeaving",(ctx)=>{
+            console.log("route routeLeaving",ctx);
+        })
+    }
+
     get userId(){
        return this.$route.param.userId;
     }
     get accountId(){
        return this.$route.param.accountId;
     }
+    
 }
 </script>

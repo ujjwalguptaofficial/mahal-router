@@ -1,5 +1,4 @@
 import { trimSlash } from "../utils";
-import { Component } from "mahal";
 import { RouteStore, T_string_string } from "../types";
 
 let routeStore: RouteStore = {};
@@ -10,15 +9,12 @@ const regex1 = /{(.*)}(?!.)/;
 interface IRouteOutput {
     key: string;
     comp: any;
-    param?: T_string_string
+    param?: T_string_string;
+    name: string;
 }
 
 const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput => {
     let route = "";
-    // if (path.length === 0) return {
-    //     key: route,
-    //     comp: routes[route].component
-    // }
     let param = {};
     const splittedPathLength = splittedPath.length;
     let path;
@@ -56,7 +52,8 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput
             return {
                 key: route,
                 comp: routes[route].component,
-                param: param
+                param: param,
+                name: routes[route].name
             }
         }
         else {

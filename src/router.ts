@@ -9,22 +9,22 @@ import { route } from "./constant";
 const ROUTER_EVENT_BUS = new EventBus();
 export class Router {
 
-    private routeEnds: { to: IRoute, from: IRoute };
+    routeEnds: { to: IRoute, from: IRoute };
+
+    private nextPath: IRoute;
+    private prevPath: IRoute;
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
             console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
             const url = new URL(location.href);
-            this.navigate_(url, true);
+            this.emitNavigate_(url, true);
         });
         (route as any).setProp_(new URL(location.href));
-        this.routeEnds = {
-            to: {
-                path: route.path
-            },
-            from: null
-        }
+        this.nextPath = {
+            path: route.path
+        };
     }
 
     goto(to: IRoute) {
@@ -41,26 +41,42 @@ export class Router {
                 url.searchParams.set(key, to.query[key]);
             }
         }
-        this.routeEnds = {
-            to: to,
-            from: {
-                name: route.name,
-                path: route.path
-            }
+
+        this.nextPath = to;
+        this.prevPath = {
+            name: route.name,
+            path: route.path,
+            param: route.param,
+            query: route.query
         };
-        this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.routeEnds).then(results => {
-            const last = results.pop();
-            //strict equal false means stop the navigation
-            if (last === false) return;
-            else if (typeof last == "object") {
-                return this.goto(last);
-            }
-            window.history.pushState(
-                merge({ key: performance.now() }, to.state || {}),
-                '',
-                url as any
-            );
-            this.navigate_(url);
+        this.emitNavigate_(url);
+    }
+
+    onRouteFound_(url: string): Promise<boolean> {
+        this.nextPath.name = route.name;
+        this.nextPath.param = route.param;
+        this.routeEnds = {
+            to: this.nextPath,
+            from: this.prevPath
+        }
+        return new Promise((res) => {
+            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.routeEnds).then(results => {
+                const last = results.pop();
+                //strict equal false means stop the navigation
+                if (last === false) res(false);
+                else if (typeof last == "object") {
+                    this.goto(last);
+                    res(false);
+                }
+                else {
+                    window.history.pushState(
+                        merge({ key: performance.now() }, this.routeEnds.to.state || {}),
+                        '',
+                        url
+                    );
+                    res(true);
+                }
+            })
         })
 
     }
@@ -86,7 +102,7 @@ export class Router {
         return ROUTER_EVENT_BUS.emit(event, data);
     }
 
-    private navigate_(url: URL, isBack?) {
+    private emitNavigate_(url: URL, isBack?) {
         (route as any).setProp_(url);
         return this.emit(ROUTER_LIFECYCLE_EVENT.Navigate, { url, isBack: isBack });
     }
