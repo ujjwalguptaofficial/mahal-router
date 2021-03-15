@@ -1,4 +1,4 @@
-import { Template, Reactive, merge, LIFECYCLE_EVENT } from "mahal";
+import { Template, Reactive, merge, LIFECYCLE_EVENT, Component } from "mahal";
 import { BaseComponent } from "./base";
 import { RouteHandler } from "../helpers/route_handler";
 import NotFound from "./404";
@@ -7,7 +7,7 @@ import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place on:created="onCompCreated" #if(shouldLoad) :of="name"/>
+    <in-place #ref(compInstance) #if(shouldLoad) :of="name"/>
 </div>
 `)
 export default class extends BaseComponent {
@@ -21,6 +21,8 @@ export default class extends BaseComponent {
     count = 0;
 
     pathname: string;
+
+    compInstance: Component;
 
     constructor() {
         super();
@@ -77,9 +79,5 @@ export default class extends BaseComponent {
         }
         this.name = componentName;
         (this.$router as any).emitAfterEach_();
-    }
-
-    onCompCreated() {
-        console.log("component created");
     }
 }
