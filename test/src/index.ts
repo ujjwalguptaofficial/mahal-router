@@ -18,3 +18,11 @@ App.extend.plugin(RouterPlugin, router);
 App.extend.renderer = createRenderer;
 
 new App(Root, '#app').create();
+
+window.onerror = function (message, source, lineno, colno, error) {
+    window['error'] = message;
+};
+
+window['onunhandledrejection'] = function (message) {
+    console.log('onunhandledrejection handler logging error', message);
+}

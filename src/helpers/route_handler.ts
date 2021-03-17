@@ -91,7 +91,7 @@ export class RouteHandler {
         let routes = routeStore;
         loaded.forEach(item => {
             splittePath.shift();
-            routes = routeStore[item].children;
+            routes = routes[item].children;
         });
 
         return findComponent(routes, splittePath);

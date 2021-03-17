@@ -7,7 +7,7 @@ import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place #ref(compInstance) #if(shouldLoad) :of="name"/>
+    <in-place #ref(compInstance) #if(shouldLoad && name) :of="name"/>
 </div>
 `)
 export default class extends BaseComponent {
@@ -16,7 +16,7 @@ export default class extends BaseComponent {
     name: String;
 
     @Reactive
-    shouldLoad = true;
+    shouldLoad: boolean;
 
     count = 0;
 
@@ -26,6 +26,7 @@ export default class extends BaseComponent {
 
     constructor() {
         super();
+        window['routerView'] = this;
         this.loadComponent();
         this.on(LIFECYCLE_EVENT.Created, () => {
             this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate.bind(this))
@@ -55,29 +56,43 @@ export default class extends BaseComponent {
     }
 
     loadComponent() {
-        const splittedPath = (this.$route as any).splittedPath_;
-        this.shouldLoad = pathVisited.length < splittedPath.length;
-        if (!this.shouldLoad) return;
-        let result = RouteHandler.findComponent(
-            splittedPath,
-            pathVisited
-        );
-        let comp;
-        if (result) {
-            comp = result.comp;
-            pathVisited.push(result.key);
-            this.pathname = result.key;
-            this.$route.param = merge({}, result.param);
-        }
-        else {
-            comp = NotFound;
-        }
-        const componentName = comp.name || "anonymous";
-        this.name = null;
-        this.children = {
-            [componentName]: comp
-        }
-        this.name = componentName;
-        (this.$router as any).emitAfterEach_();
+        new Promise((res) => {
+            if (this.compInstance) {
+                this.compInstance.emit("routeLeaving").then(evtResult => {
+                    const shouldNavigate = evtResult[0];
+                    res(shouldNavigate)
+                })
+            }
+            else {
+                res(true);
+            }
+        }).then(shouldNavigate => {
+            if (shouldNavigate === false) return;
+            const splittedPath: string[] = (this.$route as any).splittedPath_;
+            this.shouldLoad = pathVisited.length < splittedPath.length;
+            if (!this.shouldLoad) return;
+            let result = RouteHandler.findComponent(
+                splittedPath,
+                pathVisited
+            );
+            let comp;
+            if (result) {
+                comp = result.comp;
+                pathVisited.push(result.key);
+                this.pathname = result.key;
+                this.$route.param = merge({}, result.param);
+            }
+            else {
+                comp = NotFound;
+            }
+            const componentName = comp.name || "anonymous";
+            this.name = null;
+            this.children = {
+                [componentName]: comp
+            }
+            this.name = componentName;
+            (this.$router as any).emitAfterEach_();
+        })
+
     }
 }
