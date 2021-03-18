@@ -5,14 +5,13 @@ import { RouteStore } from "./types";
 import { ROUTER_LIFECYCLE_EVENT } from "./enums";
 import { EventBus } from "mahal";
 import { route } from "./constant";
+import { parseQuery, trimSlash } from "./utils";
 
 const ROUTER_EVENT_BUS = new EventBus();
 export class Router {
-
-    routeEnds: { to: IRoute, from: IRoute };
-
     private nextPath: IRoute;
     private prevPath: IRoute;
+    splittedPath_: string[];
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
@@ -21,7 +20,7 @@ export class Router {
             const url = new URL(location.href);
             this.emitNavigate_(url, true);
         });
-        (route as any).setProp_(new URL(location.href));
+        this.initRouteFromUrl_(new URL(location.href));
         this.nextPath = {
             path: route.path
         };
@@ -52,27 +51,35 @@ export class Router {
         this.emitNavigate_(url);
     }
 
-    onRouteFound_(url: string): Promise<boolean> {
-        this.nextPath.name = route.name;
-        this.nextPath.param = route.param;
-        this.routeEnds = {
-            to: this.nextPath,
-            from: this.prevPath
-        }
+    private initRoute_(val: IRoute) {
+        route.path = val.path;
+        route.param = val.param;
+        route.query = val.query || {};
+        route.name = val.name;
+    }
+
+    private initRouteFromUrl_(url: URL) {
+        route.path = url.pathname;
+        this.splittedPath_ = trimSlash(route.path).split("/");
+        route.param = {};
+        route.query = parseQuery(url.search);
+    }
+
+
+    onRouteFound_(value: IRoute): Promise<boolean> {
         return new Promise((res) => {
-            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.routeEnds).then(results => {
+            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.nextPath, this.prevPath).then(results => {
                 const last = results.pop();
-                //strict equal false means stop the navigation
-                if (last === false) res(false);
-                else if (typeof last == "object") {
+                if (last != null && typeof last == "object") {
                     this.goto(last);
                     res(false);
                 }
                 else {
+                    this.initRoute_(value);
                     window.history.pushState(
-                        merge({ key: performance.now() }, this.routeEnds.to.state || {}),
+                        merge({ key: performance.now() }, this.nextPath.state || {}),
                         '',
-                        url
+                        value.path
                     );
                     res(true);
                 }
@@ -98,16 +105,16 @@ export class Router {
         ROUTER_EVENT_BUS.off(event, cb);
     }
 
-    emit(event: string, data?: any) {
-        return ROUTER_EVENT_BUS.emit(event, data);
+    emit(event: string, ...data) {
+        return ROUTER_EVENT_BUS.emit(event, ...data);
     }
 
     private emitNavigate_(url: URL, isBack?) {
-        (route as any).setProp_(url);
+        this.splittedPath_ = trimSlash(url.pathname).split("/");
         return this.emit(ROUTER_LIFECYCLE_EVENT.Navigate, { url, isBack: isBack });
     }
 
     private emitAfterEach_() {
-        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.routeEnds);
+        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath, this.prevPath);
     }
 }

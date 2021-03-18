@@ -1,19 +1,15 @@
 import { trimSlash } from "../utils";
 import { RouteStore, T_string_string } from "../types";
+import { IRouteFindResult } from "../interfaces";
 
 let routeStore: RouteStore = {};
 
 const nameMap: { [name: string]: string } = {};
 const regex1 = /{(.*)}(?!.)/;
 
-interface IRouteOutput {
-    key: string;
-    comp: any;
-    param?: T_string_string;
-    name: string;
-}
 
-const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteOutput => {
+
+const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindResult => {
     let route = "";
     let param = {};
     const splittedPathLength = splittedPath.length;
