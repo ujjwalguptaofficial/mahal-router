@@ -3,7 +3,7 @@ import MahalModule from "mahal";
 import { Router } from "./router";
 import RouterView from "./components/router_view";
 import RouterLink from "./components/router_link";
-import { route } from "./constant";
+import { routeInstance } from "./constant";
 
 export class RouterPlugin extends Plugin {
     setup(mahal: typeof MahalModule, router: Router) {
@@ -12,7 +12,7 @@ export class RouterPlugin extends Plugin {
         
         return {
             router: router,
-            route: route,
+            route: routeInstance,
         }
     }
 }

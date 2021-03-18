@@ -4,7 +4,7 @@ import { merge } from "mahal";
 import { RouteStore } from "./types";
 import { ROUTER_LIFECYCLE_EVENT } from "./enums";
 import { EventBus } from "mahal";
-import { route } from "./constant";
+import { routeInstance } from "./constant";
 import { parseQuery, trimSlash } from "./utils";
 
 const ROUTER_EVENT_BUS = new EventBus();
@@ -12,18 +12,21 @@ export class Router {
     private nextPath: IRoute;
     private prevPath: IRoute;
     splittedPath_: string[];
+    isBack: boolean = false;
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
             console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-            const url = new URL(location.href);
-            this.emitNavigate_(url, true);
+            // const url = new URL(location.href);
+            this.isBack = true;
+            this.emitNavigate_(
+                this.routeFromUrl_(new URL(location.href))
+            );
         });
-        this.initRouteFromUrl_(new URL(location.href));
-        this.nextPath = {
-            path: route.path
-        };
+        this.emitNavigate_(
+            this.routeFromUrl_(new URL(location.href))
+        );
     }
 
     goto(to: IRoute) {
@@ -34,35 +37,22 @@ export class Router {
                 return console.warn(`No route found with name ${name}`);
             }
         }
-        const url = new URL(location.origin + to.path);
-        if (to.query) {
-            for (const key in to.query) {
-                url.searchParams.set(key, to.query[key]);
-            }
-        }
-
-        this.nextPath = to;
-        this.prevPath = {
-            name: route.name,
-            path: route.path,
-            param: route.param,
-            query: route.query
-        };
-        this.emitNavigate_(url);
+        this.emitNavigate_(to);
     }
 
     private initRoute_(val: IRoute) {
-        route.path = val.path;
-        route.param = val.param;
-        route.query = val.query || {};
-        route.name = val.name;
+        routeInstance.path = val.path;
+        routeInstance.param = val.param;
+        routeInstance.query = val.query || {};
+        routeInstance.name = val.name;
     }
 
-    private initRouteFromUrl_(url: URL) {
-        route.path = url.pathname;
-        this.splittedPath_ = trimSlash(route.path).split("/");
-        route.param = {};
-        route.query = parseQuery(url.search);
+    private routeFromUrl_(url: URL): IRoute {
+        return {
+            path: url.pathname,
+            query: parseQuery(url.search),
+            param: {}
+        }
     }
 
 
@@ -76,11 +66,13 @@ export class Router {
                 }
                 else {
                     this.initRoute_(value);
-                    window.history.pushState(
-                        merge({ key: performance.now() }, this.nextPath.state || {}),
-                        '',
-                        value.path
-                    );
+                    if (!this.isBack) {
+                        window.history.pushState(
+                            merge({ key: performance.now() }, this.nextPath.state || {}),
+                            '',
+                            value.path
+                        );
+                    }
                     res(true);
                 }
             })
@@ -109,9 +101,12 @@ export class Router {
         return ROUTER_EVENT_BUS.emit(event, ...data);
     }
 
-    private emitNavigate_(url: URL, isBack?) {
-        this.splittedPath_ = trimSlash(url.pathname).split("/");
-        return this.emit(ROUTER_LIFECYCLE_EVENT.Navigate, { url, isBack: isBack });
+    private emitNavigate_(route: IRoute) {
+        route.query = route.query || {};
+        this.nextPath = route;
+        this.prevPath = routeInstance;
+        this.splittedPath_ = trimSlash(route.path).split("/");
+        return this.emit(ROUTER_LIFECYCLE_EVENT.Navigate, route);
     }
 
     private emitAfterEach_() {
