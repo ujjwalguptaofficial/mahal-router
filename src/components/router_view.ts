@@ -56,11 +56,11 @@ export default class extends BaseComponent {
         }
     }
 
-    get nextPath(): IRoute {
+    get reqRoute(): IRoute {
         return (this.$router as any).nextPath;
     }
 
-    get prevPath(): IRoute {
+    get activeRoute(): IRoute {
         return (this.$router as any).prevPath;
     }
 
@@ -71,17 +71,19 @@ export default class extends BaseComponent {
             pathVisited
         );
 
-        Object.assign(this.nextPath, {
+        if (!result) {
+            this.onCompEvaluated(null);
+        }
+        Object.assign(this.reqRoute, {
             name: result.name,
             param: result.param
         } as IRoute);
-
         new Promise((res) => {
             if (this.compInstance) {
-                this.compInstance.emit("routeLeaving", this.nextPath, this.prevPath).then(evtResult => {
+                this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
                     const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
                     if (shouldNavigate) {
-                        Object.assign(this.$route, this.nextPath);
+                        Object.assign(this.$route, this.reqRoute);
                     }
                     res(shouldNavigate)
                 })
@@ -102,7 +104,7 @@ export default class extends BaseComponent {
         let comp;
         new Promise(res => {
             if (result) {
-                this.$router.onRouteFound_(this.nextPath).
+                this.$router.onRouteFound_(this.reqRoute).
                     then(shouldNavigate => {
                         if (shouldNavigate) {
                             comp = result.comp;
@@ -126,7 +128,14 @@ export default class extends BaseComponent {
             };
             // this.set(this, 'name', componentName);
             this.name = componentName;
-            (this.$router as any).emitAfterEach_();
+
+            // if result is null,don't call emitAfterEach
+            if (result) {
+                (this.$router as any).emitAfterEach_();
+            }
+            else {
+                (this.$router as any).emitNotFound_(this.reqRoute);
+            }
         });
     }
 }

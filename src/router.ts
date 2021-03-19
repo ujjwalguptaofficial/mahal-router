@@ -34,7 +34,10 @@ export class Router {
         if (name) {
             to.path = RouteHandler.pathByName(name);
             if (!to.path) {
-                return console.warn(`No route found with name ${name}`);
+                if (process.env.NODE_ENV != "production") {
+                    console.warn(`No route found with name ${name}`);
+                }
+                return this.emitNotFound_(to);
             }
         }
         this.emitNavigate_(to);
@@ -112,4 +115,9 @@ export class Router {
     private emitAfterEach_() {
         this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath, this.prevPath);
     }
+
+    private emitNotFound_(to) {
+        this.emit(ROUTER_LIFECYCLE_EVENT.RouteNotFound, to);
+    }
+
 }

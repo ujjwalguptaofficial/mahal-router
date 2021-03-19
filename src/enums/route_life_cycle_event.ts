@@ -4,5 +4,7 @@ export enum ROUTER_LIFECYCLE_EVENT {
     AfterEnter = "afterEnter",
     BeforeEach = "beforeEach",
     AfterEach = "afterEach",
+    RouteLeaving = "routeLeaving",
+    RouteNotFound = "routeNotFound",
 }
 
