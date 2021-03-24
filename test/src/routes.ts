@@ -13,7 +13,7 @@ export const routes: RouteStore = {
     ...createRoute({
         path: "/user",
         component: import("./components/user.mahal"),
-        name: "User",
+        name: "user",
         children: {
             "/login": {
                 component: Login,

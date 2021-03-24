@@ -2,6 +2,9 @@
 <html>
     <div>
         This is root
+        <router-link :to="{name:'user'}">
+            <a>Goto User</a>
+        </router-link>
          <router-view />
     </div>
 </html>

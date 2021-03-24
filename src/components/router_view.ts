@@ -72,7 +72,7 @@ export default class extends BaseComponent {
         );
 
         if (!result) {
-            this.onCompEvaluated(null);
+            return this.onCompEvaluated(null);
         }
         Object.assign(this.reqRoute, {
             name: result.name,
