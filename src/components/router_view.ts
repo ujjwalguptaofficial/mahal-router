@@ -28,8 +28,8 @@ export default class extends BaseComponent {
     constructor() {
         super();
         window['routerView'] = this;
-        this.loadComponent();
-        this.on(LIFECYCLE_EVENT.Created, () => {
+        this.on(LIFECYCLE_EVENT.Mount, this.loadComponent)
+        this.on(LIFECYCLE_EVENT.Create, () => {
             this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate.bind(this))
         })
     }

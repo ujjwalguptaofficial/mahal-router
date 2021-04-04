@@ -2,11 +2,12 @@
 <html>
     <div>
         This is Start
+         <router-view />
     </div>
 </html>
 <script>
 import { Component } from "mahal";
-export default class extends Component{
-        
+export default class Start extends Component{
+        isStart=true
 }
 </script>
