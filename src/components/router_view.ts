@@ -1,9 +1,10 @@
-import { Template, Reactive, merge, LIFECYCLE_EVENT, Component } from "mahal";
+import { Template, Reactive, merge, LIFECYCLE_EVENT, Component, Timer } from "mahal";
 import { BaseComponent } from "./base";
 import { RouteHandler } from "../helpers/route_handler";
 import NotFound from "./404";
 import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
+import { isArrayEqual } from "../helpers";
 
 const pathVisited = [];
 @Template(`
@@ -19,8 +20,6 @@ export default class extends BaseComponent {
     @Reactive
     shouldLoad: boolean;
 
-    count = 0;
-
     pathname: string;
 
     compInstance: Component;
@@ -28,7 +27,13 @@ export default class extends BaseComponent {
     constructor() {
         super();
         window['routerView'] = this;
-        this.on(LIFECYCLE_EVENT.Mount, this.loadComponent)
+        this.on(LIFECYCLE_EVENT.Mount, () => {
+            // setTimeout(() => {
+            if (!isArrayEqual(this.$router.splittedPath_, pathVisited)) {
+                this.loadComponent();
+            }
+            // }, 2000);
+        })
         this.on(LIFECYCLE_EVENT.Create, () => {
             this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate.bind(this))
         })
@@ -36,7 +41,12 @@ export default class extends BaseComponent {
 
     onNavigate() {
         const splittedPath: string[] = this.$router.splittedPath_;
+        // if (splittedPath.length == this.pathname.split(".").length) {
+        //     const index = pathVisited.indexOf(this.pathname);
+        //     pathVisited.splice(index, 1);
+        // }
         let isRouteFound = false;
+
         if (this.pathname) {
             splittedPath.every(q => {
                 if (q === this.pathname) {
@@ -52,7 +62,7 @@ export default class extends BaseComponent {
                 pathVisited.splice(index);
             }
             this.pathname = null;
-            this.loadComponent();
+            return this.loadComponent();
         }
     }
 
@@ -66,43 +76,68 @@ export default class extends BaseComponent {
 
     loadComponent() {
         const splittedPath: string[] = this.$router.splittedPath_;
-        let result = RouteHandler.findComponent(
-            splittedPath,
-            pathVisited
-        );
 
-        if (!result) {
-            return this.onCompEvaluated(null);
-        }
-        Object.assign(this.reqRoute, {
-            name: result.name,
-            param: result.param
-        } as IRoute);
-        new Promise((res) => {
+        return new Promise<void>((res) => {
+
+            let result = RouteHandler.findComponent(
+                splittedPath,
+                pathVisited
+            );
+            if (!result) {
+                this.onCompEvaluated(null);
+                return res();
+            }
+            Object.assign(this.reqRoute, {
+                name: result.name,
+                param: result.param
+            } as IRoute);
+            const afterRouteLeave = (shouldNavigate) => {
+                if (shouldNavigate === false) return;
+                this.shouldLoad = pathVisited.length < splittedPath.length;
+                if (!this.shouldLoad) return res();
+                this.onCompEvaluated(result).then(res);
+            }
             if (this.compInstance) {
                 this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
                     const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
                     if (shouldNavigate) {
                         Object.assign(this.$route, this.reqRoute);
                     }
-                    res(shouldNavigate)
+                    afterRouteLeave(shouldNavigate)
                 })
             }
             else {
-                res(true);
+                afterRouteLeave(true);
             }
-        }).then(shouldNavigate => {
-            if (shouldNavigate === false) return;
-            this.shouldLoad = pathVisited.length < splittedPath.length;
-            if (!this.shouldLoad) return;
-            this.onCompEvaluated(result);
-        })
+        });
 
     }
 
     onCompEvaluated(result: IRouteFindResult) {
         let comp;
-        new Promise(res => {
+        return new Promise<void>(res => {
+            const afterRouteFound = (val) => {
+                if (!val) return res();
+                const componentName = comp.name || "anonymous";
+                if (this.name) {
+                    this.name = null;
+                }
+                this.children = {
+                    [componentName]: comp
+                };
+                // this.set(this, 'name', componentName);
+
+
+                // if result is null,don't call emitAfterEach
+                if (result) {
+                    (this.$router as any).emitAfterEach_();
+                }
+                else {
+                    (this.$router as any).emitNotFound_(this.reqRoute);
+                }
+                this.name = componentName;
+                res();
+            }
             if (result) {
                 this.$router.onRouteFound_(this.reqRoute).
                     then(shouldNavigate => {
@@ -112,29 +147,12 @@ export default class extends BaseComponent {
                             this.pathname = result.key;
                             this.$route.param = merge({}, result.param);
                         }
-                        res(shouldNavigate);
+                        afterRouteFound(shouldNavigate);
                     })
             }
             else {
                 comp = NotFound;
-                res(true);
-            }
-        }).then(val => {
-            if (!val) return;
-            const componentName = comp.name || "anonymous";
-            this.name = null;
-            this.children = {
-                [componentName]: comp
-            };
-            // this.set(this, 'name', componentName);
-            this.name = componentName;
-
-            // if result is null,don't call emitAfterEach
-            if (result) {
-                (this.$router as any).emitAfterEach_();
-            }
-            else {
-                (this.$router as any).emitNotFound_(this.reqRoute);
+                afterRouteFound(true);
             }
         });
     }

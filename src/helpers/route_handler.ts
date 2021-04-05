@@ -80,7 +80,7 @@ export class RouteHandler {
         console.log("namedmap", nameMap);
     }
 
-    static findComponent(splittePath: string[], loaded) {
+    static findComponent(splittePath: string[], loaded: string[]) {
         // immutable array
         splittePath = Array.from(splittePath);
 

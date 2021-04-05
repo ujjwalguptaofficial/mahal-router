@@ -109,7 +109,10 @@ export class Router {
         this.nextPath = route;
         this.prevPath = routeInstance;
         this.splittedPath_ = trimSlash(route.path).split("/");
-        return this.emit(ROUTER_LIFECYCLE_EVENT.Navigate, route);
+        return ROUTER_EVENT_BUS.emitLinear(
+            ROUTER_LIFECYCLE_EVENT.Navigate,
+            route
+        );
     }
 
     private emitAfterEach_() {
