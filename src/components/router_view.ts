@@ -12,7 +12,7 @@ const pathVisited = [];
     <in-place #ref(compInstance) #if(shouldLoad) :of="name"/>
 </div>
 `)
-export default class extends BaseComponent {
+export default class RouterView extends BaseComponent {
 
     @Reactive
     name: String;
@@ -24,19 +24,25 @@ export default class extends BaseComponent {
 
     compInstance: Component;
 
+
     constructor() {
         super();
         window['routerView'] = this;
-        this.on(LIFECYCLE_EVENT.Mount, () => {
+        this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
             // setTimeout(() => {
             if (!isArrayEqual(this.$router.splittedPath_, pathVisited)) {
                 this.loadComponent();
             }
             // }, 2000);
-        })
-        this.on(LIFECYCLE_EVENT.Create, () => {
-            this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate.bind(this))
-        })
+        });
+        const onNavigateRef = this.onNavigate.bind(this);
+        this.waitFor(LIFECYCLE_EVENT.Create).then(_ => {
+            this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigateRef);
+        });
+        this.on(LIFECYCLE_EVENT.Destroy, () => {
+            this.compInstance = null;
+            this.$router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigateRef);
+        });
     }
 
     onNavigate() {
@@ -119,20 +125,29 @@ export default class extends BaseComponent {
             const afterRouteFound = (val) => {
                 if (!val) return res();
                 const componentName = comp.name || "anonymous";
-                if (this.name) {
-                    this.name = null;
+                const setName = () => {
+                    this.children = {
+                        [componentName]: comp
+                    };
+                    if (result) {
+                        this.$router['emitAfterEach_']();
+                    }
+                    else {
+                        this.$router['emitNotFound_'](this.reqRoute);
+                    }
+                    this.name = componentName;
+                    this.waitFor(LIFECYCLE_EVENT.Update).then(res);
                 }
-                this.children = {
-                    [componentName]: comp
-                };
-                if (result) {
-                    (this.$router as any).emitAfterEach_();
+                if (this.name && this.name === componentName) {
+                    this.name = null;
+                    this.waitFor(LIFECYCLE_EVENT.Update).then(_ => {
+                        setName();
+                    });
                 }
                 else {
-                    (this.$router as any).emitNotFound_(this.reqRoute);
+                    setName();
                 }
-                this.name = componentName;
-                res();
+
             }
             if (result) {
                 this.$router.onRouteFound_(this.reqRoute).

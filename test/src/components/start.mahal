@@ -2,7 +2,7 @@
 <html>
     <div>
         This is Start
-         <router-view />
+         <router-view name="Start" />
     </div>
 </html>
 <script>

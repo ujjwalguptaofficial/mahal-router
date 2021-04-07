@@ -14,6 +14,8 @@ export class Router {
     splittedPath_: string[];
     isBack: boolean = false;
 
+    _routerBus = ROUTER_EVENT_BUS;
+
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
