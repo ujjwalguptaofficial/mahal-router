@@ -1,10 +1,12 @@
 
 <html>
     <div>
-        This is root
-        <router-link :to="{name:'user'}">
-            <a>Goto User</a>
-        </router-link>
+        <route-to name="user">
+            <a class="btn">User</a>
+        </route-to>
+        <route-to name="user-login">
+            <a class="btn">Login</a>
+        </route-to>
          <router-view />
     </div>
 </html>

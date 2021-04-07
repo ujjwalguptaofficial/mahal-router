@@ -8,7 +8,7 @@ import { routeInstance } from "./constant";
 export class RouterPlugin extends Plugin {
     setup(mahal: typeof MahalModule, router: Router) {
         mahal.App.extend.component("router-view", RouterView);
-        mahal.App.extend.component("router-link", RouterLink);
+        mahal.App.extend.component("route-to", RouterLink);
         return {
             router: router,
             route: routeInstance,

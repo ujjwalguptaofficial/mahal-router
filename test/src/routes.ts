@@ -3,6 +3,7 @@ import Start from "./components/start.mahal";
 import User from "./components/user.mahal";
 import UserById from "./components/user_by_id.mahal";
 import Login from "./components/login.mahal";
+import Dashboard from "./components/dashboard.mahal";
 
 export const routes: RouteStore = {
     ...createRoute({
@@ -17,7 +18,11 @@ export const routes: RouteStore = {
         children: {
             "/login": {
                 component: Login,
-                name: "user_login",
+                name: "user-login",
+            },
+            "/dashboard": {
+                component: Dashboard,
+                name: "user-dashboard",
             },
             "/{userId}/{accountId}": {
                 component: UserById

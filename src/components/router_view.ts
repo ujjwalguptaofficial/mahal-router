@@ -125,10 +125,6 @@ export default class extends BaseComponent {
                 this.children = {
                     [componentName]: comp
                 };
-                // this.set(this, 'name', componentName);
-
-
-                // if result is null,don't call emitAfterEach
                 if (result) {
                     (this.$router as any).emitAfterEach_();
                 }

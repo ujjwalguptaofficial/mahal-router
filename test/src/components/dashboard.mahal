@@ -1,7 +1,13 @@
 
 <html>
     <div>
-       <router-view />
+        <p>Dashboard</p>
+        <p>{{$route.query.name}}</p>
+        <div>
+         <route-to>
+         <a/>
+         </route-to>
+        </div>
     </div>
 </html>
 <script>

@@ -1,6 +1,7 @@
 import { trimSlash } from "../utils";
 import { RouteStore, T_string_string } from "../types";
 import { IRouteFindResult } from "../interfaces";
+import { Route } from "../route";
 
 let routeStore: RouteStore = {};
 
@@ -95,6 +96,40 @@ export class RouteHandler {
 
     static pathByName(name: string) {
         return nameMap[name];
+    }
+
+    static resolve(route: Route) {
+        let path = "";
+        if (route.name) {
+            path = RouteHandler.pathByName(route.name);
+            if (!path) {
+                throw `Invalid route - no route found with name ${route.name}`;
+            }
+        }
+        else if (route.path) {
+            path = route.path;
+        }
+        if (route.param) {
+            // const query = route.query;
+            // path += Object.keys(query).reduce((prev, next) => {
+            //     return prev + `${next}=${query[next]}&`
+            // }, "?");
+            // const pathLength = path.length;
+            // if (path[pathLength - 1] === "&") {
+            //     path = path.substr(0, pathLength - 1);
+            // }
+        }
+        if (route.query) {
+            const query = route.query;
+            path += Object.keys(query).reduce((prev, next) => {
+                return prev + `${next}=${query[next]}&`
+            }, "?");
+            const pathLength = path.length;
+            if (path[pathLength - 1] === "&") {
+                path = path.substr(0, pathLength - 1);
+            }
+        }
+        return path;
     }
 
 }
