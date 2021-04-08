@@ -82,25 +82,28 @@ export default class RouterView extends BaseComponent {
 
     loadComponent() {
         const splittedPath: string[] = this.$router.splittedPath_;
+        const isRuterViewEligible = pathVisited.length < splittedPath.length;
 
         return new Promise<void>((res) => {
-
-            let result = RouteHandler.findComponent(
-                splittedPath,
-                pathVisited
-            );
-            if (!result) {
-                this.onCompEvaluated(null);
-                return res();
+            let result;
+            if (isRuterViewEligible) {
+                result = RouteHandler.findComponent(
+                    splittedPath,
+                    pathVisited
+                );
+                if (!result) {
+                    this.onCompEvaluated(null);
+                    return res();
+                }
+                Object.assign(this.reqRoute, {
+                    name: result.name,
+                    param: result.param
+                } as IRoute);
             }
-            Object.assign(this.reqRoute, {
-                name: result.name,
-                param: result.param
-            } as IRoute);
             const afterRouteLeave = (shouldNavigate) => {
                 if (shouldNavigate === false) return;
-                this.shouldLoad = pathVisited.length < splittedPath.length;
-                if (!this.shouldLoad) return res();
+                this.shouldLoad = isRuterViewEligible;
+                if (!isRuterViewEligible) return res();
                 this.onCompEvaluated(result).then(res);
             }
             if (this.compInstance) {
