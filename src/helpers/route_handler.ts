@@ -100,15 +100,16 @@ export class RouteHandler {
 
     static resolve(route: Route) {
         let path = "";
-        if (route.name) {
+        if (route.path) {
+            path = route.path;
+        }
+        else if (route.name) {
             path = RouteHandler.pathByName(route.name);
             if (!path) {
                 throw `Invalid route - no route found with name ${route.name}`;
             }
         }
-        else if (route.path) {
-            path = route.path;
-        }
+
         if (route.param) {
             // const query = route.query;
             // path += Object.keys(query).reduce((prev, next) => {

@@ -6,6 +6,7 @@ import { ROUTER_LIFECYCLE_EVENT } from "./enums";
 import { EventBus } from "mahal";
 import { routeInstance } from "./constant";
 import { parseQuery, trimSlash } from "./utils";
+import { Route } from "./route";
 
 const ROUTER_EVENT_BUS = new EventBus();
 export class Router {
@@ -47,7 +48,7 @@ export class Router {
 
     private initRoute_(val: IRoute) {
         routeInstance.path = val.path;
-        routeInstance.param = val.param;
+        routeInstance.param = val.param || {};
         routeInstance.query = val.query || {};
         routeInstance.name = val.name;
     }
@@ -61,7 +62,7 @@ export class Router {
     }
 
 
-    onRouteFound_(value: IRoute): Promise<boolean> {
+    onRouteFound_(to: Route): Promise<boolean> {
         return new Promise((res) => {
             this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.nextPath, this.prevPath).then(results => {
                 const last = results.pop();
@@ -70,12 +71,12 @@ export class Router {
                     res(false);
                 }
                 else {
-                    this.initRoute_(value);
+                    this.initRoute_(to);
                     if (!this.isBack) {
                         window.history.pushState(
-                            merge({ key: performance.now() }, this.nextPath.state || {}),
+                            merge({ key: performance.now() }),
                             '',
-                            value.path + 
+                            RouteHandler.resolve(to)
                         );
                     }
                     res(true);
