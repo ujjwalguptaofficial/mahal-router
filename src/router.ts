@@ -75,7 +75,7 @@ export class Router {
                         window.history.pushState(
                             merge({ key: performance.now() }, this.nextPath.state || {}),
                             '',
-                            value.path
+                            value.path + 
                         );
                     }
                     res(true);

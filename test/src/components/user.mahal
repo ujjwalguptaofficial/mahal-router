@@ -1,6 +1,7 @@
 
 <html>
     <div>
+    User
        <router-view name="User"/>
     </div>
 </html>

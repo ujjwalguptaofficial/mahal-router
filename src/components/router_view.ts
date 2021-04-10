@@ -9,16 +9,13 @@ import { isArrayEqual } from "../helpers";
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place #ref(compInstance) #if(shouldLoad) :of="name"/>
+    <in-place #ref(compInstance) :of="name"/>
 </div>
 `)
 export default class RouterView extends BaseComponent {
 
     @Reactive
     name: String;
-
-    @Reactive
-    shouldLoad: boolean;
 
     pathname: string;
 
@@ -102,8 +99,10 @@ export default class RouterView extends BaseComponent {
             }
             const afterRouteLeave = (shouldNavigate) => {
                 if (shouldNavigate === false) return;
-                this.shouldLoad = isRuterViewEligible;
-                if (!isRuterViewEligible) return res();
+                if (!isRuterViewEligible) {
+                    this.name = null;
+                    return res();
+                }
                 this.onCompEvaluated(result).then(res);
             }
             if (this.compInstance) {
