@@ -5,8 +5,8 @@ const webpackConfig = require("./webpack/webpack.config.test")
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 // return console.log(webpackConfig);
-const basePath = path.join(__dirname);
-console.log('basePath', basePath);
+// const basePath = path.join(__dirname);
+// console.log('basePath', basePath);
 module.exports = function (config) {
     config.set({
         // basePath: '',
@@ -16,26 +16,10 @@ module.exports = function (config) {
             // "src/**/*.ts",
             "bin/bundles.js",
             { pattern: 'bin/**/*.js', included: false, watched: false, served: true },
-            "test/start.js"
-            // "bin/index.html" // *.tsx for React Jsx
+            "test/start.js",
+            // "test/task.js"
         ],
-        // preprocessors: {
-        //     // "**/*.ts": "webpack",
-        //     // "**/*.js": "webpack"
-        //     '**/*.html': ['html2js']
-        // },
-        // html2JsPreprocessor: {
-        //     processPath: function (filePath) {
-        //         return filePath.split('/')[1];
-        //     }
-        // },
-        // webpack: webpackConfig,
         client: {
-            // karmaHTML: {
-            //     source: [
-            //         { src: '"bin/index.html" ', tag: 'index' },
-            //     ]
-            // },
             mocha: {
                 timeout: 5000
             }

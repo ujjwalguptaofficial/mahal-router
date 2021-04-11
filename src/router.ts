@@ -35,7 +35,7 @@ export class Router {
     goto(to: IRoute) {
         const name = to.name;
         if (name) {
-            to.path = RouteHandler.pathByName(name);
+            to.path = RouteHandler.pathByName(to);
             if (!to.path) {
                 if (process.env.NODE_ENV != "production") {
                     console.warn(`No route found with name ${name}`);
@@ -62,7 +62,7 @@ export class Router {
     }
 
 
-    onRouteFound_(to: Route): Promise<boolean> {
+    onRouteFound_(to: IRoute): Promise<boolean> {
         return new Promise((res) => {
             this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.nextPath, this.prevPath).then(results => {
                 const last = results.pop();
@@ -76,7 +76,7 @@ export class Router {
                         window.history.pushState(
                             merge({ key: performance.now() }),
                             '',
-                            RouteHandler.resolve(to)
+                            RouteHandler.resolve(to as any)
                         );
                     }
                     res(true);

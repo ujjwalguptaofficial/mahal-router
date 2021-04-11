@@ -1,6 +1,6 @@
 import { trimSlash } from "../utils";
 import { RouteStore, T_string_string } from "../types";
-import { IRouteFindResult } from "../interfaces";
+import { IRouteFindResult, IRoute } from "../interfaces";
 import { Route } from "../route";
 
 let routeStore: RouteStore = {};
@@ -8,7 +8,7 @@ let routeStore: RouteStore = {};
 const nameMap: { [name: string]: string } = {};
 const regex1 = /{(.*)}(?!.)/;
 
-
+window['regex1'] = regex1;
 
 const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindResult => {
     let route = "";
@@ -44,7 +44,7 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
                 path = splittedPath[++pathIndex];
             }
             return isRouteFound;
-        })
+        });
         if (isRouteFound) {
             return {
                 key: route,
@@ -68,6 +68,7 @@ export class RouteHandler {
                     delete data[key];
                 }
                 let path = parentPath + "/" + newKey;
+                //.replace(regex1, 'someValue');
                 if (data[newKey].name) {
                     nameMap[data[newKey].name] = path;
                 }
@@ -94,8 +95,25 @@ export class RouteHandler {
         return findComponent(routes, splittePath);
     }
 
-    static pathByName(name: string) {
-        return nameMap[name];
+    static pathByName(route: IRoute) {
+        let path = nameMap[route.name];
+        if (path && path.match(regex1)) {
+            const splittedPath = path.split("/");
+            let modifiedPaths = [];
+            splittedPath.forEach(item => {
+                const regexMatch = item.match(regex1);
+                if (regexMatch) {
+                    modifiedPaths.push(
+                        route.param[regexMatch[1]]
+                    );
+                }
+                else {
+                    modifiedPaths.push(item);
+                }
+            });
+            return modifiedPaths.join("/");
+        }
+        return path;
     }
 
     static resolve(route: Route) {
@@ -104,7 +122,7 @@ export class RouteHandler {
             path = route.path;
         }
         else if (route.name) {
-            path = RouteHandler.pathByName(route.name);
+            path = RouteHandler.pathByName(route);
             if (!path) {
                 throw `Invalid route - no route found with name ${route.name}`;
             }

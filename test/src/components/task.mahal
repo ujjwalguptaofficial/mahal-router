@@ -1,7 +1,7 @@
 
 <html>
-    <div comp="user">
-    User
+    <div comp="task">
+      <h1>Task</h1>
        <router-view name="User"/>
     </div>
 </html>
@@ -9,16 +9,6 @@
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent {
-
     
-    gotoLogin(){
-        this.$router.goto({
-            name:"user_login"
-        })
-    }
-    
-    get name(){
-        return this.$route.query['name'];
-    }
 }
 </script>

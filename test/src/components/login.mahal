@@ -13,6 +13,7 @@ import { BaseComponent } from "./base";
 
 export default class extends BaseComponent{
     login(){
+        localStorage.setItem("authenticated","true");
         this.$router.goto({
             name:'user-dashboard',
             query:{

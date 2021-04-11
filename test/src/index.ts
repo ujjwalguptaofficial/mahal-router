@@ -1,4 +1,4 @@
-import { App } from "mahal";
+import { App, Timer } from "mahal";
 import Root from "./components/root.mahal";
 import { RouterPlugin, Router } from "mahal-router";
 import { routes } from "./routes";
@@ -7,6 +7,7 @@ import "flexboot";
 import * as $ from "jquery";
 
 window['$'] = $;
+window['after'] = new Timer().timeout;
 
 const router = new Router(routes);
 

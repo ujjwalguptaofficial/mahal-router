@@ -7,7 +7,7 @@
         <route-to name="user">
             <a class="btn">User</a>
         </route-to>
-        <route-to name="user-login">
+        <route-to class="route-login" name="user-login">
             <a class="btn">Login</a>
         </route-to>
          <router-view />

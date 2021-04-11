@@ -1,12 +1,13 @@
 
 <html>
     <div>
-        <p>Dashboard</p>
-        <p>{{$route.query.name}}</p>
-        <div>
-         <route-to>
-         <a/>
-         </route-to>
+        <h1>Dashboard</h1>
+        <div class="row">
+        <p>Welcome</p> <p class="margin-left-5px user-name">{{$route.query.name}}</p>
+        </div>
+        <div on:click="()=>{openTask(item)}" class="todo row" #for(item,index in todos)>
+         <p>{{index}}</p>   
+         <p class="margin-left-5px">{{item}}</p>
         </div>
     </div>
 </html>
@@ -14,6 +15,9 @@
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent {
+
+    todos = ["Buy shoes","Travel to home","hire front end devs"];
+    
     gotoLogin(){
         this.$router.goto({
             name:"user_login"
@@ -23,5 +27,26 @@ export default class extends BaseComponent {
     get name(){
         return this.$route.query['name'];
     }
+
+    openTask(task){
+        this.$router.goto({
+            name:"particular_task",
+            param:{
+                value:task
+            }
+        });
+    }
 }
 </script>
+<style>
+.margin-left-5px{
+    margin-left:5px;
+}
+.todo{
+    padding: 5px;
+    background: maroon;
+    color: white;
+    margin-top:1px;
+    cursor:pointer;
+}
+</style>
