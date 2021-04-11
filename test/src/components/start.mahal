@@ -1,7 +1,7 @@
 
 <html>
-    <div>
-        This is Start
+    <div class="start">
+        Mahal Router
          <router-view name="Start" />
     </div>
 </html>

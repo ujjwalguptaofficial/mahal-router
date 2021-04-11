@@ -12,6 +12,16 @@ export const routes: RouteStore = {
         name: "home",
     }),
     ...createRoute({
+        path: "/debug.html",
+        component: Start,
+        name: "home",
+    }),
+    ...createRoute({
+        path: "/context.html",
+        component: Start,
+        name: "home",
+    }),
+    ...createRoute({
         path: "/user",
         component: import("./components/user.mahal"),
         name: "user",

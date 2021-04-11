@@ -9,7 +9,7 @@ module.exports = {
         historyApiFallback: true
     },
     entry: './src/index.ts',
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     mode: "development",
     module: {
         rules: [{
@@ -45,7 +45,7 @@ module.exports = {
     output: {
         filename: 'bundles.js',
         path: path.resolve(__dirname, 'bin/'),
-        publicPath : '/'
+        publicPath: process.env.NODE_ENV == "test" ? '/bin/' : "/"
     },
     plugins: [
         new MahalPlugin({

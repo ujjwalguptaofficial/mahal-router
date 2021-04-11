@@ -1,6 +1,9 @@
 
 <html>
     <div>
+        <route-to path="debug.html">
+            <a class="btn">Home</a>
+        </route-to>
         <route-to name="user">
             <a class="btn">User</a>
         </route-to>

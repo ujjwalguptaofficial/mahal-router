@@ -4,8 +4,11 @@ import { RouterPlugin, Router } from "mahal-router";
 import { routes } from "./routes";
 import { createRenderer } from "mahal-html-compiler";
 import "flexboot";
+import * as $ from "jquery";
 
-const router = new Router(routes, {} as any);
+window['$'] = $;
+
+const router = new Router(routes);
 
 router.on("beforeEach", (ctx) => {
     console.log("beforeEach", ctx);
