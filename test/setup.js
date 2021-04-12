@@ -65,6 +65,22 @@ before(async () => {
             return document.querySelectorAll(q).length;
         }, selector);
     }
+    global.$location = async () => {
+        return await page.evaluate(q => {
+            return location;
+        });
+    }
+    global.$history = async () => {
+        return await page.evaluate(q => {
+            return {
+                length: history.length
+            }
+        });
+    }
+
+    global.$reload = () => {
+        return page.reload();
+    }
 });
 
 

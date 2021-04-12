@@ -4,13 +4,24 @@
 describe('Start', function () {
 
     it("wait for mounting", (done) => {
-        setTimeout(done, 1000);
+        setTimeout(done, 100);
     })
 
     it("check for mahal router", async () => {
         const text = await $text('.start');
         expect(text.trim()).equal("Mahal Router");
+        const location = await $location();
+        expect(location.pathname).equal("/");
+        expect(location.href.includes("?")).equal(false);
     })
+
+    it("reload && check history length", async () => {
+        let history = await $history();
+        const prevHistoryLength = history.length;
+        await $reload();
+        history = await $history();
+        expect(prevHistoryLength).equal(history.length);
+    });
 
     it("login", async () => {
         await $click('.route-login');

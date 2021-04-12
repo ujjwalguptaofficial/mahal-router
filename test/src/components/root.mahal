@@ -1,7 +1,7 @@
 
 <html>
     <div>
-        <route-to path="debug.html">
+        <route-to name="home-context" class="route-home">
             <a class="btn">Home</a>
         </route-to>
         <route-to name="user">

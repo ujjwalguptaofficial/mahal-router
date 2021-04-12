@@ -138,14 +138,15 @@ export class RouteHandler {
             //     path = path.substr(0, pathLength - 1);
             // }
         }
-        if (route.query) {
-            const query = route.query;
-            path += Object.keys(query).reduce((prev, next) => {
+        const query = route.query;
+        if (query) {
+            let queryString = Object.keys(query).reduce((prev, next) => {
                 return prev + `${next}=${query[next]}&`
             }, "?");
-            const pathLength = path.length;
-            if (path[pathLength - 1] === "&") {
-                path = path.substr(0, pathLength - 1);
+            const queryStringLength = queryString.length;
+            if (queryString[queryStringLength - 1] === "&") {
+                queryString = queryString.substr(0, queryStringLength - 1);
+                path += queryString;
             }
         }
         return path;

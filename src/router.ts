@@ -6,7 +6,6 @@ import { ROUTER_LIFECYCLE_EVENT } from "./enums";
 import { EventBus } from "mahal";
 import { routeInstance } from "./constant";
 import { parseQuery, trimSlash } from "./utils";
-import { Route } from "./route";
 
 const ROUTER_EVENT_BUS = new EventBus();
 export class Router {
@@ -16,12 +15,11 @@ export class Router {
     isBack: boolean = false;
 
     _routerBus = ROUTER_EVENT_BUS;
+    _isStart_ = true;
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
-            console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-            // const url = new URL(location.href);
             this.isBack = true;
             this.emitNavigate_(
                 this.routeFromUrl_(new URL(location.href))
@@ -72,12 +70,15 @@ export class Router {
                 }
                 else {
                     this.initRoute_(to);
-                    if (!this.isBack) {
+                    if (!this.isBack && !this._isStart_) {
                         window.history.pushState(
                             merge({ key: performance.now() }),
                             '',
                             RouteHandler.resolve(to as any)
                         );
+                    }
+                    else {
+                        this.isBack = this._isStart_ = false;
                     }
                     res(true);
                 }
@@ -108,7 +109,7 @@ export class Router {
     }
 
     private emitNavigate_(route: IRoute) {
-        route.query = route.query || {};
+        route.query = route.query;
         this.nextPath = route;
         this.prevPath = routeInstance;
         this.splittedPath_ = trimSlash(route.path).split("/");

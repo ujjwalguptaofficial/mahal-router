@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.config.js",
     "install:lib": "npm i ../mahal/mahal-0.8.0.tgz --no-save",
     "build:test": "npm run build:pack && npm run test",
-    "test": "cd test && npm run install:lib && npm run test",
+    "test": "cd test && npm run install:lib && npm run build:test",
     "dev": "cd test && npm run install:lib && npm run dev",
     "build:dev": "npm run build:pack && npm run dev",
     "build:pack": "npm run build && npm pack"

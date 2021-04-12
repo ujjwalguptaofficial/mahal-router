@@ -12,14 +12,9 @@ export const routes: RouteStore = {
         name: "home",
     }),
     ...createRoute({
-        path: "/debug.html",
-        component: Start,
-        name: "home",
-    }),
-    ...createRoute({
         path: "/context.html",
         component: Start,
-        name: "home",
+        name: "home-context",
     }),
     ...createRoute({
         path: "/user",

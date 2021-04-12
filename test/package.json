@@ -8,9 +8,9 @@
     "build": "webpack --config webpack.config.js",
     "install:dev": "npm run install:lib && npm run dev",
     "install:lib": "npm i ../mahal-router-1.0.0.tgz",
-    "build:test": "cross-env NODE_ENV=test webpack --config webpack.config.js && npm run test",
-    "test": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "test:mocha": "cross-env NODE_ENV=test mocha --timeout 0  ./setup.js test/index.js"
+    "build:test": "cross-env NODE_ENV=test npm run build && npm run test",
+    "test:karma": "cross-env NODE_ENV=test karma start karma.conf.js",
+    "test": "cross-env NODE_ENV=test mocha --timeout 0  ./setup.js test/index.js"
   },
   "author": "",
   "license": "ISC",
