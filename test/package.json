@@ -9,12 +9,14 @@
     "install:dev": "npm run install:lib && npm run dev",
     "install:lib": "npm i ../mahal-router-1.0.0.tgz",
     "build:test": "cross-env NODE_ENV=test webpack --config webpack.config.js && npm run test",
-    "test": "cross-env NODE_ENV=test karma start karma.conf.js"
+    "test": "cross-env NODE_ENV=test karma start karma.conf.js",
+    "test:mocha": "cross-env NODE_ENV=test mocha --timeout 0  ./setup.js test/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "flexboot": "^1.0.1",
+    "fortjs": "^2.0.0",
     "html-webpack-plugin": "^5.2.0",
     "jquery": "^3.6.0",
     "mahal-html-compiler": "^0.6.0",

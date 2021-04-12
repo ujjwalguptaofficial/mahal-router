@@ -7,23 +7,24 @@ describe('Start', function () {
         setTimeout(done, 1000);
     })
 
-    it("check for mahal router", () => {
-        expect($('.start').text().trim()).equal("Mahal Router");
+    it("check for mahal router", async () => {
+        const text = await $text('.start');
+        expect(text.trim()).equal("Mahal Router");
     })
 
     it("login", async () => {
-        $('.route-login').click();
-        await window['after'](100);
-        $('input[type="text"]').val('ujjwal')
-        $('input[type="password"]').val('admin')
-        $('.btn-login').click();
-        await window['after'](100);
-        const el = $('div[comp="user"]');
-        const html = el.html();
+        await $click('.route-login');
+        await $after(100);
+        await $val('input[type="text"]', 'ujjwal')
+        await $val('input[type="password"]', 'admin')
+        await $click('.btn-login');
+        await $after(100);
+        const selector = 'div[comp="user"]';
+        const html = await $html(selector);
         expect(html.includes("User")).equal(true);
         expect(html.includes("Dashboard")).equal(true);
-        expect(el.find('.user-name')).length(1);
-        expect(el.find('.user-name').text()).equal("ujjwal");
+        expect(await $length(selector + ' .user-name')).equal(1);
+        expect(await $text(selector + ' .user-name')).equal("ujjwal");
     })
-    
+
 })

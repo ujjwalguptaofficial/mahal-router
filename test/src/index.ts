@@ -6,7 +6,7 @@ import { createRenderer } from "mahal-html-compiler";
 import "flexboot";
 import * as $ from "jquery";
 
-window['$'] = $;
+window['jQuery'] = $;
 window['after'] = new Timer().timeout;
 
 const router = new Router(routes);

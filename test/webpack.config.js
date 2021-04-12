@@ -45,7 +45,8 @@ module.exports = {
     output: {
         filename: 'bundles.js',
         path: path.resolve(__dirname, 'bin/'),
-        publicPath: process.env.NODE_ENV == "test" ? '/bin/' : "/"
+        publicPath: "/"
+        // process.env.NODE_ENV == "test" ? '/bin/' : "/"
     },
     plugins: [
         new MahalPlugin({

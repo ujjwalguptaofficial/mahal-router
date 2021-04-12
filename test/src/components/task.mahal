@@ -2,7 +2,7 @@
 <html>
     <div comp="task">
       <h1>Task</h1>
-       <router-view name="User"/>
+       <router-view name="task"/>
     </div>
 </html>
 <script>
