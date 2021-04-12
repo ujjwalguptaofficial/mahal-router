@@ -99,10 +99,10 @@ export default class RouterView extends BaseComponent {
                 //     this.onCompEvaluated(null);
                 //     return res();
                 // }
-                Object.assign(this.reqRoute, {
-                    name: result.name,
-                    param: result.param
-                } as IRoute);
+                // Object.assign(this.reqRoute, {
+                //     name: result.name,
+                //     param: result.param
+                // } as IRoute);
             }
             const afterRouteLeave = (shouldNavigate) => {
                 if (shouldNavigate === false) return;

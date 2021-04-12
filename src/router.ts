@@ -28,6 +28,11 @@ export class Router {
     }
 
     goto(to: IRoute) {
+        if (typeof to === "string") {
+            to = {
+                path: to as any
+            }
+        }
         const name = to.name;
         if (name) {
             to.path = RouteHandler.pathByName(to);
@@ -50,10 +55,14 @@ export class Router {
             }
             return false;
         });
-        if (splittedPath.length !== loaded.length) {
+        if (loaded.length == 0 || splittedPath.length !== loaded.length) {
             return this.emitNotFound_(to);
         }
-        to.name = matched[loaded.pop()].name;
+        to.param = loaded.reduce((prev, item) => {
+            return merge(prev, item.param)
+        }, {});
+        const routePath = loaded.pop();
+        to.name = matched[routePath].name;
         this.onRouteFound_(to).then(shouldNavigate => {
             if (!shouldNavigate) return;
             this.splittedPath_ = splittedPath;

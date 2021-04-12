@@ -6,6 +6,18 @@ describe('Task', function () {
         await $after(100);
         expect(await $text('div[comp="task"] h1')).equal("Task");
         expect(text).equal(await $text('div[comp="task"] h3'));
+        const route = await $var('activeRoute');
+        expect(route.name).equal("particular_task");
+    })
+
+    it("go to another task", async () => {
+        const text = "Hello World";
+        await $routeGoto("/task/" + text);
+        await $after(100);
+        expect(await $text('div[comp="task"] h1')).equal("Task");
+        expect(text).equal(await $text('div[comp="task"] h3'));
+        const route = await $var('activeRoute');
+        expect(route.name).equal("particular_task");
     })
 
     it("click on home", async () => {

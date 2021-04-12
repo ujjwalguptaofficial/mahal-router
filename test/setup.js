@@ -33,6 +33,12 @@ before(async () => {
     await Fort.create();
     await page.goto("http://localhost:4000/");
 
+    global.$routeGoto = (selector) => {
+        return page.evaluate(q => {
+            return router.goto(q);
+        }, selector);
+    }
+
     global.$text = async (selector) => {
         return await page.evaluate(q => {
             return jQuery(q).text();
@@ -69,6 +75,11 @@ before(async () => {
         return await page.evaluate(q => {
             return location;
         });
+    }
+    global.$var = async (value) => {
+        return await page.evaluate(q => {
+            return window[q];
+        }, value);
     }
     global.$history = async () => {
         return await page.evaluate(q => {
