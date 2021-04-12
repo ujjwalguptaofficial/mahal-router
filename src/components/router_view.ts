@@ -27,9 +27,9 @@ export default class RouterView extends BaseComponent {
         window['routerView'] = this;
         this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
             // setTimeout(() => {
-            if (!isArrayEqual(this.$router.splittedPath_, pathVisited)) {
-                this.loadComponent();
-            }
+            // if (!isArrayEqual(this.$router.splittedPath_, pathVisited)) {
+            this.loadComponent();
+            // }
             // }, 2000);
         });
         const onNavigateRef = this.onNavigate.bind(this);
@@ -48,18 +48,20 @@ export default class RouterView extends BaseComponent {
         //     const index = pathVisited.indexOf(this.pathname);
         //     pathVisited.splice(index, 1);
         // }
-        let isRouteFound = false;
+        let isSameRoute = false;
 
+        // find if same route is being called
         if (this.pathname) {
             splittedPath.every(q => {
                 if (q === this.pathname) {
-                    isRouteFound = true;
+                    isSameRoute = true;
                     return false;
                 }
                 return true;
             })
         }
-        if (!isRouteFound) {
+        // ignore if same route
+        if (!isSameRoute) {
             const index = pathVisited.findIndex(q => q === this.pathname);
             if (index >= 0) {
                 pathVisited.splice(index);
@@ -84,14 +86,19 @@ export default class RouterView extends BaseComponent {
         return new Promise<void>((res) => {
             let result;
             if (isRuterViewEligible) {
-                result = RouteHandler.findComponent(
-                    splittedPath,
-                    pathVisited
-                );
-                if (!result) {
-                    this.onCompEvaluated(null);
-                    return res();
-                }
+                const pathToLoad = splittedPath.slice(pathVisited.length)[0];
+                const matchedRoute = this.$router._matched_[
+                    pathToLoad
+                ];
+                result = matchedRoute;
+                // result = RouteHandler.findComponent(
+                //     splittedPath,
+                //     pathVisited
+                // );
+                // if (!result) {
+                //     this.onCompEvaluated(null);
+                //     return res();
+                // }
                 Object.assign(this.reqRoute, {
                     name: result.name,
                     param: result.param
@@ -124,48 +131,39 @@ export default class RouterView extends BaseComponent {
     onCompEvaluated(result: IRouteFindResult) {
         let comp;
         return new Promise<void>(res => {
-            const afterRouteFound = (val) => {
-                if (!val) return res();
-                const componentName = comp.name || "anonymous";
-                const setName = () => {
-                    this.children = {
-                        [componentName]: comp
-                    };
-                    if (result) {
-                        this.$router['emitAfterEach_']();
-                    }
-                    else {
-                        this.$router['emitNotFound_'](this.reqRoute);
-                    }
-                    this.name = componentName;
-                    this.waitFor(LIFECYCLE_EVENT.Update).then(res);
-                }
-                if (this.name && this.name === componentName) {
-                    this.name = null;
-                    this.waitFor(LIFECYCLE_EVENT.Update).then(_ => {
-                        setName();
-                    });
-                }
-                else {
-                    setName();
-                }
 
-            }
             if (result) {
-                this.$router.onRouteFound_(this.reqRoute).
-                    then(shouldNavigate => {
-                        if (shouldNavigate) {
-                            comp = result.comp;
-                            pathVisited.push(result.key);
-                            this.pathname = result.key;
-                            this.$route.param = merge({}, result.param);
-                        }
-                        afterRouteFound(shouldNavigate);
-                    })
+                comp = result.comp;
+                pathVisited.push(result.key);
+                this.pathname = result.key;
+                this.$route.param = merge({}, result.param);
             }
             else {
                 comp = NotFound;
-                afterRouteFound(true);
+            }
+
+            const componentName = comp.name || "anonymous";
+            const setName = () => {
+                this.children = {
+                    [componentName]: comp
+                };
+                if (result) {
+                    this.$router['emitAfterEach_']();
+                }
+                else {
+                    this.$router['emitNotFound_'](this.reqRoute);
+                }
+                this.name = componentName;
+                this.waitFor(LIFECYCLE_EVENT.Update).then(res);
+            }
+            if (this.name && this.name === componentName) {
+                this.name = null;
+                this.waitFor(LIFECYCLE_EVENT.Update).then(_ => {
+                    setName();
+                });
+            }
+            else {
+                setName();
             }
         });
     }

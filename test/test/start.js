@@ -24,8 +24,12 @@ describe('Start', function () {
     });
 
     it("login", async () => {
+        let history = await $history();
+        const prevHistoryLength = history.length;
         await $click('.route-login');
         await $after(100);
+        history = await $history();
+        expect(history.length).equal(prevHistoryLength + 1);
         await $val('input[type="text"]', 'ujjwal')
         await $val('input[type="password"]', 'admin')
         await $click('.btn-login');

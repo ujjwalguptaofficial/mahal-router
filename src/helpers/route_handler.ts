@@ -127,17 +127,7 @@ export class RouteHandler {
                 throw `Invalid route - no route found with name ${route.name}`;
             }
         }
-
-        if (route.param) {
-            // const query = route.query;
-            // path += Object.keys(query).reduce((prev, next) => {
-            //     return prev + `${next}=${query[next]}&`
-            // }, "?");
-            // const pathLength = path.length;
-            // if (path[pathLength - 1] === "&") {
-            //     path = path.substr(0, pathLength - 1);
-            // }
-        }
+        
         const query = route.query;
         if (query) {
             let queryString = Object.keys(query).reduce((prev, next) => {

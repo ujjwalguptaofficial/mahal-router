@@ -1,4 +1,4 @@
-import { IRoute, IRouterOption } from "./interfaces";
+import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
 import { RouteHandler } from "./helpers/route_handler";
 import { merge } from "mahal";
 import { RouteStore } from "./types";
@@ -16,18 +16,15 @@ export class Router {
 
     _routerBus = ROUTER_EVENT_BUS;
     _isStart_ = true;
+    _matched_;
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
         window.addEventListener('popstate', (event) => {
             this.isBack = true;
-            this.emitNavigate_(
-                this.routeFromUrl_(new URL(location.href))
-            );
+            this.goto(this.routeFromUrl_(location))
         });
-        this.emitNavigate_(
-            this.routeFromUrl_(new URL(location.href))
-        );
+        this.goto(this.routeFromUrl_(location))
     }
 
     goto(to: IRoute) {
@@ -41,7 +38,30 @@ export class Router {
                 return this.emitNotFound_(to);
             }
         }
-        this.emitNavigate_(to);
+        const splittedPath = trimSlash(to.path).split("/");
+        const loaded = [];
+        const matched: { [key: string]: IRouteFindResult } = {};
+        splittedPath.every(item => {
+            const result = RouteHandler.findComponent(splittedPath, loaded);
+            if (result) {
+                matched[item] = result
+                loaded.push(item);
+                return true;
+            }
+            return false;
+        });
+        if (splittedPath.length !== loaded.length) {
+            return this.emitNotFound_(to);
+        }
+        to.name = matched[loaded.pop()].name;
+        this.onRouteFound_(to).then(shouldNavigate => {
+            if (!shouldNavigate) return;
+            this.splittedPath_ = splittedPath;
+            this._matched_ = matched;
+            console.log("matched", matched);
+            this.emitNavigate_(to);
+        })
+
     }
 
     private initRoute_(val: IRoute) {
@@ -51,18 +71,17 @@ export class Router {
         routeInstance.name = val.name;
     }
 
-    private routeFromUrl_(url: URL): IRoute {
+    routeFromUrl_(url: URL | Location): IRoute {
         return {
             path: url.pathname,
-            query: parseQuery(url.search),
-            param: {}
+            query: parseQuery(url.search)
         }
     }
 
 
     onRouteFound_(to: IRoute): Promise<boolean> {
         return new Promise((res) => {
-            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, this.nextPath, this.prevPath).then(results => {
+            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to, routeInstance).then(results => {
                 const last = results.pop();
                 if (last != null && typeof last == "object") {
                     this.goto(last);
@@ -108,22 +127,22 @@ export class Router {
         return ROUTER_EVENT_BUS.emit(event, ...data);
     }
 
-    private emitNavigate_(route: IRoute) {
+    emitNavigate_(route: IRoute) {
         route.query = route.query;
         this.nextPath = route;
         this.prevPath = routeInstance;
-        this.splittedPath_ = trimSlash(route.path).split("/");
+        // this.splittedPath_ = trimSlash(route.path).split("/");
         return ROUTER_EVENT_BUS.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
         );
     }
 
-    private emitAfterEach_() {
+    emitAfterEach_() {
         this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath, this.prevPath);
     }
 
-    private emitNotFound_(to) {
+    emitNotFound_(to) {
         this.emit(ROUTER_LIFECYCLE_EVENT.RouteNotFound, to);
     }
 
