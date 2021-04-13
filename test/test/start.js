@@ -62,6 +62,31 @@ describe('Start', function () {
         expect(text.trim()).equal(`Route "invalid" does not exist`);
     })
 
+    it("go to user_by_id route path", async () => {
+        await $routeGoto({
+            path: '/user/12/15'
+        });
+        await $after(100);
+        let location = await $location();
+        expect(location.pathname).equal("/user/12/15");
+        let text = await $text('.user-id');
+        expect(text.trim()).equal(`12`);
+
+        text = await $text('.account-id');
+        expect(text.trim()).equal(`15`);
+
+        let route = await $var('activeRoute');
+        expect(route.name).equal("user-account");
+
+        expect(route.param).eql({
+            userId: "12",
+            accountId: "15"
+        })
+        expect(route.query).eql({
+
+        })
+    })
+
     it("go to dashboard", async () => {
         await $routeGoto({
             name: "user-dashboard"

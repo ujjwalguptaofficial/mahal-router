@@ -36,7 +36,8 @@ export const routes: RouteStore = {
                 name: "user-dashboard",
             },
             "/{userId}/{accountId}": {
-                component: UserById
+                component: UserById,
+                name: "user-account",
             }
         }
     }),

@@ -44,33 +44,45 @@ export class Router {
             }
         }
         const splittedPath = trimSlash(to.path).split("/");
-        const loaded = [];
+        const storedRoutes = [];
         const matched: { [key: string]: IRouteFindResult } = {};
-        splittedPath.every(item => {
-            const result = RouteHandler.findComponent(splittedPath, loaded);
+        let paths = [];
+        splittedPath.every(_ => {
+            const result = RouteHandler.findComponent(splittedPath, storedRoutes);
             if (result) {
-                matched[item] = result
-                loaded.push(item);
+                matched[result.path] = result
+                storedRoutes.push(result.key);
+                paths.push(result.path);
                 return true;
             }
             return false;
         });
-        if (loaded.length == 0 || splittedPath.length !== loaded.length) {
+
+        splittedPath.forEach((_, index) => {
+            if (paths[index] == null) {
+                const pathRemoved = splittedPath.splice(index, 1)[0];
+                splittedPath[index - 1] = splittedPath[index - 1] + "/" + pathRemoved;
+            }
+        });
+
+        if (storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length) {
             this.emitNotFound_(to);
             this.splittedPath_ = ["*"];
             matched["*"] = RouteHandler.findComponent(["*"], []);
         }
         else {
-            to.param = loaded.reduce((prev, item) => {
-                return merge(prev, item.param)
-            }, {});
-            const routePath = loaded.pop();
+            to.query = to.query || {};
+            let param = {};
+            for (const key in matched) {
+                param = merge(param, matched[key].param);
+            }
+            to.param = param;
+            const routePath = paths.pop();
             to.name = matched[routePath].name;
             this.splittedPath_ = splittedPath;
         }
 
         this._matched_ = matched;
-        console.log("matched", matched);
 
         this.emitBeforeEach(to).then(shouldNavigate => {
             if (shouldNavigate) {

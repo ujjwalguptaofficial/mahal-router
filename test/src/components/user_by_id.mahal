@@ -2,8 +2,8 @@
 <html>
     <div>
         Userid view
-        UserId  {{userId}}
-        AcountId  {{accountId}}
+        UserId  <b class="user-id">{{userId}}</b>
+        AcountId  <b class="account-id">{{accountId}}</b>
     </div>
 </html>
 <script>
