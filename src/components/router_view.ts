@@ -110,14 +110,12 @@ export default class RouterView extends BaseComponent {
                     this.name = null;
                     return res();
                 }
+                Object.assign(this.$route, this.reqRoute);
                 this.onCompEvaluated(result).then(res);
             }
             if (this.compInstance) {
                 this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
                     const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
-                    if (shouldNavigate) {
-                        Object.assign(this.$route, this.reqRoute);
-                    }
                     afterRouteLeave(shouldNavigate)
                 })
             }

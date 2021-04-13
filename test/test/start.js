@@ -32,6 +32,11 @@ describe('Start', function () {
         expect(history.length).equal(prevHistoryLength + 1);
         await $val('input[type="text"]', 'ujjwal')
         await $val('input[type="password"]', 'admin')
+        let location = await $location();
+        expect(location.pathname).equal("/user/login");
+        let route = await $var('activeRoute');
+        expect(route.name).equal("user-login");
+
         await $click('.btn-login');
         await $after(100);
         const selector = 'div[comp="user"]';
@@ -40,6 +45,12 @@ describe('Start', function () {
         expect(html.includes("Dashboard")).equal(true);
         expect(await $length(selector + ' .user-name')).equal(1);
         expect(await $text(selector + ' .user-name')).equal("ujjwal");
+
+        location = await $location();
+        expect(location.pathname).equal("/user/dashboard");
+        expect(location.search).equal("?name=ujjwal");
+        route = await $var('activeRoute');
+        expect(route.name).equal("user-dashboard");
     })
 
 })
