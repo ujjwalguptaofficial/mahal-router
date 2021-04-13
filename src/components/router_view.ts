@@ -26,11 +26,7 @@ export default class RouterView extends BaseComponent {
         super();
         window['routerView'] = this;
         this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
-            // setTimeout(() => {
-            // if (!isArrayEqual(this.$router.splittedPath_, pathVisited)) {
             this.loadComponent();
-            // }
-            // }, 2000);
         });
         const onNavigateRef = this.onNavigate.bind(this);
         this.waitFor(LIFECYCLE_EVENT.Create).then(_ => {
@@ -78,15 +74,13 @@ export default class RouterView extends BaseComponent {
     loadComponent() {
         const splittedPath: string[] = this.$router.splittedPath_;
         const isRuterViewEligible = pathVisited.length < splittedPath.length;
-
+        let matchedRoute;
         return new Promise<void>((res) => {
-            let result;
             if (isRuterViewEligible) {
                 const pathToLoad = splittedPath.slice(pathVisited.length)[0];
-                const matchedRoute = this.$router._matched_[
+                matchedRoute = this.$router._matched_[
                     pathToLoad
                 ];
-                result = matchedRoute;
             }
             const afterRouteLeave = (shouldNavigate) => {
                 if (shouldNavigate === false) return;
@@ -95,7 +89,7 @@ export default class RouterView extends BaseComponent {
                     return res();
                 }
                 Object.assign(this.$route, this.reqRoute);
-                this.onCompEvaluated(result).then(res);
+                this.onCompEvaluated(matchedRoute).then(res);
             }
             if (this.compInstance) {
                 this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
@@ -133,23 +127,17 @@ export default class RouterView extends BaseComponent {
                     setName();
                 }
             }
-            if (result) {
-                const splittedPath: string[] = this.$router.splittedPath_;
-                if (result.path === splittedPath[splittedPath.length - 1]) {
-                    this.$router._changeRoute_(this.reqRoute);
-                    this.$router['emitAfterEach_']();
-                }
-                comp = result.comp;
-                pathVisited.push(result.key);
-                this.pathname = result.key;
-                this.$route.param = merge({}, result.param);
-                changeComponent(true);
+            const splittedPath: string[] = this.$router.splittedPath_;
+            if (result.path === splittedPath[splittedPath.length - 1]) {
+                this.$router._changeRoute_(this.reqRoute);
+                this.$router['emitAfterEach_']();
             }
-            else {
-                comp = NotFound;
-                this.$router['emitNotFound_'](this.reqRoute);
-                changeComponent(true);
-            }
+            comp = result.comp;
+            pathVisited.push(result.key);
+            this.pathname = result.key;
+            this.$route.param = merge({}, result.param);
+            changeComponent(true);
+
         });
     }
 }
