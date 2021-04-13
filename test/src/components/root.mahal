@@ -10,6 +10,9 @@
         <route-to class="route-login" name="user-login">
             <a class="btn">Login</a>
         </route-to>
+        <route-to class="route-invalid" path="invalid">
+            <a class="btn">Invalid</a>
+        </route-to>
          <router-view />
     </div>
 </html>

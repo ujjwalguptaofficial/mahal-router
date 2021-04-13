@@ -44,10 +44,6 @@ export default class RouterView extends BaseComponent {
 
     onNavigate() {
         const splittedPath: string[] = this.$router.splittedPath_;
-        // if (splittedPath.length == this.pathname.split(".").length) {
-        //     const index = pathVisited.indexOf(this.pathname);
-        //     pathVisited.splice(index, 1);
-        // }
         let isSameRoute = false;
 
         // find if same route is being called

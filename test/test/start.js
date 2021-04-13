@@ -53,4 +53,24 @@ describe('Start', function () {
         expect(route.name).equal("user-dashboard");
     })
 
+    it("go to invalid path", async () => {
+        await $click('.route-invalid');
+        await $after(100);
+        let location = await $location();
+        expect(location.pathname).equal("/user/invalid");
+        const text = await $text('.not-found');
+        expect(text.trim()).equal(`Route "invalid" does not exist`);
+    })
+
+    it("go to dashboard", async () => {
+        await $routeGoto({
+            name: "user-dashboard"
+        });
+        await $after(100);
+        const selector = 'div[comp="user"]';
+        const html = await $html(selector);
+        expect(html.includes("User")).equal(true);
+        expect(html.includes("Dashboard")).equal(true);
+    })
+
 })

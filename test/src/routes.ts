@@ -4,8 +4,14 @@ import User from "./components/user.mahal";
 import UserById from "./components/user_by_id.mahal";
 import Login from "./components/login.mahal";
 import Dashboard from "./components/dashboard.mahal";
+import NotFound from "./components/not_found.mahal";
 
 export const routes: RouteStore = {
+    ...createRoute({
+        path: "/*",
+        component: NotFound,
+        name: "not_found",
+    }),
     ...createRoute({
         path: "/",
         component: Start,

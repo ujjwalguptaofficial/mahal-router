@@ -1,0 +1,11 @@
+<html>
+<div class="not-found">
+    Route "{{$route.path}}" does not exist
+</div>
+</html>
+<script>
+import { BaseComponent } from "./base";
+export default class extends BaseComponent {
+    
+}
+</script>

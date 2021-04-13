@@ -16,7 +16,7 @@ export class Router {
 
     _routerBus = ROUTER_EVENT_BUS;
     _isStart_ = true;
-    _matched_;
+    _matched_: { [key: string]: IRouteFindResult };
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         RouteHandler.routes = routes;
@@ -56,23 +56,27 @@ export class Router {
             return false;
         });
         if (loaded.length == 0 || splittedPath.length !== loaded.length) {
-            return this.emitNotFound_(to);
+            this.emitNotFound_(to);
+            this.splittedPath_ = ["*"];
+            matched["*"] = RouteHandler.findComponent(["*"], []);
         }
-        to.param = loaded.reduce((prev, item) => {
-            return merge(prev, item.param)
-        }, {});
-        const routePath = loaded.pop();
-        to.name = matched[routePath].name;
-        this.splittedPath_ = splittedPath;
+        else {
+            to.param = loaded.reduce((prev, item) => {
+                return merge(prev, item.param)
+            }, {});
+            const routePath = loaded.pop();
+            to.name = matched[routePath].name;
+            this.splittedPath_ = splittedPath;
+        }
+
         this._matched_ = matched;
         console.log("matched", matched);
-        this.emitBeforeEach(to).then(_ => {
-            this.emitNavigate_(to);
-        })
-        // this.onRouteFound_(to).then(shouldNavigate => {
-        //     if (!shouldNavigate) return;
 
-        // })
+        this.emitBeforeEach(to).then(shouldNavigate => {
+            if (shouldNavigate) {
+                this.emitNavigate_(to);
+            }
+        })
     }
 
     private initRoute_(val: IRoute) {
