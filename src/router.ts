@@ -101,7 +101,7 @@ export class Router {
     routeFromUrl_(url: URL | Location): IRoute {
         return {
             path: url.pathname,
-            query: parseQuery(url.search)
+            query: url.search && parseQuery(url.search)
         }
     }
 

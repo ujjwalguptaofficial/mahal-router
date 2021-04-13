@@ -13,6 +13,9 @@ describe('Start', function () {
         const location = await $location();
         expect(location.pathname).equal("/");
         expect(location.href.includes("?")).equal(false);
+
+        let route = await $var('activeRoute');
+        expect(route.query).eql({});
     })
 
     it("reload && check history length", async () => {
