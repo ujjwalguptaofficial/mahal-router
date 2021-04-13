@@ -5,4 +5,5 @@ export interface IRouteFindResult {
     comp: any;
     param?: T_string_string;
     name: string;
+    path: string;
 }

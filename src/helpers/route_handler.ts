@@ -14,39 +14,43 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
     let route = "";
     let param = {};
     const splittedPathLength = splittedPath.length;
-    let path;
+    let targetPath;
     let pathIndex;;
     const resetPath = () => {
         pathIndex = 0;
-        path = splittedPath[pathIndex];
+        targetPath = splittedPath[pathIndex];
     }
     resetPath();
+    let paths = [];
     for (route in routes) {
         const routeslashSplit = route.split("/");
         if (splittedPathLength < routeslashSplit.length) return;
         let isRouteFound = false;
 
         routeslashSplit.every(key => {
-            if (key === path) {
+            if (key === targetPath) {
                 isRouteFound = true;
+                paths.push(key);
             }
             else {
                 const regMatch1 = key.match(regex1);
                 if (regMatch1 != null) {
-                    param[regMatch1[1]] = path;
+                    param[regMatch1[1]] = targetPath;
                     isRouteFound = true;
+                    paths.push(key.replace(regex1, targetPath));
                 }
                 else {
                     isRouteFound = false;
                 }
             }
             if (isRouteFound) {
-                path = splittedPath[++pathIndex];
+                targetPath = splittedPath[++pathIndex];
             }
             return isRouteFound;
         });
         if (isRouteFound) {
             return {
+                path: paths.join("/"),
                 key: route,
                 comp: routes[route].component,
                 param: param,
@@ -127,7 +131,7 @@ export class RouteHandler {
                 throw `Invalid route - no route found with name ${route.name}`;
             }
         }
-        
+
         const query = route.query;
         if (query) {
             let queryString = Object.keys(query).reduce((prev, next) => {

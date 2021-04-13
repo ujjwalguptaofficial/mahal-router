@@ -63,14 +63,16 @@ export class Router {
         }, {});
         const routePath = loaded.pop();
         to.name = matched[routePath].name;
-        this.onRouteFound_(to).then(shouldNavigate => {
-            if (!shouldNavigate) return;
-            this.splittedPath_ = splittedPath;
-            this._matched_ = matched;
-            console.log("matched", matched);
+        this.splittedPath_ = splittedPath;
+        this._matched_ = matched;
+        console.log("matched", matched);
+        this.emitBeforeEach(to).then(_ => {
             this.emitNavigate_(to);
         })
+        // this.onRouteFound_(to).then(shouldNavigate => {
+        //     if (!shouldNavigate) return;
 
+        // })
     }
 
     private initRoute_(val: IRoute) {
@@ -87,8 +89,7 @@ export class Router {
         }
     }
 
-
-    onRouteFound_(to: IRoute): Promise<boolean> {
+    emitBeforeEach(to) {
         return new Promise((res) => {
             this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to, routeInstance).then(results => {
                 const last = results.pop();
@@ -97,22 +98,24 @@ export class Router {
                     res(false);
                 }
                 else {
-                    this.initRoute_(to);
-                    if (!this.isBack && !this._isStart_) {
-                        window.history.pushState(
-                            merge({ key: performance.now() }),
-                            '',
-                            RouteHandler.resolve(to as any)
-                        );
-                    }
-                    else {
-                        this.isBack = this._isStart_ = false;
-                    }
                     res(true);
                 }
             })
         })
+    }
 
+    _changeRoute_(to: IRoute) {
+        this.initRoute_(to);
+        if (!this.isBack && !this._isStart_) {
+            window.history.pushState(
+                merge({ key: performance.now() }),
+                '',
+                RouteHandler.resolve(to as any)
+            );
+        }
+        else {
+            this.isBack = this._isStart_ = false;
+        }
     }
 
     back() {
