@@ -1,14 +1,11 @@
 import { trimSlash } from "../utils";
-import { RouteStore, T_string_string } from "../types";
+import { RouteStore } from "../types";
 import { IRouteFindResult, IRoute } from "../interfaces";
 import { Route } from "../route";
 
-let routeStore: RouteStore = {};
 
 const nameMap: { [name: string]: string } = {};
 const regex1 = /{(.*)}(?!.)/;
-
-window['regex1'] = regex1;
 
 const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindResult => {
     let route = "";
@@ -62,8 +59,10 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
         }
     }
 };
-export class RouteHandler {
-    static set routes(val: RouteStore) {
+export class RouteManager {
+    private routeStore_: RouteStore = {};
+
+    constructor(val: RouteStore) {
         const trimSlashFromRoutes = (data: RouteStore, parentPath: string = "") => {
             for (const key in data) {
                 const newKey = trimSlash(key);
@@ -82,15 +81,14 @@ export class RouteHandler {
             }
         }
         trimSlashFromRoutes(val);
-        routeStore = val;
-        console.log("namedmap", nameMap);
+        this.routeStore_ = val;
     }
 
-    static findComponent(splittePath: string[], loaded: string[]) {
+    findComponent(splittePath: string[], loaded: string[]) {
         // immutable array
         splittePath = Array.from(splittePath);
 
-        let routes = routeStore;
+        let routes = this.routeStore_;
         loaded.forEach(item => {
             splittePath.shift();
             routes = routes[item].children;
@@ -99,7 +97,7 @@ export class RouteHandler {
         return findComponent(routes, splittePath);
     }
 
-    static pathByName(route: IRoute) {
+    pathByName(route: IRoute) {
         let path = nameMap[route.name];
         if (path && path.match(regex1)) {
             const splittedPath = path.split("/");
@@ -120,13 +118,13 @@ export class RouteHandler {
         return path;
     }
 
-    static resolve(route: Route) {
+    resolve(route: Route) {
         let path = "";
         if (route.path) {
             path = route.path;
         }
         else if (route.name) {
-            path = RouteHandler.pathByName(route);
+            path = this.pathByName(route);
             if (!path) {
                 throw `Invalid route - no route found with name ${route.name}`;
             }

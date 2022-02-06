@@ -1,5 +1,5 @@
 import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
-import { RouteHandler } from "./helpers/route_handler";
+import { RouteManager } from "./helpers";
 import { merge } from "mahal";
 import { RouteStore } from "./types";
 import { ROUTER_LIFECYCLE_EVENT } from "./enums";
@@ -17,9 +17,10 @@ export class Router {
     _routerBus = ROUTER_EVENT_BUS;
     _isStart_ = true;
     _matched_: { [key: string]: IRouteFindResult };
+    routeManager: RouteManager;
 
     constructor(routes: RouteStore, option?: IRouterOption) {
-        RouteHandler.routes = routes;
+        this.routeManager = new RouteManager(routes);
         window.addEventListener('popstate', (event) => {
             this.isBack = true;
             this.goto(this.routeFromUrl_(location))
@@ -35,7 +36,7 @@ export class Router {
         }
         const name = to.name;
         if (name) {
-            to.path = RouteHandler.pathByName(to);
+            to.path = this.routeManager.pathByName(to);
             if (!to.path) {
                 if (process.env.NODE_ENV != "production") {
                     console.warn(`No route found with name ${name}`);
@@ -48,7 +49,7 @@ export class Router {
         const matched: { [key: string]: IRouteFindResult } = {};
         let paths = [];
         splittedPath.every(_ => {
-            const result = RouteHandler.findComponent(splittedPath, storedRoutes);
+            const result = this.routeManager.findComponent(splittedPath, storedRoutes);
             if (result) {
                 matched[result.path] = result
                 storedRoutes.push(result.key);
@@ -68,7 +69,7 @@ export class Router {
         if (storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length) {
             this.emitNotFound_(to);
             this.splittedPath_ = ["*"];
-            matched["*"] = RouteHandler.findComponent(["*"], []);
+            matched["*"] = this.routeManager.findComponent(["*"], []);
         }
         else {
             to.query = to.query || {};
@@ -126,7 +127,7 @@ export class Router {
             window.history.pushState(
                 merge({ key: performance.now() }),
                 '',
-                RouteHandler.resolve(to as any)
+                this.routeManager.resolve(to as any)
             );
         }
         else {

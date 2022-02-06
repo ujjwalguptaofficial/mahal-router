@@ -1,7 +1,6 @@
 import { Prop } from "mahal";
 import { BaseComponent } from "./base";
 import { Route } from "../route";
-import { RouteHandler } from "../helpers/route_handler";
 import { T_string_any } from "../types";
 
 export default class extends BaseComponent {
@@ -31,7 +30,7 @@ export default class extends BaseComponent {
         return new Promise<HTMLElement>((res) => {
             Promise.all(children as Array<Promise<HTMLElement>>).then(childrens => {
                 let slotElement: HTMLElement = childrens[0] || document.createElement('a');
-                (slotElement as HTMLLinkElement).href = RouteHandler.resolve(to);
+                (slotElement as HTMLLinkElement).href = this.router.routeManager.resolve(to);
                 slotElement.onclick = (e) => {
                     e.preventDefault();
                     let shouldPrevent;

@@ -1,10 +1,7 @@
 import { Template, Reactive, merge, LIFECYCLE_EVENT, Component, Timer } from "mahal";
 import { BaseComponent } from "./base";
-import { RouteHandler } from "../helpers/route_handler";
-import NotFound from "./404";
 import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
-import { isArrayEqual } from "../helpers";
 
 const pathVisited = [];
 @Template(`
