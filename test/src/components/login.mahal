@@ -14,7 +14,7 @@ import { BaseComponent } from "./base";
 export default class extends BaseComponent{
     login(){
         localStorage.setItem("authenticated","true");
-        this.$router.goto({
+        this.router.goto({
             name:'user-dashboard',
             query:{
                 name:'ujjwal'

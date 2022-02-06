@@ -19,7 +19,7 @@
     "fortjs": "^2.0.0",
     "html-webpack-plugin": "^5.2.0",
     "jquery": "^3.6.0",
-    "mahal-html-compiler": "^0.6.0",
+    "mahal-html-compiler": "^0.18.0",
     "mahal-router": "file:../mahal-router-1.0.0.tgz"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^5.0.0",
-    "mahal-webpack-loader": "^0.4.0",
+    "mahal-webpack-loader": "^0.12.0",
     "mocha": "^8.3.2",
     "puppeteer": "^8.0.0",
     "style-loader": "^2.0.0",

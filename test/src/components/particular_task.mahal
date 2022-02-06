@@ -1,14 +1,14 @@
-
 <html>
-      <h3>{{task}}</h3>
+<h3>
+	{{task}}
+</h3>
 </html>
 <script>
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent {
-
-    get task(){
-        return this.$route.param['value'];
+    get task() {
+        return this.route.param["value"];
     }
 }
 </script>

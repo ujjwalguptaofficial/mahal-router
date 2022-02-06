@@ -9,7 +9,7 @@ import { isArrayEqual } from "../helpers";
 const pathVisited = [];
 @Template(`
 <div>
-    <in-place #ref(compInstance) :of="name"/>
+    <in-place :ref(compInstance) :of="name"/>
 </div>
 `)
 export default class RouterView extends BaseComponent {
@@ -21,25 +21,23 @@ export default class RouterView extends BaseComponent {
 
     compInstance: Component;
 
-
-    constructor() {
-        super();
+    onInit() {
         window['routerView'] = this;
         this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
             this.loadComponent();
         });
-        const onNavigateRef = this.onNavigate.bind(this);
-        this.waitFor(LIFECYCLE_EVENT.Create).then(_ => {
-            this.$router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigateRef);
+        const onNavigate = this.onNavigate.bind(this);
+        this.waitFor(LIFECYCLE_EVENT.Create).then(() => {
+            this.router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
         });
         this.on(LIFECYCLE_EVENT.Destroy, () => {
             this.compInstance = null;
-            this.$router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigateRef);
+            this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate);
         });
     }
 
     onNavigate() {
-        const splittedPath: string[] = this.$router.splittedPath_;
+        const splittedPath: string[] = this.router.splittedPath_;
         let isSameRoute = false;
 
         // find if same route is being called
@@ -64,21 +62,21 @@ export default class RouterView extends BaseComponent {
     }
 
     get reqRoute(): IRoute {
-        return (this.$router as any).nextPath;
+        return (this.router as any).nextPath;
     }
 
     get activeRoute(): IRoute {
-        return (this.$router as any).prevPath;
+        return (this.router as any).prevPath;
     }
 
     loadComponent() {
-        const splittedPath: string[] = this.$router.splittedPath_;
+        const splittedPath: string[] = this.router.splittedPath_;
         const isRuterViewEligible = pathVisited.length < splittedPath.length;
         let matchedRoute;
         return new Promise<void>((res) => {
             if (isRuterViewEligible) {
                 const pathToLoad = splittedPath.slice(pathVisited.length)[0];
-                matchedRoute = this.$router._matched_[
+                matchedRoute = this.router._matched_[
                     pathToLoad
                 ];
             }
@@ -88,7 +86,7 @@ export default class RouterView extends BaseComponent {
                     this.name = null;
                     return res();
                 }
-                Object.assign(this.$route, this.reqRoute);
+                Object.assign(this.route, this.reqRoute);
                 this.onCompEvaluated(matchedRoute).then(res);
             }
             if (this.compInstance) {
@@ -127,15 +125,15 @@ export default class RouterView extends BaseComponent {
                     setName();
                 }
             }
-            const splittedPath: string[] = this.$router.splittedPath_;
+            const splittedPath: string[] = this.router.splittedPath_;
             if (result.path === splittedPath[splittedPath.length - 1]) {
-                this.$router._changeRoute_(this.reqRoute);
-                this.$router['emitAfterEach_']();
+                this.router._changeRoute_(this.reqRoute);
+                this.router['emitAfterEach_']();
             }
             comp = result.comp;
             pathVisited.push(result.key);
             this.pathname = result.key;
-            this.$route.param = merge({}, result.param);
+            this.route.param = merge({}, result.param);
             changeComponent(true);
 
         });

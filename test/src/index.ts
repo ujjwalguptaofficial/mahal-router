@@ -1,4 +1,4 @@
-import { App, Timer } from "mahal";
+import { Timer, Mahal } from "mahal";
 import Root from "./components/root.mahal";
 import { RouterPlugin, Router } from "mahal-router";
 import { routes } from "./routes";
@@ -22,11 +22,12 @@ router.on("afterEach", (next, prev) => {
     window['prevRoute'] = prev;
     console.log("afterEach", next);
 })
+const app = new Mahal(Root, '#app');
 
-App.extend.plugin(RouterPlugin, router);
-App.extend.renderer = createRenderer;
+app.extend.plugin(RouterPlugin, router);
+app.extend.renderer = createRenderer;
 
-new App(Root, '#app').create();
+app.create();
 
 window.onerror = function (message, source, lineno, colno, error) {
     window['error'] = message;

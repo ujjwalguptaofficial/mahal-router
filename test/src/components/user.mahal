@@ -1,24 +1,22 @@
 
 <html>
-    <div comp="user">
-    User
-       <router-view name="User"/>
-    </div>
+<div comp="user">
+	User
+	<router-view name="User" />
+</div>
 </html>
 <script>
 import { Component } from "mahal";
 import { BaseComponent } from "./base";
 export default class extends BaseComponent {
-
-    
-    gotoLogin(){
-        this.$router.goto({
-            name:"user_login"
-        })
+    gotoLogin() {
+        this.router.goto({
+            name: "user_login",
+        });
     }
-    
-    get name(){
-        return this.$route.query['name'];
+
+    get name() {
+        return this.route.query["name"];
     }
 }
 </script>

@@ -1,6 +1,6 @@
 <html>
 <div class="not-found">
-    Route "{{$route.path}}" does not exist
+    Route "{{route.path}}" does not exist
 </div>
 </html>
 <script>

@@ -1,4 +1,4 @@
-import { Component, Template, Reactive, Prop } from "mahal";
+import { Prop } from "mahal";
 import { BaseComponent } from "./base";
 import { Route } from "../route";
 import { RouteHandler } from "../helpers/route_handler";
@@ -20,9 +20,7 @@ export default class extends BaseComponent {
     @Prop(Object)
     param: T_string_any;
 
-
-
-    render({ createElement, children }) {
+    render({ children }) {
         const to = {
             name: this.name,
             param: this.param,
@@ -44,7 +42,7 @@ export default class extends BaseComponent {
                     }
                     this.emit("click", context).then(_ => {
                         if (shouldPrevent) return;
-                        this.$router.goto(to);
+                        this.router.goto(to);
                     })
                 };
                 res(slotElement);

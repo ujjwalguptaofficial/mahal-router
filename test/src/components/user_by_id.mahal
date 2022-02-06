@@ -20,10 +20,10 @@ export default class extends BaseComponent{
     }
 
     get userId(){
-       return this.$route.param.userId;
+       return this.route.param.userId;
     }
     get accountId(){
-       return this.$route.param.accountId;
+       return this.route.param.accountId;
     }
     
 }
