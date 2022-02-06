@@ -24,7 +24,9 @@ export default class RouterView extends BaseComponent {
     onInit() {
         window['routerView'] = this;
         this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
-            this.loadComponent();
+            if (!this.pathname) {
+                this.loadComponent();
+            }
         });
         const onNavigate = this.onNavigate.bind(this);
         this.waitFor(LIFECYCLE_EVENT.Create).then(() => {
@@ -32,7 +34,7 @@ export default class RouterView extends BaseComponent {
         });
         this.on(LIFECYCLE_EVENT.Destroy, () => {
             this.compInstance = null;
-            this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, this.onNavigate);
+            this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
         });
     }
 
@@ -62,11 +64,11 @@ export default class RouterView extends BaseComponent {
     }
 
     get reqRoute(): IRoute {
-        return (this.router as any).nextPath;
+        return this.router['nextPath'];
     }
 
     get activeRoute(): IRoute {
-        return (this.router as any).prevPath;
+        return this.router['prevPath'];
     }
 
     loadComponent() {
@@ -131,8 +133,8 @@ export default class RouterView extends BaseComponent {
                 this.router['emitAfterEach_']();
             }
             comp = result.comp;
-            pathVisited.push(result.key);
-            this.pathname = result.key;
+            pathVisited.push(result.path);
+            this.pathname = result.path;
             this.route.param = merge({}, result.param);
             changeComponent(true);
 
