@@ -1,8 +1,8 @@
 import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
-import { RouteManager } from "./helpers";
+import { getHistory, RouteManager } from "./helpers";
 import { merge } from "mahal";
 import { RouteStore } from "./types";
-import { ROUTER_LIFECYCLE_EVENT } from "./enums";
+import { ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { routeInstance } from "./constant";
 import { parseQuery, trimSlash } from "./utils";
@@ -12,19 +12,34 @@ export class Router {
     private nextPath: IRoute;
     private prevPath: IRoute;
     splittedPath_: string[];
-    isBack: boolean = false;
+    isNavigatedByBrowser: boolean = false;
 
     _routerBus = ROUTER_EVENT_BUS;
     _isStart_ = true;
     _matched_: { [key: string]: IRouteFindResult };
     routeManager: RouteManager;
 
+    option: IRouterOption;
+
+    history: History;
+
+    isHistoryMode = false;
+
     constructor(routes: RouteStore, option?: IRouterOption) {
+        this.option = option = option || {
+            mode: ROUTER_MODE.History
+        } as IRouterOption;
         this.routeManager = new RouteManager(routes);
-        window.addEventListener('popstate', (event) => {
-            this.isBack = true;
-            this.goto(this.routeFromUrl_(location))
-        });
+        this.isHistoryMode = option.mode === ROUTER_MODE.History;
+
+        this.history = getHistory(option.mode as any);
+
+        if (option.mode === ROUTER_MODE.History) {
+            window.addEventListener('popstate', (event) => {
+                this.isNavigatedByBrowser = this.isHistoryMode;
+                this.goto(this.routeFromUrl_(location))
+            });
+        }
         this.goto(this.routeFromUrl_(location))
     }
 
@@ -123,24 +138,26 @@ export class Router {
 
     _changeRoute_(to: IRoute) {
         this.initRoute_(to);
-        if (!this.isBack && !this._isStart_) {
-            window.history.pushState(
-                merge({ key: performance.now() }),
-                '',
-                this.routeManager.resolve(to as any)
-            );
+        if (!this.isNavigatedByBrowser && !this._isStart_) {
+            if (this.isHistoryMode) {
+                this.history.pushState(
+                    merge({ key: performance.now() }),
+                    '',
+                    this.routeManager.resolve(to as any)
+                );
+            }
         }
         else {
-            this.isBack = this._isStart_ = false;
+            this.isNavigatedByBrowser = this._isStart_ = false;
         }
     }
 
     back() {
-        history.back();
+        this.history.back();
     }
 
     go(delta: number = 1) {
-        history.go(delta);
+        this.history.go(delta);
     }
 
     on(event: string, cb: Function) {

@@ -1,3 +1,5 @@
+import { ROUTER_MODE } from "../enums";
+
 export interface IRouterOption {
-    mode: string;
+    mode: "history" | "memory" | ROUTER_MODE;
 }

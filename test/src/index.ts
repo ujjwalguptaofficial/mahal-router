@@ -9,7 +9,9 @@ import * as $ from "jquery";
 window['jQuery'] = $;
 window['after'] = new Timer().timeout;
 
-const router = new Router(routes);
+const router = new Router(routes, {
+    mode: "memory"
+});
 
 window['router'] = router;
 
