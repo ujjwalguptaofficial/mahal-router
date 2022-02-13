@@ -136,16 +136,25 @@ describe('Start', function () {
         text = await $text('.account-id');
         expect(text.trim()).equal(`15`);
 
-        let route = await $var('activeRoute');
-        expect(route.name).equal("user-account");
+        expectedRoute = {
+            name: "user-account",
+            param: {
+                userId: "12",
+                accountId: "15"
+            },
+            path: "/user/12/15",
+            query: {
 
-        expect(route.param).eql({
-            userId: "12",
-            accountId: "15"
-        })
-        expect(route.query).eql({
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "not_found",
+            param: {},
+            path: "invalid",
+            query: {
 
-        })
+            }
+        }, expectedRoute);
     })
 
     it("go to dashboard", async () => {
@@ -157,6 +166,28 @@ describe('Start', function () {
         const html = await $html(selector);
         expect(html.includes("User")).equal(true);
         expect(html.includes("Dashboard")).equal(true);
+
+        expectedRoute = {
+            name: "user-dashboard",
+            param: {
+                 
+            },
+            path: "/user/dashboard",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-account",
+            param: {
+                userId: "12",
+                accountId: "15"
+            },
+            path: "/user/12/15",
+            query: {
+
+            }
+        }, expectedRoute);
     })
 
 })

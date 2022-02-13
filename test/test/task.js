@@ -6,8 +6,28 @@ describe('Task', function () {
         await $after(100);
         expect(await $text('div[comp="task"] h1')).equal("Task");
         expect(text).equal(await $text('div[comp="task"] h3'));
-        const route = await $var('activeRoute');
-        expect(route.name).equal("particular_task");
+
+        expectedRoute = {
+            name: "particular_task",
+            param: {
+                "value": "Buy shoes"
+            },
+            path: "/task/Buy shoes",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-dashboard",
+            param: {
+
+            },
+            path: "/user/dashboard",
+            query: {
+
+            }
+        }, expectedRoute);
+
     })
 
     it("go to another task", async () => {
