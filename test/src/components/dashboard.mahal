@@ -12,7 +12,8 @@
 </div>
 </html>
 <script >
-import { BaseComponent } from "./base";
+import { BaseComponent } from "./base_component";
+
 export default class extends BaseComponent {
     todos = ["Buy shoes", "Travel to home", "hire front end devs"];
 

@@ -1,7 +1,10 @@
+import { Godam } from "godam";
 import { Component } from "mahal";
-import { Router, Route } from "mahal-router";
+import { Route, Router } from "mahal-router";
 
 export class BaseComponent extends Component {
+    store: Godam;
+
     get router() {
         return this.global.router as Router;
     }

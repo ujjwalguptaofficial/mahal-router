@@ -4,15 +4,29 @@
         "declaration": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
         "lib": [
             "es6",
             "dom"
         ],
         "mapRoot": "./",
         "module": "ES2020",
-        "moduleResolution": "node",
+        "outDir": "bin/ts",
         "sourceMap": true,
-        "target": "es5"
-    }
+        "target": "es5",
+        "moduleResolution": "node",
+        "paths": {
+            "~/*": [
+                "./*"
+            ],
+            "@/*": [
+                "./src/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@config/*": [
+                "./config/*"
+            ]
+        }
+    },
 }

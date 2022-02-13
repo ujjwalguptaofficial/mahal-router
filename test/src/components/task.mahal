@@ -1,14 +1,12 @@
 
 <html>
-    <div comp="task">
-      <h1>Task</h1>
-       <router-view name="task"/>
-    </div>
+<div comp="task">
+	<h1>Task</h1>
+	<router-view name="task" />
+</div>
 </html>
 <script>
 import { Component } from "mahal";
-import { BaseComponent } from "./base";
-export default class extends BaseComponent {
-    
-}
+import { BaseComponent } from "./base_component";
+export default class extends BaseComponent {}
 </script>

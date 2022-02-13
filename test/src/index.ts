@@ -1,16 +1,12 @@
-import { Timer, Mahal } from "mahal";
-import Root from "./components/root.mahal";
-import { RouterPlugin, Router } from "mahal-router";
+import { Mahal } from "mahal";
+import App from "@/app.mahal";
+import { registerGlobalFormatter } from "@/formatters";
+import config from "~/config";
+import { Router, RouterPlugin } from "mahal-router";
 import { routes } from "./routes";
-import { createRenderer } from "mahal-html-compiler";
-import "flexboot";
-import * as $ from "jquery";
-
-window['jQuery'] = $;
-window['after'] = new Timer().timeout;
 
 const router = new Router(routes, {
-    mode: "memory"
+    mode: "history"
 });
 
 window['router'] = router;
@@ -24,17 +20,11 @@ router.on("afterEach", (next, prev) => {
     window['prevRoute'] = prev;
     console.log("afterEach", next);
 })
-const app = new Mahal(Root, '#app');
 
-app.extend.plugin(RouterPlugin, router);
-app.extend.renderer = createRenderer;
-
+const app = new Mahal(App, '#app');
+// register global formatter
+registerGlobalFormatter(app);
+// set config to be available globally
+app.global.config = config;
+app.extend.plugin(RouterPlugin, router)
 app.create();
-
-window.onerror = function (message, source, lineno, colno, error) {
-    window['error'] = message;
-};
-
-window['onunhandledrejection'] = function (message) {
-    console.log('onunhandledrejection handler logging error', message);
-}

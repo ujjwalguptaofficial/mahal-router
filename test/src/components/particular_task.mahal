@@ -5,7 +5,7 @@
 </html>
 <script>
 import { Component } from "mahal";
-import { BaseComponent } from "./base";
+import { BaseComponent } from "./base_component";
 export default class extends BaseComponent {
     get task() {
         return this.route.param["value"];

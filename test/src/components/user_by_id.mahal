@@ -1,30 +1,28 @@
 
 <html>
-    <div>
-        Userid view
-        UserId  <b class="user-id">{{userId}}</b>
-        AcountId  <b class="account-id">{{accountId}}</b>
-    </div>
+<div>
+	Userid view
+	UserId <b class="user-id">{{userId}}</b>
+	AcountId <b class="account-id">{{accountId}}</b>
+</div>
 </html>
 <script>
 import { Component } from "mahal";
-import { BaseComponent } from "./base";
-export default class extends BaseComponent{
-
-    constructor(){
+import { BaseComponent } from "./base_component";
+export default class extends BaseComponent {
+    constructor() {
         super();
 
-        this.on("routeLeaving",(ctx)=>{
-            console.log("route routeLeaving",ctx);
-        })
+        this.on("routeLeaving", (ctx) => {
+            console.log("route routeLeaving", ctx);
+        });
     }
 
-    get userId(){
-       return this.route.param.userId;
+    get userId() {
+        return this.route.param.userId;
     }
-    get accountId(){
-       return this.route.param.accountId;
+    get accountId() {
+        return this.route.param.accountId;
     }
-    
 }
 </script>

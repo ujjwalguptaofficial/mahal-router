@@ -1,34 +1,33 @@
 
 <html>
-    <div class="flex col div-login center content-center">
-       <p class="margin-bottom-10px">Login to continue</p>
-       <input class="textbox" type="text"/>
-       <input class="textbox margin-top-10px" type="password"/>
-       <button class="btn primary btn-login" on:click="login">Login</button>
-    </div>
+<div class="flex col div-login center content-center">
+	<p class="margin-bottom-10px">Login to continue</p>
+	<input class="textbox" type="text" />
+	<input class="textbox margin-top-10px" type="password" />
+	<button class="btn primary btn-login" on:click="login">Login</button>
+</div>
 </html>
 <script>
-import { Component } from "mahal";
-import { BaseComponent } from "./base";
+import { BaseComponent } from "./base_component";
 
-export default class extends BaseComponent{
-    login(){
-        localStorage.setItem("authenticated","true");
+export default class extends BaseComponent {
+    login() {
+        localStorage.setItem("authenticated", "true");
         this.router.goto({
-            name:'user-dashboard',
-            query:{
-                name:'ujjwal'
-            }
-        })
+            name: "user-dashboard",
+            query: {
+                name: "ujjwal",
+            },
+        });
     }
 }
 </script>
 <style>
-.div-login{
-    max-width:500px;
+.div-login {
+    max-width: 500px;
 }
-.btn-login{
-    width:100px;
-    margin-top:15px;
+.btn-login {
+    width: 100px;
+    margin-top: 15px;
 }
 </style>

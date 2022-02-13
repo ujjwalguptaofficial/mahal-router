@@ -7,6 +7,10 @@ import { Mahal } from "mahal/dist/ts/mahal";
 
 export class RouterPlugin extends Plugin {
     setup(app: Mahal, router: Router) {
+        if (!router) {
+            throw "no router provided";
+        }
+
         app.extend.component("router-view", RouterView);
         app.extend.component("route-to", RouterLink);
         app.global.router = router;
