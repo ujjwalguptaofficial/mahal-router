@@ -126,7 +126,7 @@ export class Router {
 
     emitBeforeEach(to) {
         return new Promise((res) => {
-            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to, this.currentRoute_).then(results => {
+            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to).then(results => {
                 const last = results.pop();
                 if (last != null && typeof last == "object") {
                     this.goto(last);

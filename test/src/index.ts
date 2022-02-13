@@ -2,7 +2,6 @@ import { Timer, Mahal } from "mahal";
 import Root from "./components/root.mahal";
 import { RouterPlugin, Router } from "mahal-router";
 import { routes } from "./routes";
-import { createRenderer } from "mahal-html-compiler";
 import "flexboot";
 import * as $ from "jquery";
 
@@ -15,8 +14,9 @@ const router = new Router(routes, {
 
 window['router'] = router;
 
-router.on("beforeEach", (ctx) => {
-    console.log("beforeEach", ctx);
+router.on("beforeEach", (next) => {
+    window['nextRouteFromBeforeEach'] = next;
+    console.log("beforeEach", "next", next);
 })
 
 router.on("afterEach", (next, prev) => {

@@ -15,7 +15,21 @@ describe('Start', function () {
         expect(location.href.includes("?")).equal(false);
 
         let route = await $var('activeRoute');
-        expect(route.query).eql({});
+        expect(route).eql({
+            name: "home",
+            param: {},
+            path: "/",
+            query: {}
+        });
+        let prevRoute = await $var('prevRoute');
+        expect(prevRoute).eql({
+            name: "home",
+            param: {},
+            path: "/",
+            query: {}
+        });
+        let nextRouteFromBeforeEach = await $var('nextRouteFromBeforeEach');
+        expect(nextRouteFromBeforeEach).equal(undefined);
     })
 
     it("reload && check history length", async () => {
@@ -39,8 +53,25 @@ describe('Start', function () {
         let location = await $location();
         expect(location.pathname).equal("/user/login");
         let route = await $var('activeRoute');
-        expect(route.name).equal("user-login");
+        const expectedRoute = {
+            name: "user-login",
+            param: {},
+            path: "/user/login",
+            query: {}
+        }
+        expect(route).eql(expectedRoute);
 
+        // let prevRoute = await $var('prevRoute');
+        // expect(prevRoute).eql({
+        //     name: "home",
+        //     param: {},
+        //     path: "/",
+        //     query: {}
+        // });
+        let nextRouteFromBeforeEach = await $var('nextRouteFromBeforeEach');
+        expect(nextRouteFromBeforeEach).eql(expectedRoute);
+
+        
         await $click('.btn-login');
         await $after(100);
         const selector = 'div[comp="user"]';
