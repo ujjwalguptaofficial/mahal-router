@@ -179,7 +179,7 @@ export class Router {
     emitNavigate_(route: IRoute) {
         route.query = route.query;
         this.nextPath = route;
-        this.prevPath = this.currentRoute_;
+        this.prevPath = merge({}, this.currentRoute_);
         // this.splittedPath_ = trimSlash(route.path).split("/");
         return ROUTER_EVENT_BUS.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,

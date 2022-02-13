@@ -33,6 +33,19 @@ before(async () => {
     await Fort.create();
     await page.goto("http://localhost:4000/");
 
+    global.$testForRoute = async (nextRoute, prevRoute, nextRouteFromBeforeEach) => {
+        let route = await $var('activeRoute');
+        expect(route).eql(nextRoute);
+
+        let prevRouteFromVar = await $var('prevRoute');
+
+        expect(prevRouteFromVar).eql(prevRoute);
+
+        let nextRouteFromBeforeEachVar = await $var('nextRouteFromBeforeEach');
+
+        expect(nextRouteFromBeforeEachVar).eql(nextRouteFromBeforeEach);
+    }
+
     global.$routeGoto = (selector) => {
         return page.evaluate(q => {
             return router.goto(q);
@@ -52,11 +65,11 @@ before(async () => {
     global.$click = async (selector, attachDebugger) => {
         return await page.evaluate(q => {
             const el = jQuery(q.selector);
-            if(q.attachDebugger){
+            if (q.attachDebugger) {
                 debugger
             }
             return el.trigger('click');
-        }, {selector,attachDebugger});
+        }, { selector, attachDebugger });
     }
     global.$after = (time) => {
         return new Promise(res => {
