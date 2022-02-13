@@ -12,7 +12,6 @@
         "mapRoot": "./",
         "module": "ES2020",
         "moduleResolution": "node",
-        "outDir": "bin/ts",
         "sourceMap": true,
         "target": "es5"
     }

@@ -1,13 +1,12 @@
-
 <html>
-    <div class="start">
-        Mahal Router
-         <router-view name="Start" />
-    </div>
+<div class="start">
+	Mahal Router
+	<router-view name="Start" />
+</div>
 </html>
 <script>
 import { Component } from "mahal";
-export default class Start extends Component{
-        isStart=true
+export default class Start extends Component {
+    isStart = true;
 }
 </script>

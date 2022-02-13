@@ -1,2 +1,0 @@
-require("./start");
-require("./task");
