@@ -3,7 +3,7 @@ import { BaseComponent } from "./base";
 import { Route } from "../route";
 import { T_string_any } from "../types";
 
-export default class extends BaseComponent {
+export class RouterLink extends BaseComponent {
 
     to: Route;
 

@@ -4,8 +4,8 @@ import { merge } from "mahal";
 import { RouteStore } from "./types";
 import { ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
-import { routeInstance } from "./constant";
 import { parseQuery, trimSlash } from "./utils";
+import { Route } from "./route";
 
 const ROUTER_EVENT_BUS = new EventBus();
 export class Router {
@@ -24,6 +24,8 @@ export class Router {
     history: History;
 
     isHistoryMode = false;
+
+    private currentRoute_ = new Route();
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         this.option = option = option || {
@@ -108,6 +110,7 @@ export class Router {
     }
 
     private initRoute_(val: IRoute) {
+        const routeInstance = this.currentRoute_;
         routeInstance.path = val.path;
         routeInstance.param = val.param || {};
         routeInstance.query = val.query || {};
@@ -123,7 +126,7 @@ export class Router {
 
     emitBeforeEach(to) {
         return new Promise((res) => {
-            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to, routeInstance).then(results => {
+            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to, this.currentRoute_).then(results => {
                 const last = results.pop();
                 if (last != null && typeof last == "object") {
                     this.goto(last);
@@ -176,7 +179,7 @@ export class Router {
     emitNavigate_(route: IRoute) {
         route.query = route.query;
         this.nextPath = route;
-        this.prevPath = routeInstance;
+        this.prevPath = this.currentRoute_;
         // this.splittedPath_ = trimSlash(route.path).split("/");
         return ROUTER_EVENT_BUS.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,

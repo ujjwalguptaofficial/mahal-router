@@ -4,6 +4,6 @@ import { BaseComponent } from "./base";
 @Template(`
 <div>Route does not exist</div>
 `)
-export default class RouteNotFound extends BaseComponent {
-   
+export class RouteNotFound extends BaseComponent {
+
 }

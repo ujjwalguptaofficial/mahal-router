@@ -9,7 +9,7 @@ const pathVisited = [];
     <in-place :ref(compInstance) :of="name"/>
 </div>
 `)
-export default class RouterView extends BaseComponent {
+export class RouterView extends BaseComponent {
 
     @Reactive
     name: String;
