@@ -27,7 +27,7 @@ router.on("afterEach", (next, prev) => {
 const app = new Mahal(Root, '#app');
 
 app.extend.plugin(RouterPlugin, router);
-app.extend.renderer = createRenderer;
+// app.extend.renderer = createRenderer;
 
 app.create();
 

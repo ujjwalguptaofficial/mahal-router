@@ -1,9 +1,12 @@
-import { Component, Template, Reactive } from "mahal";
+import { IRenderContext } from "mahal/dist/ts/interface";
 import { BaseComponent } from "./base";
 
-@Template(`
-<div>Route does not exist</div>
-`)
 export class RouteNotFound extends BaseComponent {
-
+    render(context: IRenderContext) {
+        const ce = context.createElement;
+        const ct = context.createTextNode;
+        return ce.call(this, 'div', [
+            ct.call(this, 'Route does not exist | 404')
+        ], {});
+    }
 }

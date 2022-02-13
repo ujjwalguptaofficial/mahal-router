@@ -2,13 +2,10 @@ import { Template, Reactive, merge, LIFECYCLE_EVENT, Component, Timer } from "ma
 import { BaseComponent } from "./base";
 import { ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
+import { IRenderContext } from "mahal/dist/ts/interface";
 
 const pathVisited = [];
-@Template(`
-<div>
-    <in-place :ref(compInstance) :of="name"/>
-</div>
-`)
+
 export class RouterView extends BaseComponent {
 
     @Reactive
@@ -17,6 +14,33 @@ export class RouterView extends BaseComponent {
     pathname: string;
 
     compInstance: Component;
+
+    render(context: IRenderContext): Promise<HTMLElement> {
+        const ce = context.createElement;
+        const ctx = this;
+        return ce.call(this, 'div', [
+            ce.call(this, 'in-place', [], {
+                attr: {
+                    of: {
+                        v: ctx.name,
+                        k: 'name'
+                    }
+                },
+                dir: {
+                    model: {
+                        get value() {
+                            return [ctx.compInstance]
+                        },
+                        set value(values) {
+                            ctx.compInstance = values[0];
+                        },
+                        props: ['ref'],
+                        params: [ctx.compInstance]
+                    }
+                },
+            })
+        ], {});
+    }
 
     onInit() {
         window['routerView'] = this;
