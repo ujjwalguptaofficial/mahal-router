@@ -84,9 +84,13 @@ export class Router {
         });
 
         if (storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length) {
+            const result = this.routeManager.findComponent(["*"], []);
+            to.name = result.name;
+            to.query = to.query || {};
+            to.param = result.param;
             this.emitNotFound_(to);
             this.splittedPath_ = ["*"];
-            matched["*"] = this.routeManager.findComponent(["*"], []);
+            matched["*"] = result;
         }
         else {
             to.query = to.query || {};

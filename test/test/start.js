@@ -20,7 +20,7 @@ describe('Start', function () {
             query: {}
         }
 
-        $testForRoute(expectedRoute, expectedRoute, undefined)
+        await $testForRoute(expectedRoute, {}, undefined)
     })
 
     it("reload && check history length", async () => {
@@ -29,6 +29,15 @@ describe('Start', function () {
         await $reload();
         history = await $history();
         expect(prevHistoryLength).equal(history.length);
+
+        const expectedRoute = {
+            name: "home",
+            param: {},
+            path: "/",
+            query: {}
+        }
+
+        await $testForRoute(expectedRoute, {}, undefined)
     });
 
     it("login", async () => {
@@ -44,13 +53,13 @@ describe('Start', function () {
         let location = await $location();
         expect(location.pathname).equal("/user/login");
         let route = await $var('activeRoute');
-        const expectedRoute = {
+        let expectedRoute = {
             name: "user-login",
             param: {},
             path: "/user/login",
             query: {}
         }
-        $testForRoute(expectedRoute, {
+        await $testForRoute(expectedRoute, {
             name: "home",
             param: {},
             path: "/",
@@ -71,6 +80,21 @@ describe('Start', function () {
         expect(location.search).equal("?name=ujjwal");
         route = await $var('activeRoute');
         expect(route.name).equal("user-dashboard");
+
+        expectedRoute = {
+            name: "user-dashboard",
+            param: {},
+            path: "/user/dashboard",
+            query: {
+                name: 'ujjwal'
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-login",
+            param: {},
+            path: "/user/login",
+            query: {}
+        }, expectedRoute)
     })
 
     it("go to invalid path", async () => {
@@ -80,6 +104,23 @@ describe('Start', function () {
         expect(location.pathname).equal("/user/invalid");
         const text = await $text('.not-found');
         expect(text.trim()).equal(`Route "invalid" does not exist`);
+
+        expectedRoute = {
+            name: "not_found",
+            param: {},
+            path: "invalid",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-dashboard",
+            param: {},
+            path: "/user/dashboard",
+            query: {
+                name: 'ujjwal'
+            }
+        }, expectedRoute)
     })
 
     it("go to user_by_id route path", async () => {
