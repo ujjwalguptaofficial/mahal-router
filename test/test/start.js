@@ -29,6 +29,7 @@ describe('Start', function () {
     it("login", async () => {
         let history = await $history();
         const prevHistoryLength = history.length;
+        console.log('prevHistoryLength', prevHistoryLength)
         await $click('.route-login');
         await $after(100);
         history = await $history();

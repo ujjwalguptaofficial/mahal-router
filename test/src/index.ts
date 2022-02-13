@@ -10,7 +10,7 @@ window['jQuery'] = $;
 window['after'] = new Timer().timeout;
 
 const router = new Router(routes, {
-    mode: "memory"
+    mode: "history"
 });
 
 window['router'] = router;

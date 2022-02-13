@@ -49,10 +49,14 @@ before(async () => {
             return jQuery(q).html();
         }, selector);
     }
-    global.$click = async (selector) => {
+    global.$click = async (selector, attachDebugger) => {
         return await page.evaluate(q => {
-            return jQuery(q).click();
-        }, selector);
+            const el = jQuery(q.selector);
+            if(q.attachDebugger){
+                debugger
+            }
+            return el.trigger('click');
+        }, {selector,attachDebugger});
     }
     global.$after = (time) => {
         return new Promise(res => {
@@ -91,6 +95,11 @@ before(async () => {
 
     global.$reload = () => {
         return page.reload();
+    }
+    global.$debug = async () => {
+        return await page.evaluate(q => {
+            debugger;
+        });
     }
 });
 
