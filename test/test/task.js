@@ -38,6 +38,28 @@ describe('Task', function () {
         expect(text).equal(await $text('div[comp="task"] h3'));
         const route = await $var('activeRoute');
         expect(route.name).equal("particular_task");
+
+        expectedRoute = {
+            name: "particular_task",
+            param: {
+                "value": "Hello World"
+            },
+            path: "/task/Hello World",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "particular_task",
+            param: {
+                "value": "Buy shoes"
+            },
+            path: "/task/Buy shoes",
+            query: {
+
+            }
+        }, expectedRoute);
+
     })
 
     it("click on home", async () => {
@@ -48,5 +70,26 @@ describe('Task', function () {
         expect(location.href.includes("?")).equal(false);
         let route = await $var('activeRoute');
         expect(route.name).equal("home-context");
+
+        expectedRoute = {
+            name: "home-context",
+            param: {
+                
+            },
+            path: "/context.html",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "particular_task",
+            param: {
+                "value": "Hello World"
+            },
+            path: "/task/Hello World",
+            query: {
+
+            }
+        }, expectedRoute);
     })
 })
