@@ -14,12 +14,12 @@ const router = new Router(routes, {
 
 window['router'] = router;
 
-router.on("beforeEach", (next) => {
+router.on("router.beforeEach", (next) => {
     window['nextRouteFromBeforeEach'] = next;
     console.log("beforeEach", "next", next);
 })
 
-router.on("afterEach", (next, prev) => {
+router.on("router.afterEach", (next, prev) => {
     window['activeRoute'] = next;
     window['prevRoute'] = prev;
     console.log("afterEach", next);
