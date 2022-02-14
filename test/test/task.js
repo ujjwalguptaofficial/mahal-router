@@ -68,13 +68,11 @@ describe('Task', function () {
         const location = await $location();
         expect(location.pathname).equal("/context.html");
         expect(location.href.includes("?")).equal(false);
-        let route = await $var('activeRoute');
-        expect(route.name).equal("home-context");
 
         expectedRoute = {
             name: "home-context",
             param: {
-                
+
             },
             path: "/context.html",
             query: {

@@ -16,6 +16,9 @@
         <route-to class="route-invalid" path="invalid">
             <a class="btn">Invalid</a>
         </route-to>
+        <route-to class="route-do-not-leave" name="do-not-leave">
+            <a class="btn">Do not leave</a>
+        </route-to>
          <router-view />
     </div>
 </html>

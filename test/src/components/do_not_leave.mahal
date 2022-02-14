@@ -1,0 +1,27 @@
+---
+name: do_not_leave.mahal
+description:
+dateCreated:
+---
+
+<html>
+<div>
+	Do not leave
+</div>
+</html>
+
+<script>
+import { IRoute } from "mahal-router";
+import { BaseComponent } from "./base";
+
+export default class extends BaseComponent {
+    onInit() {
+        this.router.on("router.beforeEach", async (next: IRoute) => {
+            return next.name === "home";
+        });
+    }
+}
+</script>
+
+<style>
+</style>

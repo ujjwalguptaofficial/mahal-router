@@ -1,6 +1,6 @@
 import { RouteStore, createRoute } from "mahal-router";
 import Start from "./components/start.mahal";
-import User from "./components/user.mahal";
+import DoNotLeave from "./components/do_not_leave.mahal"
 import UserById from "./components/user_by_id.mahal";
 import Login from "./components/login.mahal";
 import Dashboard from "./components/dashboard.mahal";
@@ -21,6 +21,11 @@ export const routes: RouteStore = {
         path: "/context.html",
         component: Start,
         name: "home-context",
+    }),
+    ...createRoute({
+        path: "/do-not-leave",
+        component: DoNotLeave,
+        name: "do-not-leave",
     }),
     ...createRoute({
         path: "/user",

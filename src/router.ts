@@ -126,17 +126,19 @@ export class Router {
     }
 
     private emitBeforeEach(to) {
-        return new Promise((res) => {
-            this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to).then(results => {
-                const last = results.pop();
-                if (last != null && typeof last == "object") {
-                    this.goto(last);
-                    res(false);
+        return this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to).then(results => {
+            const result = results.pop();
+            if (result != null) {
+                const resultType = typeof result;
+                if (resultType == "object") {
+                    this.goto(result);
+                    return false;
                 }
-                else {
-                    res(true);
+                else if (resultType == "boolean") {
+                    return result;
                 }
-            })
+            }
+            return true;
         })
     }
 
