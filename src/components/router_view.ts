@@ -60,7 +60,7 @@ export class RouterView extends BaseComponent {
     }
 
     onNavigate() {
-        const splittedPath: string[] = this.router.splittedPath_;
+        const splittedPath: string[] = this.splittedPath;
         let isSameRoute = false;
 
         // find if same route is being called
@@ -85,21 +85,21 @@ export class RouterView extends BaseComponent {
     }
 
     get reqRoute(): IRoute {
-        return this.router['nextPath'];
+        return this.router['nextPath_'];
     }
 
     get activeRoute(): IRoute {
-        return this.router['prevPath'];
+        return this.router['prevPath_'];
     }
 
     loadComponent() {
-        const splittedPath: string[] = this.router.splittedPath_;
+        const splittedPath: string[] = this.splittedPath;
         const isRuterViewEligible = pathVisited.length < splittedPath.length;
         let matchedRoute;
         return new Promise<void>((res) => {
             if (isRuterViewEligible) {
                 const pathToLoad = splittedPath.slice(pathVisited.length)[0];
-                matchedRoute = this.router._matched_[
+                matchedRoute = this.router['_matched_'][
                     pathToLoad
                 ];
             }
@@ -148,9 +148,9 @@ export class RouterView extends BaseComponent {
                     setName();
                 }
             }
-            const splittedPath: string[] = this.router.splittedPath_;
+            const splittedPath: string[] = this.splittedPath;
             if (result.path === splittedPath[splittedPath.length - 1]) {
-                this.router._changeRoute_(this.reqRoute);
+                this.router['_changeRoute_'](this.reqRoute);
                 this.router['emitAfterEach_']();
             }
             comp = result.comp;

@@ -10,4 +10,8 @@ export class BaseComponent extends Component {
     get route() {
         return this.global.route as Route;
     }
+
+    get splittedPath() {
+        return this.router['splittedPath_'];
+    }
 }

@@ -30,7 +30,7 @@ export class RouterLink extends BaseComponent {
         return new Promise<HTMLElement>((res) => {
             Promise.all(children as Array<Promise<HTMLElement>>).then(childrens => {
                 let slotElement: HTMLElement = childrens[0] || document.createElement('a');
-                (slotElement as HTMLLinkElement).href = this.router.routeManager.resolve(to);
+                (slotElement as HTMLLinkElement).href = this.router['routeManager_'].resolve(to);
                 slotElement.onclick = (e) => {
                     e.preventDefault();
                     let shouldPrevent;
