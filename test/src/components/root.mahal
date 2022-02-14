@@ -10,7 +10,7 @@
         <route-to class="route-login" name="user-login">
             <a class="btn">Login</a>
         </route-to>
-        <route-to class="account-login" name="user-account" :param="{userId:1, accountId:2}">
+        <route-to class="account-page" name="user-account" :param="{userId:1, accountId:2}">
             <a class="btn">Account page</a>
         </route-to>
         <route-to class="route-invalid" path="invalid">

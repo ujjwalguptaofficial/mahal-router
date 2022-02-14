@@ -52,6 +52,18 @@ before(async () => {
         }, selector);
     }
 
+    global.$routeBack = (selector) => {
+        return page.evaluate(q => {
+            return history.back();
+        }, selector);
+    }
+
+    global.$routeForward = (selector) => {
+        return page.evaluate(q => {
+            return history.forward();
+        }, selector);
+    }
+
     global.$text = async (selector) => {
         return await page.evaluate(q => {
             return jQuery(q).text();

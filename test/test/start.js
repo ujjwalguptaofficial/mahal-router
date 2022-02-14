@@ -157,22 +157,19 @@ describe('Start', function () {
         }, expectedRoute);
     })
 
-    it("go to dashboard", async () => {
-        await $routeGoto({
-            name: "user-dashboard"
-        });
+    it("go to user_by_id by route link", async () => {
+        await $click('.account-page');
         await $after(100);
-        const selector = 'div[comp="user"]';
-        const html = await $html(selector);
-        expect(html.includes("User")).equal(true);
-        expect(html.includes("Dashboard")).equal(true);
+        let location = await $location();
+        expect(location.pathname).equal("/user/1/2");
 
         expectedRoute = {
-            name: "user-dashboard",
+            name: "user-account",
             param: {
-                 
+                userId: "1",
+                accountId: "2"
             },
-            path: "/user/dashboard",
+            path: "/user/1/2",
             query: {
 
             }
@@ -188,6 +185,118 @@ describe('Start', function () {
 
             }
         }, expectedRoute);
+
+        let text = await $text('.user-id');
+        expect(text.trim()).equal(`1`);
+
+        text = await $text('.account-id');
+        expect(text.trim()).equal(`2`);
     })
+
+    it('go back by browser', async () => {
+        await $routeBack();
+        await $after(100);
+        let location = await $location();
+        expect(location.pathname).equal("/user/12/15");
+        let text = await $text('.user-id');
+        expect(text.trim()).equal(`12`);
+
+        text = await $text('.account-id');
+        expect(text.trim()).equal(`15`);
+
+        expectedRoute = {
+            name: "user-account",
+            param: {
+                userId: "12",
+                accountId: "15"
+            },
+            path: "/user/12/15",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-account",
+            param: {
+                userId: "1",
+                accountId: "2"
+            },
+            path: "/user/1/2",
+            query: {
+
+            }
+        }, expectedRoute);
+    })
+
+    it('go forward by browser', async () => {
+        await $routeForward();
+        await $after(100);
+        let location = await $location();
+        expect(location.pathname).equal("/user/1/2");
+
+        expectedRoute = {
+            name: "user-account",
+            param: {
+                userId: "1",
+                accountId: "2"
+            },
+            path: "/user/1/2",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-account",
+            param: {
+                userId: "12",
+                accountId: "15"
+            },
+            path: "/user/12/15",
+            query: {
+
+            }
+        }, expectedRoute);
+
+        let text = await $text('.user-id');
+        expect(text.trim()).equal(`1`);
+
+        text = await $text('.account-id');
+        expect(text.trim()).equal(`2`);
+    })
+
+    it("go to dashboard", async () => {
+        await $routeGoto({
+            name: "user-dashboard"
+        });
+        await $after(100);
+        const selector = 'div[comp="user"]';
+        const html = await $html(selector);
+        expect(html.includes("User")).equal(true);
+        expect(html.includes("Dashboard")).equal(true);
+
+        expectedRoute = {
+            name: "user-dashboard",
+            param: {
+
+            },
+            path: "/user/dashboard",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "user-account",
+            param: {
+                userId: "1",
+                accountId: "2"
+            },
+            path: "/user/1/2",
+            query: {
+
+            }
+        }, expectedRoute);
+    })
+
+
 
 })
