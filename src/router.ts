@@ -18,11 +18,11 @@ export class Router {
     private routeManager_: RouteManager;
     private option_: IRouterOption;
 
-    private history: History;
+    private history_: History;
 
     private isHistoryMode_ = false;
 
-    private currentRoute_ = new Route();
+    currentRoute = new Route();
 
     constructor(routes: RouteStore, option?: IRouterOption) {
         this.option_ = option = option || {
@@ -31,11 +31,11 @@ export class Router {
         this.routeManager_ = new RouteManager(routes);
         this.isHistoryMode_ = option.mode === ROUTER_MODE.History;
 
-        this.history = getHistory(option.mode as any);
+        this.history_ = getHistory(option.mode as any);
 
         if (option.mode === ROUTER_MODE.History) {
             window.addEventListener('popstate', (event) => {
-                this.isNavigatedByBrowser_ = this.isHistoryMode_;
+                this.isNavigatedByBrowser_ = true;
                 this.goto(this.routeFromUrl_(location))
             });
         }
@@ -111,7 +111,7 @@ export class Router {
     }
 
     private initRoute_(val: IRoute) {
-        const routeInstance = this.currentRoute_;
+        const routeInstance = this.currentRoute;
         routeInstance.path = val.path;
         routeInstance.param = val.param || {};
         routeInstance.query = val.query || {};
@@ -144,7 +144,7 @@ export class Router {
         this.initRoute_(to);
         if (!this.isNavigatedByBrowser_ && !this._isStart_) {
             if (this.isHistoryMode_) {
-                this.history.pushState(
+                this.history_.pushState(
                     merge({ key: performance.now() }),
                     '',
                     this.routeManager_.resolve(to as any)
@@ -157,11 +157,11 @@ export class Router {
     }
 
     back() {
-        this.history.back();
+        this.history_.back();
     }
 
     go(delta: number = 1) {
-        this.history.go(delta);
+        this.history_.go(delta);
     }
 
     on(event: string, cb: Function) {
@@ -180,7 +180,7 @@ export class Router {
     private emitNavigate_(route: IRoute) {
         route.query = route.query;
         this.nextPath_ = route;
-        this.prevPath_ = merge({}, this.currentRoute_);
+        this.prevPath_ = merge({}, this.currentRoute);
         // this.splittedPath_ = trimSlash(route.path).split("/");
         return this.routerBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,

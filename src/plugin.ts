@@ -9,7 +9,7 @@ export class RouterPlugin extends Plugin {
         app.global.router = router;
         Object.defineProperty(app.global, 'route', {
             get() {
-                return router['currentRoute_']
+                return router.currentRoute;
             }
         })
     }
