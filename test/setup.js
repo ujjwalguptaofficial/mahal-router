@@ -48,6 +48,9 @@ before(async () => {
 
     global.$routeGoto = (selector) => {
         return page.evaluate(q => {
+            if (typeof q === 'string') {
+                return router.gotoPath(q);
+            }
             return router.goto(q);
         }, selector);
     }

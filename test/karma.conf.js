@@ -1,37 +1,51 @@
 const webpack = require("webpack");
 const path = require("path");
-const webpackConfig = require("./webpack/webpack.config.test")
-// const path = require("path");
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
-// return console.log(webpackConfig);
-// const basePath = path.join(__dirname);
-// console.log('basePath', basePath);
 module.exports = function (config) {
     config.set({
-        // basePath: '',
-        frameworks: ["mocha", 'chai'],
+        frameworks: ["mocha",'webpack'],
         // plugins: ['karma-chai'],
         files: [
             // "src/**/*.ts",
-            "bin/bundles.js",
-            { pattern: 'bin/**/*.js', included: false, watched: false, served: true },
-            "test/start.js",
-            // "test/task.js"
+            "unit/index.ts" // *.tsx for React Jsx
         ],
+        preprocessors: {
+            "**/*.ts": "webpack",
+            // "**/*.js": "webpack"
+        },
+        webpack: {
+            mode: "development",
+            module: {
+                rules: [{
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/
+                }]
+            },
+            resolve: {
+                extensions: ['.tsx', '.ts', '.js']
+            },
+            output: {
+                filename: 'bundle.js',
+                path: path.resolve(__dirname, 'bin/')
+            },
+            plugins: [
+                // new webpack.DefinePlugin({
+                //     'process.env.NODE_ENV': "'test'"
+                // })
+            ],
+            devtool: 'inline-source-map'
+        },
         client: {
             mocha: {
-                timeout: 5000
+                timeout: 60000
             }
-        },
-        proxies: {
-            '/bin/': '/base/bin'
         },
         reporters: ["mocha"],
         // browsers: ["jsdom"],
         colors: true,
         logLevel: config.LOG_INFO,
-        // browsers: ['HeadlessChrome'],
         browsers: ['HeadlessChrome'],
         customLaunchers: {
             HeadlessChrome: {

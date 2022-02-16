@@ -12,7 +12,7 @@ export class Router {
     private prevPath_: IRoute;
     private splittedPath_: string[];
     private isNavigatedByBrowser_: boolean = false;
-    private routerBus_ = new EventBus();
+    private eventBus_ = new EventBus();
     private _isStart_ = true;
     private _matched_: { [key: string]: IRouteFindResult };
     private routeManager_: RouteManager;
@@ -38,16 +38,18 @@ export class Router {
                 this.isNavigatedByBrowser_ = true;
                 this.goto(this.routeFromUrl_(location))
             });
+            this.goto(this.routeFromUrl_(location));
         }
-        this.goto(this.routeFromUrl_(location))
+    }
+
+    gotoPath(path: string) {
+        const route = {
+            path: path
+        };
+        this.goto(route);
     }
 
     goto(to: IRoute) {
-        if (typeof to === "string") {
-            to = {
-                path: to as any
-            }
-        }
         const name = to.name;
         if (name) {
             to.path = this.routeManager_.pathByName(to);
@@ -167,16 +169,16 @@ export class Router {
     }
 
     on(event: RouterLifeCycleEvent, cb: Function) {
-        this.routerBus_.on(event, cb);
+        this.eventBus_.on(event, cb);
         return this;
     }
 
-    off(event: string, cb: Function) {
-        this.routerBus_.off(event, cb);
+    off(event: string, cb?: Function) {
+        this.eventBus_.off(event, cb);
     }
 
     emit(event: string, ...data) {
-        return this.routerBus_.emit(event, ...data);
+        return this.eventBus_.emit(event, ...data);
     }
 
     private emitNavigate_(route: IRoute) {
@@ -184,7 +186,7 @@ export class Router {
         this.nextPath_ = route;
         this.prevPath_ = merge({}, this.currentRoute);
         // this.splittedPath_ = trimSlash(route.path).split("/");
-        return this.routerBus_.emitLinear(
+        return this.eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
         );

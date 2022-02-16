@@ -41,7 +41,8 @@ export class RouterLink extends BaseComponent {
                     }
                     this.emit("click", context).then(_ => {
                         if (shouldPrevent) return;
-                        this.router.goto(to);
+                        const method = typeof to === 'string' ? 'gotoPath' : 'goto';
+                        this.router[method](to as any);
                     })
                 };
                 res(slotElement);

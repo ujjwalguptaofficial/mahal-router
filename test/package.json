@@ -10,7 +10,8 @@
     "install:lib": "npm i ../mahal-router-1.0.0.tgz",
     "build:test": "cross-env NODE_ENV=test npm run build && npm run test",
     "test:karma": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "test": "npm run build && cross-env NODE_ENV=test mocha --timeout 0  ./setup.js e2e/index.js"
+    "test": "npm run build && cross-env NODE_ENV=test mocha --timeout 0  ./setup.js e2e/index.js",
+    "test:unit": "cross-env NODE_ENV=test mocha --timeout 0  ./setup.js unit/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "mahal-router": "file:../mahal-router-1.0.0.tgz"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.0",
     "@types/jquery": "^3.5.5",
     "@types/mocha": "^8.2.2",
     "chai": "^4.3.4",
