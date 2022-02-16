@@ -10,7 +10,7 @@
     "install:lib": "npm i ../mahal-router-1.0.0.tgz",
     "build:test": "cross-env NODE_ENV=test npm run build && npm run test",
     "test:karma": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "test": "npm run build && cross-env NODE_ENV=test mocha --timeout 0  ./setup.js test/index.js"
+    "test": "npm run build && cross-env NODE_ENV=test mocha --timeout 0  ./setup.js e2e/index.js"
   },
   "author": "",
   "license": "ISC",

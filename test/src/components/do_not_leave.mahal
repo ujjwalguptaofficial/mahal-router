@@ -16,7 +16,7 @@ import { BaseComponent } from "./base";
 
 export default class extends BaseComponent {
     onInit() {
-        this.router.on("router.beforeEach", async (next: IRoute) => {
+        this.router.on("beforeEach", async (next: IRoute) => {
             return next.name === "home";
         });
     }

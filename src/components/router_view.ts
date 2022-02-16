@@ -103,24 +103,24 @@ export class RouterView extends BaseComponent {
                     pathToLoad
                 ];
             }
-            const afterRouteLeave = (shouldNavigate) => {
-                if (shouldNavigate === false) return;
-                if (!isRuterViewEligible) {
-                    this.name = null;
-                    return res();
-                }
-                Object.assign(this.route, this.reqRoute);
-                this.onCompEvaluated(matchedRoute).then(res);
+            // const afterRouteLeave = (shouldNavigate) => {
+            // if (shouldNavigate === false) return;
+            if (!isRuterViewEligible) {
+                this.name = null;
+                return res();
             }
-            if (this.compInstance) {
-                this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
-                    const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
-                    afterRouteLeave(shouldNavigate)
-                })
-            }
-            else {
-                afterRouteLeave(true);
-            }
+            Object.assign(this.route, this.reqRoute);
+            this.onCompEvaluated(matchedRoute).then(res);
+            // }
+            // if (this.compInstance) {
+            //     this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
+            //         const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
+            //         afterRouteLeave(shouldNavigate)
+            //     })
+            // }
+            // else {
+            // afterRouteLeave(true);
+            // }
         });
 
     }

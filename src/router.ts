@@ -1,7 +1,7 @@
 import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
 import { getHistory, RouteManager } from "./helpers";
 import { merge } from "mahal";
-import { RouteStore } from "./types";
+import { RouteStore, RouterLifeCycleEvent } from "./types";
 import { ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { parseQuery, trimSlash } from "./utils";
@@ -166,7 +166,7 @@ export class Router {
         this.history_.go(delta);
     }
 
-    on(event: string, cb: Function) {
+    on(event: RouterLifeCycleEvent, cb: Function) {
         this.routerBus_.on(event, cb);
         return this;
     }
