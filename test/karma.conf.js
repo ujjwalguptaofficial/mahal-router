@@ -28,7 +28,7 @@ module.exports = function (config) {
             },
             output: {
                 filename: 'bundle.js',
-                path: path.resolve(__dirname, 'bin/')
+                path: path.resolve(__dirname, 'bin/karma')
             },
             plugins: [
                 // new webpack.DefinePlugin({

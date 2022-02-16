@@ -43,21 +43,27 @@ describe('event test', () => {
                 param: {},
                 path: '/'
             })
+            router.off('navigate');
             done();
         });
         router.gotoPath("/");
     })
 
     it('check 404', (done) => {
-        router.on("navigate", (route) => {
-            expect(route).eql({
-                name: 'home',
+        router.on("notFound", (route) => {
+            const expectedRoute = {
+                name: "NotFound",
                 query: {},
                 param: {},
-                path: '/'
-            })
-            done();
+                path: '/dd'
+            };
+            expect(route).eql(expectedRoute);
+            router.on("navigate", (route) => {
+                expect(route).eql(expectedRoute);
+                done();
+            });
         });
+
         router.gotoPath("/dd");
     })
 })

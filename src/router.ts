@@ -6,6 +6,7 @@ import { ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { parseQuery, trimSlash } from "./utils";
 import { Route } from "./route";
+import { RouteNotFound } from "./components";
 
 export class Router {
     private nextPath_: IRoute;
@@ -28,6 +29,7 @@ export class Router {
         this.option_ = option = option || {
             mode: ROUTER_MODE.History
         } as IRouterOption;
+
         this.routeManager_ = new RouteManager(routes);
         this.isHistoryMode_ = option.mode === ROUTER_MODE.History;
 
@@ -83,7 +85,13 @@ export class Router {
         });
 
         if (storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length) {
-            const result = this.routeManager_.findComponent(["*"], []);
+            const result = this.routeManager_.findComponent(["*"], []) || {
+                comp: RouteNotFound,
+                key: '*',
+                name: 'NotFound',
+                path: to.path,
+                param: to.param || {}
+            };
             to.name = result.name;
             to.query = to.query || {};
             to.param = result.param;
