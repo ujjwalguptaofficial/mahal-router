@@ -44,12 +44,13 @@ describe('event test', () => {
                 path: '/'
             })
             router.off('navigate');
+            expect(router.)
             done();
         });
         router.gotoPath("/");
     })
 
-    it('check 404', (done) => {
+    it('check 404 using path', (done) => {
         router.on("notFound", (route) => {
             const expectedRoute = {
                 name: "NotFound",
@@ -60,11 +61,30 @@ describe('event test', () => {
             expect(route).eql(expectedRoute);
             router.on("navigate", (route) => {
                 expect(route).eql(expectedRoute);
+                router.off('navigate');
+                router.off('notFound');
                 done();
             });
         });
 
         router.gotoPath("/dd");
+    })
+
+    it('check 404 using route object', (done) => {
+        router.on("notFound", (route) => {
+            const expectedRoute = {
+                name: "invalid_route"
+            };
+            // return done(route)
+            expect(route).eql(expectedRoute);
+            router.off('navigate');
+            router.off('notFound');
+            done();
+        });
+
+        router.goto({
+            name: 'invalid_route'
+        });
     })
 })
 

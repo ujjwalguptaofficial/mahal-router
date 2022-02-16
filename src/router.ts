@@ -54,13 +54,14 @@ export class Router {
     goto(to: IRoute) {
         const name = to.name;
         if (name) {
-            to.path = this.routeManager_.pathByName(to);
-            if (!to.path) {
+            const path = this.routeManager_.pathByName(to);
+            if (!path) {
                 if (process.env.NODE_ENV != "production") {
                     console.warn(`No route found with name ${name}`);
                 }
                 return this.emitNotFound_(to);
             }
+            to.path = path;
         }
         const splittedPath = trimSlash(to.path).split("/");
         const storedRoutes = [];
