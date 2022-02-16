@@ -149,10 +149,10 @@ export class RouterView extends BaseComponent {
                 }
             }
             const splittedPath: string[] = this.splittedPath;
-            if (result.path === splittedPath[splittedPath.length - 1]) {
-                this.router['_changeRoute_'](this.reqRoute);
-                this.router['emitAfterEach_']();
-            }
+            // if (result.path === splittedPath[splittedPath.length - 1]) {
+                // this.router['_changeRoute_'](this.reqRoute);
+                // this.router['emitAfterEach_']();
+            // }
             comp = result.comp;
             pathVisited.push(result.path);
             this.pathname = result.path;

@@ -44,7 +44,7 @@ describe('event test', () => {
                 path: '/'
             })
             router.off('navigate');
-            expect(router.)
+            expect(router.history).length(1);
             done();
         });
         router.gotoPath("/");
@@ -63,6 +63,7 @@ describe('event test', () => {
                 expect(route).eql(expectedRoute);
                 router.off('navigate');
                 router.off('notFound');
+                expect(router.history).length(2);
                 done();
             });
         });
@@ -79,6 +80,7 @@ describe('event test', () => {
             expect(route).eql(expectedRoute);
             router.off('navigate');
             router.off('notFound');
+            expect(router.history).length(2);
             done();
         });
 

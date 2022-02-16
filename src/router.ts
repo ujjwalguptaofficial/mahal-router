@@ -19,7 +19,7 @@ export class Router {
     private routeManager_: RouteManager;
     private option_: IRouterOption;
 
-    private history_: History;
+    history: History;
 
     private isHistoryMode_ = false;
 
@@ -33,7 +33,7 @@ export class Router {
         this.routeManager_ = new RouteManager(routes);
         this.isHistoryMode_ = option.mode === ROUTER_MODE.History;
 
-        this.history_ = getHistory(option.mode as any);
+        this.history = getHistory(option.mode as any);
 
         if (option.mode === ROUTER_MODE.History) {
             window.addEventListener('popstate', (event) => {
@@ -156,13 +156,11 @@ export class Router {
     private _changeRoute_(to: IRoute) {
         this.initRoute_(to);
         if (!this.isNavigatedByBrowser_ && !this._isStart_) {
-            if (this.isHistoryMode_) {
-                this.history_.pushState(
-                    merge({ key: performance.now() }),
-                    '',
-                    this.routeManager_.resolve(to as any)
-                );
-            }
+            this.history.pushState(
+                merge({ key: performance.now() }),
+                '',
+                this.routeManager_.resolve(to as any)
+            );
         }
         else {
             this.isNavigatedByBrowser_ = this._isStart_ = false;
@@ -170,11 +168,11 @@ export class Router {
     }
 
     back() {
-        this.history_.back();
+        this.history.back();
     }
 
     go(delta: number = 1) {
-        this.history_.go(delta);
+        this.history.go(delta);
     }
 
     on(event: RouterLifeCycleEvent, cb: Function) {
@@ -195,14 +193,20 @@ export class Router {
         this.nextPath_ = route;
         this.prevPath_ = merge({}, this.currentRoute);
         // this.splittedPath_ = trimSlash(route.path).split("/");
+
+        this._changeRoute_(route);
         return this.eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
-        );
+        ).then(_ => {
+            this.emitAfterEach_();
+        }).catch(error => {
+            this.emitAfterEach_(error);
+        })
     }
 
-    private emitAfterEach_() {
-        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath_, this.prevPath_);
+    private emitAfterEach_(error?) {
+        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath_, this.prevPath_, error);
     }
 
     private emitNotFound_(to) {
