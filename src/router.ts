@@ -1,8 +1,8 @@
 import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
-import { getHistory, RouteManager } from "./helpers";
+import { ErrorHelper, getHistory, RouteManager } from "./helpers";
 import { merge } from "mahal";
 import { RouteStore, RouterLifeCycleEvent } from "./types";
-import { ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
+import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { parseQuery, trimSlash } from "./utils";
 import { Route } from "./route";
@@ -114,9 +114,21 @@ export class Router {
 
         this._matched_ = matched;
 
-        this.emitBeforeEach(to).then(shouldNavigate => {
-            if (shouldNavigate) {
+        this.emitBeforeEach(to).then(result => {
+            if (result.success) {
                 this.emitNavigate_(to);
+            }
+            else {
+                this.emitAfterEach_(
+                    new ErrorHelper(
+                        result.cancelled ? ERROR_TYPE.NavigationCancelled :
+                            ERROR_TYPE.NavigationAborted,
+                        {
+                            from: this.currentRoute.path, to: to.path,
+                            path: result.cancelled.path
+                        }
+                    ).get()
+                );
             }
         })
     }
@@ -143,13 +155,13 @@ export class Router {
                 const resultType = typeof result;
                 if (resultType == "object") {
                     this.goto(result);
-                    return false;
+                    return { success: false, cancelled: result };
                 }
                 else if (resultType == "boolean") {
-                    return result;
+                    return { success: result };
                 }
             }
-            return true;
+            return { success: true };
         })
     }
 
