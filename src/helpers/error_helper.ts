@@ -26,6 +26,8 @@ export class ErrorHelper {
                 return `navigation aborted from "${info.from}", to "${info.from}"`;
             case ERROR_TYPE.NavigationCancelled:
                 return `navigation cancelled from "${info.from}", to "${info.from}" with a new navigation "info.path".`;
+            case ERROR_TYPE.SameRoute:
+                return `navigation cancalled because of same route.`
         }
     }
 }

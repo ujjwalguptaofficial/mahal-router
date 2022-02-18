@@ -1,8 +1,9 @@
 import { Template, Reactive, merge, LIFECYCLE_EVENT, Component, Timer } from "mahal";
 import { BaseComponent } from "./base";
-import { ROUTER_LIFECYCLE_EVENT } from "../enums";
+import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
 import { IRenderContext } from "mahal/dist/ts/interface";
+import { ErrorHelper } from "../helpers";
 
 const pathVisited = [];
 
@@ -43,7 +44,6 @@ export class RouterView extends BaseComponent {
     }
 
     onInit() {
-        window['routerView'] = this;
         this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
             if (!this.pathname) {
                 this.loadComponent();
@@ -64,7 +64,7 @@ export class RouterView extends BaseComponent {
         let isSameRoute = false;
 
         // find if same route is being called
-        if (this.pathname) {
+        if (this.pathname != null) {
             splittedPath.every(q => {
                 if (q === this.pathname) {
                     isSameRoute = true;
@@ -82,6 +82,7 @@ export class RouterView extends BaseComponent {
             this.pathname = null;
             return this.loadComponent();
         }
+        return new ErrorHelper(ERROR_TYPE.SameRoute).get();
     }
 
     get reqRoute(): IRoute {
@@ -94,6 +95,7 @@ export class RouterView extends BaseComponent {
 
     loadComponent() {
         const splittedPath: string[] = this.splittedPath;
+        // if the router view is eligible for changing the component
         const isRuterViewEligible = pathVisited.length < splittedPath.length;
         let matchedRoute;
         return new Promise<void>((res) => {
@@ -127,7 +129,7 @@ export class RouterView extends BaseComponent {
 
     onCompEvaluated(result: IRouteFindResult) {
         let comp;
-        return new Promise<void>(res => {
+        return new Promise<void>((res, rej) => {
             const changeComponent = (val) => {
                 if (!val) return res();
                 const componentName = comp.name || "anonymous";
@@ -137,6 +139,7 @@ export class RouterView extends BaseComponent {
                     };
                     this.name = componentName;
                     this.waitFor(LIFECYCLE_EVENT.Update).then(res);
+                    this.waitFor(LIFECYCLE_EVENT.Error).then(rej);
                 }
                 if (this.name && this.name === componentName) {
                     this.name = null;
@@ -148,10 +151,10 @@ export class RouterView extends BaseComponent {
                     setName();
                 }
             }
-            const splittedPath: string[] = this.splittedPath;
+            // const splittedPath: string[] = this.splittedPath;
             // if (result.path === splittedPath[splittedPath.length - 1]) {
-                // this.router['_changeRoute_'](this.reqRoute);
-                // this.router['emitAfterEach_']();
+            // this.router['_changeRoute_'](this.reqRoute);
+            // this.router['emitAfterEach_']();
             // }
             comp = result.comp;
             pathVisited.push(result.path);

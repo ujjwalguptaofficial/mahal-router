@@ -56,7 +56,7 @@ export class Router {
         if (name) {
             const path = this.routeManager_.pathByName(to);
             if (!path) {
-                if (process.env.NODE_ENV != "production") {
+                if (process.env.NODE_ENV !== "production") {
                     console.warn(`No route found with name ${name}`);
                 }
                 return this.emitNotFound_(to);
@@ -85,7 +85,9 @@ export class Router {
             }
         });
 
-        if (storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length) {
+        const isNotFound = storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length;
+
+        if (isNotFound) {
             const result = this.routeManager_.findComponent(["*"], []) || {
                 comp: RouteNotFound,
                 key: '*',
@@ -114,21 +116,27 @@ export class Router {
 
         this._matched_ = matched;
 
-        this.emitBeforeEach(to).then(result => {
+        return this.emitBeforeEach(to).then(result => {
             if (result.success) {
-                this.emitNavigate_(to);
+                return this.emitNavigate_(to).then(errs => {
+                    const err = errs.find(q => q != null);
+                    this.emitAfterEach_(err);
+                    return err;
+                }).catch(error => {
+                    this.emitAfterEach_(error);
+                })
             }
             else {
-                this.emitAfterEach_(
-                    new ErrorHelper(
-                        result.cancelled ? ERROR_TYPE.NavigationCancelled :
-                            ERROR_TYPE.NavigationAborted,
-                        {
-                            from: this.currentRoute.path, to: to.path,
-                            path: result.cancelled.path
-                        }
-                    ).get()
-                );
+                const err = new ErrorHelper(
+                    result.cancelled ? ERROR_TYPE.NavigationCancelled :
+                        ERROR_TYPE.NavigationAborted,
+                    {
+                        from: this.currentRoute.path, to: to.path,
+                        path: result.cancelled.path
+                    }
+                ).get();
+                this.emitAfterEach_(err);
+                return err;
             }
         })
     }
@@ -210,11 +218,7 @@ export class Router {
         return this.eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
-        ).then(_ => {
-            this.emitAfterEach_();
-        }).catch(error => {
-            this.emitAfterEach_(error);
-        })
+        );
     }
 
     private emitAfterEach_(error?) {

@@ -3,7 +3,7 @@ import { IRoute } from "../interfaces";
 export enum ERROR_TYPE {
     NavigationAborted = 'navigation_aborted',
     NavigationCancelled = 'navigation_cancelled',
-    RouteDuplicated = 'route_duplicated'
+    SameRoute = 'same_route',
 }
 
 export interface NavigationFailure extends Error {
