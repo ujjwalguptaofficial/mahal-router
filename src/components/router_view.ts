@@ -16,6 +16,8 @@ export class RouterView extends BaseComponent {
 
     compInstance: Component;
 
+    isDestroyed = false;
+
     render(context: IRenderContext): Promise<HTMLElement> {
         const ce = context.createElement;
         const ctx = this;
@@ -56,33 +58,49 @@ export class RouterView extends BaseComponent {
         this.on(LIFECYCLE_EVENT.Destroy, () => {
             this.compInstance = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
+            this.isDestroyed = true;
         });
     }
 
     onNavigate() {
+
+        if (this.isDestroyed) {
+            return;
+        }
+
         const splittedPath: string[] = this.splittedPath;
         let isSameRoute = false;
 
         // find if same route is being called
-        if (this.pathname != null) {
-            splittedPath.every(q => {
-                if (q === this.pathname) {
-                    isSameRoute = true;
-                    return false;
-                }
-                return true;
-            })
-        }
-        // ignore if same route
-        if (!isSameRoute) {
-            const index = pathVisited.findIndex(q => q === this.pathname);
-            if (index >= 0) {
-                pathVisited.splice(index);
+        // if (!this.isFirstLoad) {
+        // splittedPath.every(q => {
+        //     if (q === this.pathname) {
+        //         isSameRoute = true;
+        //         return false;
+        //     }
+        //     return true;
+        // })
+        // }
+
+        const samePathIndex = splittedPath.findIndex(q => q === this.pathname);
+
+        if (samePathIndex >= 0) {
+            isSameRoute = true;
+            if (samePathIndex === splittedPath.length - 1) {
+                return new ErrorHelper(ERROR_TYPE.SameRoute).get();
             }
-            this.pathname = null;
-            return this.loadComponent();
+            return;
         }
-        return new ErrorHelper(ERROR_TYPE.SameRoute).get();
+
+        // ignore if same route
+        // if (!isSameRoute) {
+        const index = pathVisited.findIndex(q => q === this.pathname);
+        if (index >= 0) {
+            pathVisited.splice(index);
+        }
+        this.pathname = null;
+        return this.loadComponent();
+        // }
     }
 
     get reqRoute(): IRoute {

@@ -23,6 +23,28 @@ describe('Start', function () {
         await $testForRoute(expectedRoute, {}, undefined)
     })
 
+    it("go to same route", async () => {
+        let history = await $history();
+        const prevHistoryLength = history.length;
+        await $routeGoto({
+            path: '/'
+        });
+        await $after(100);
+        const location = await $location();
+        expect(location.pathname).equal("/");
+        expect(location.href.includes("?")).equal(false);
+        const expectedRoute = {
+            name: "home",
+            param: {},
+            path: "/",
+            query: {}
+        }
+
+        await $testForRoute(expectedRoute, expectedRoute, expectedRoute)
+        history = await $history();
+        expect(prevHistoryLength).equal(history.length);
+    })
+
     it("reload && check history length", async () => {
         let history = await $history();
         const prevHistoryLength = history.length;

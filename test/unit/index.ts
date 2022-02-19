@@ -27,12 +27,16 @@ describe('event test', () => {
             })
             router.off('navigate');
             checkForEvent('navigate', 0);
-            done();
+
         });
         checkForEvent('navigate', 1);
         router.goto({
             name: 'home'
-        });
+        }).then(result => {
+            expect(result).equal(undefined);
+            expect(router.history).length(1);
+            done();
+        })
     })
 
     it('go to by path', (done) => {
@@ -44,10 +48,13 @@ describe('event test', () => {
                 path: '/'
             })
             router.off('navigate');
-            expect(router.history).length(1);
-            done();
         });
-        router.gotoPath("/");
+        router.gotoPath("/").then(result => {
+            expect(result).equal(undefined);
+            debugger;
+            expect(router.history).length(2);
+            done();
+        })
     })
 
     it('check 404 using path', (done) => {
@@ -63,12 +70,13 @@ describe('event test', () => {
                 expect(route).eql(expectedRoute);
                 router.off('navigate');
                 router.off('notFound');
-                expect(router.history).length(2);
-                done();
             });
         });
 
-        router.gotoPath("/dd");
+        router.gotoPath("/dd").then(_ => {
+            expect(router.history).length(3);
+            done();
+        })
     })
 
     it('check 404 using route object', (done) => {
@@ -80,13 +88,14 @@ describe('event test', () => {
             expect(route).eql(expectedRoute);
             router.off('navigate');
             router.off('notFound');
-            expect(router.history).length(2);
-            done();
         });
 
         router.goto({
             name: 'invalid_route'
-        });
+        }).then(_ => {
+            expect(router.history).length(3);
+            done();
+        })
     })
 })
 

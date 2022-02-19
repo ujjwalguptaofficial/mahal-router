@@ -25,6 +25,7 @@ export class MemoryHistory {
 
     go(delta?: number) {
         this.activeIndex_ += delta || 0;
+        window.dispatchEvent(popStateEvent);
     }
 
     pushState(data: any, unused: string, url?: string | URL | null) {

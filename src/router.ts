@@ -48,7 +48,7 @@ export class Router {
         const route = {
             path: path
         };
-        this.goto(route);
+        return this.goto(route);
     }
 
     goto(to: IRoute) {
@@ -59,7 +59,8 @@ export class Router {
                 if (process.env.NODE_ENV !== "production") {
                     console.warn(`No route found with name ${name}`);
                 }
-                return this.emitNotFound_(to);
+                
+                return Promise.resolve(null);
             }
             to.path = path;
         }
@@ -120,6 +121,9 @@ export class Router {
             if (result.success) {
                 return this.emitNavigate_(to).then(errs => {
                     const err = errs.find(q => q != null);
+                    if (!err) {
+                        this._changeRoute_(to);
+                    }
                     this.emitAfterEach_(err);
                     return err;
                 }).catch(error => {
@@ -166,20 +170,21 @@ export class Router {
                     return { success: false, cancelled: result };
                 }
                 else if (resultType == "boolean") {
-                    return { success: result };
+                    return { success: result, cancelled: to };
                 }
             }
             return { success: true };
         })
     }
 
-    private _changeRoute_(to: IRoute) {
-        this.initRoute_(to);
-        if (!this.isNavigatedByBrowser_ && !this._isStart_) {
+
+    private _changeRoute_(route: IRoute) {
+        this.initRoute_(route);
+        if (!this.isHistoryMode_ || (!this.isNavigatedByBrowser_ && !this._isStart_)) {
             this.history.pushState(
                 merge({ key: performance.now() }),
                 '',
-                this.routeManager_.resolve(to as any)
+                this.routeManager_.resolve(route as any)
             );
         }
         else {
@@ -214,7 +219,6 @@ export class Router {
         this.prevPath_ = merge({}, this.currentRoute);
         // this.splittedPath_ = trimSlash(route.path).split("/");
 
-        this._changeRoute_(route);
         return this.eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
