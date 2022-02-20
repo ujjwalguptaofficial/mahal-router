@@ -19,9 +19,10 @@ router.on("beforeEach", (next) => {
     console.log("beforeEach", "next", next);
 })
 
-router.on("afterEach", (next, prev) => {
+router.on("afterEach", (next, prev, err) => {
     window['activeRoute'] = next;
     window['prevRoute'] = prev;
+    window['routeErr'] = err;
     console.log("afterEach", next);
 })
 const app = new Mahal(Root, '#app');

@@ -23,11 +23,11 @@ export class ErrorHelper {
     private getMsg_(info) {
         switch (this.type) {
             case ERROR_TYPE.NavigationAborted:
-                return `navigation aborted from "${info.from}", to "${info.from}"`;
+                return `navigation aborted from "${info.from}", to "${info.to}"`;
             case ERROR_TYPE.NavigationCancelled:
-                return `navigation cancelled from "${info.from}", to "${info.from}" with a new navigation "info.path".`;
+                return `navigation cancelled from "${info.from}", to "${info.to}" with a new navigation "${info.path}".`;
             case ERROR_TYPE.SameRoute:
-                return `navigation cancalled because of same route.`
+                return `navigation cancelled because of same route.`
         }
     }
 }

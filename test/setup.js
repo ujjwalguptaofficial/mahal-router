@@ -45,6 +45,10 @@ before(async () => {
 
         expect(nextRouteFromBeforeEachVar).eql(nextRouteFromBeforeEach);
     }
+    global.$testForError = async (err) => {
+        let actualError = await $var('routeErr');
+        expect(err).eql(actualError);
+    }
 
     global.$routeGoto = (selector) => {
         return page.evaluate(q => {

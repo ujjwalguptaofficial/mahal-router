@@ -1,4 +1,4 @@
-import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
+import { IRoute, IRouterOption, IRouteFindResult, IError } from "./interfaces";
 import { ErrorHelper, getHistory, RouteManager } from "./helpers";
 import { merge } from "mahal";
 import { RouteStore, RouterLifeCycleEvent } from "./types";
@@ -59,7 +59,7 @@ export class Router {
                 if (process.env.NODE_ENV !== "production") {
                     console.warn(`No route found with name ${name}`);
                 }
-                
+
                 return Promise.resolve(null);
             }
             to.path = path;
@@ -117,7 +117,7 @@ export class Router {
 
         this._matched_ = matched;
 
-        return this.emitBeforeEach(to).then(result => {
+        return this.emitBeforeEach_(to).then(result => {
             if (result.success) {
                 return this.emitNavigate_(to).then(errs => {
                     const err = errs.find(q => q != null);
@@ -131,16 +131,25 @@ export class Router {
                 })
             }
             else {
-                const err = new ErrorHelper(
-                    result.cancelled ? ERROR_TYPE.NavigationCancelled :
-                        ERROR_TYPE.NavigationAborted,
-                    {
-                        from: this.currentRoute.path, to: to.path,
-                        path: result.cancelled.path
-                    }
-                ).get();
-                this.emitAfterEach_(err);
-                return err;
+                let err: ErrorHelper;
+                if (result.cancelled) {
+                    err = new ErrorHelper(ERROR_TYPE.NavigationCancelled,
+                        {
+                            from: this.currentRoute.path,
+                            to: to.path,
+                            path: result.cancelled.path
+                        }
+                    )
+                }
+                else {
+                    err = new ErrorHelper(ERROR_TYPE.NavigationAborted, {
+                        from: this.currentRoute.path,
+                        to: to.path,
+                    })
+                }
+                const errMessage = err.get();
+                this.emitAfterEach_(errMessage);
+                return errMessage;
             }
         })
     }
@@ -160,7 +169,7 @@ export class Router {
         }
     }
 
-    private emitBeforeEach(to) {
+    private emitBeforeEach_(to) {
         return this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to).then(results => {
             const result = results.pop();
             if (result != null) {
@@ -170,7 +179,9 @@ export class Router {
                     return { success: false, cancelled: result };
                 }
                 else if (resultType == "boolean") {
-                    return { success: result, cancelled: to };
+                    return {
+                        success: result,
+                    };
                 }
             }
             return { success: true };

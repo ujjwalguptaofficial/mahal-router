@@ -24,6 +24,7 @@ describe('Do not leave', function () {
 
             }
         }, expectedRoute);
+        await $testForError(undefined);
     })
 
     it("go to user page", async () => {
@@ -62,5 +63,8 @@ describe('Do not leave', function () {
 
             }
         });
+
+        await $testForError({message: 'navigation aborted from "/do-not-leave", to "/context.html"', type: 'navigation_aborted'});
+
     })
 })

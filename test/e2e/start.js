@@ -120,6 +120,9 @@ describe('Start', function () {
     })
 
     it("go to invalid path", async () => {
+        let history = await $history();
+        const prevHistoryLength = history.length;
+
         await $click('.route-invalid');
         await $after(100);
         let location = await $location();
@@ -143,6 +146,9 @@ describe('Start', function () {
                 name: 'ujjwal'
             }
         }, expectedRoute)
+
+        history = await $history();
+        expect(prevHistoryLength + 1).equal(history.length);
     })
 
     it("go to user_by_id route path", async () => {
