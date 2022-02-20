@@ -2,16 +2,21 @@
   "name": "mahal-router",
   "version": "1.0.0",
   "description": "The official router for mahal framework.",
-  "main": "dist/mahal-router.lib.js",
+  "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build:dev": "webpack --config webpack/webpack.dev.config.js",
+    "build:prod": "webpack --config webpack/webpack.prod.config.js",
     "install:lib": "npm i ../mahal/mahal-0.8.0.tgz --no-save",
     "build:test": "npm run build:pack && npm run test",
+    "dev:test": " npm run test",
+    "prod:test": "npm run test",
     "test": "cd test && npm run install:lib && npm run build:test",
     "dev": "cd test && npm run install:dev",
-    "build:dev": "npm run build:pack && npm run dev",
-    "build:pack": "npm run build && npm pack"
+    "build:run:dev": "npm run build:pack && npm run dev",
+    "build": "npm run build:dev && npm run build:prod",
+    "build:pack": "npm run build && npm pack",
+    "deploy": "npm run build:pack && npm run dev:test && npm run prod:test"
   },
   "repository": {
     "type": "git",
@@ -25,11 +30,14 @@
   "homepage": "https://github.com/ujjwalguptaofficial/mahal-router#readme",
   "devDependencies": {
     "@types/node": "^14.14.35",
+    "copy-webpack-plugin": "^6.1.1",
     "mahal": "^0.22.0",
+    "smart-banner-webpack-plugin": "^3.0.1",
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.1.1"
   },
   "dependencies": {
     "webpack-node-externals": "^2.5.2"

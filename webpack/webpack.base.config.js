@@ -1,5 +1,8 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const SmartBannerPlugin = require('smart-banner-webpack-plugin');
+const banner = require('../build_helper/licence');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: './src/index.ts',
@@ -25,15 +28,12 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts']
     },
-    output: {
-        library: 'mahalRouter',
-        libraryTarget: "commonjs2",
-        filename: 'mahal-router.lib.js',
-        path: path.resolve(__dirname, 'dist/')
-    },
     plugins: [
-        // new MahalPlugin({
-        //     lang: 'ts'
-        // })
+        new SmartBannerPlugin(banner),
+        new CopyPlugin({
+            patterns: [
+                { from: 'build_helper', to: '' },
+            ],
+        }),
     ]
 };
