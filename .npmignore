@@ -1,0 +1,13 @@
+node_modules
+src
+tests
+test
+webpack
+*.tgz
+*.env
+build
+build_helper
+
+
+#definition
+!dist/ts/src
