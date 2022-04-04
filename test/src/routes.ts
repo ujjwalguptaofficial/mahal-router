@@ -36,10 +36,11 @@ export const routes: RouteStore = {
                 component: Login,
                 name: "user-login",
             },
-            "/dashboard": {
-                component: Dashboard,
+            ...createRoute({
+                "path": "dashboard",
+                component:Dashboard,
                 name: "user-dashboard",
-            },
+            }),
             "/{userId}/{accountId}": {
                 component: UserById,
                 name: "user-account",
