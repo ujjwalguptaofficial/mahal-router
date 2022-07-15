@@ -18,7 +18,7 @@ export class RouterView extends BaseComponent {
 
     isDestroyed = false;
 
-    render(context: IRenderContext): Promise<HTMLElement> {
+    render(context: IRenderContext): HTMLElement {
         const ce = context.createElement;
         const ctx = this;
         return ce.call(this, 'div', [

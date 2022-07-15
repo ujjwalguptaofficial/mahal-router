@@ -216,7 +216,7 @@ export class Router {
         return this;
     }
 
-    off(event: string, cb?: Function) {
+    off(event: string, cb: Function) {
         this.eventBus_.off(event, cb);
     }
 
