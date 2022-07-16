@@ -1,8 +1,9 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const SmartBannerPlugin = require('smart-banner-webpack-plugin');
 const banner = require('../build_helper/licence');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+
 
 module.exports = {
     entry: './src/index.ts',
@@ -29,7 +30,7 @@ module.exports = {
         extensions: ['.tsx', '.ts']
     },
     plugins: [
-        new SmartBannerPlugin(banner),
+        new webpack.BannerPlugin(banner),
         new CopyPlugin({
             patterns: [
                 { from: 'build_helper', to: '' },

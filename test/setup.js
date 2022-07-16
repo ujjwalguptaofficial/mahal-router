@@ -12,7 +12,7 @@ const { Fort } = require("fortjs");
 
 
 const opts = {
-    headless: false,
+    // headless: false,
     slowMo: 100,
     timeout: 0,
     args: ['--start-maximized', '--window-size=1366,786'],
@@ -21,7 +21,7 @@ const opts = {
 
 before(async () => {
     global.expect = expect;
-    const browser = await puppeteer.launch(opts);
+    const browser = await puppeteer.launch();
     global.browser = browser;
     const page = await browser.newPage();
 

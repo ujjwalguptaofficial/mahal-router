@@ -7,7 +7,7 @@
     "dev": "webpack serve --config webpack.config.js",
     "build": "webpack --config webpack.config.js",
     "install:dev": "npm run install:lib && npm run dev",
-    "install:lib": "npm i ../mahal-router-1.1.1.tgz",
+    "install:lib": "node install_lib.js",
     "build:test": "cross-env NODE_ENV=test npm run build && npm run test",
     "test:karma": "cross-env NODE_ENV=test karma start karma.conf.js",
     "test:e2e": "npm run build && cross-env NODE_ENV=test mocha --timeout 0  ./setup.js e2e/index.js",
