@@ -23,7 +23,8 @@
     "build:run:dev": "npm run build:pack && npm run dev",
     "build": "npm run build:dev && npm run build:prod",
     "build:pack": "npm run build && npm pack",
-    "deploy": "npm run clean && npm run build:pack && npm run dev:test && npm run prod:test",
+    "build:ci": "npm run build:pack && npm run dev:test && npm run prod:test",
+    "deploy": "npm run clean && npm run build:ci",
     "clean": "del dist",
     "prepublishOnly": "npm run deploy"
   },
