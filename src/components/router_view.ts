@@ -1,4 +1,4 @@
-import { Template, Reactive, merge, LIFECYCLE_EVENT, Component, Timer } from "mahal";
+import { Reactive, merge, Component } from "mahal";
 import { BaseComponent } from "./base";
 import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
@@ -46,16 +46,16 @@ export class RouterView extends BaseComponent {
     }
 
     onInit() {
-        this.waitFor(LIFECYCLE_EVENT.Mount).then(_ => {
+        this.waitFor("mount").then(_ => {
             if (!this.pathname) {
                 this.loadComponent();
             }
         });
         const onNavigate = this.onNavigate.bind(this);
-        this.waitFor(LIFECYCLE_EVENT.Create).then(() => {
+        this.waitFor("create").then(() => {
             this.router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
         });
-        this.on(LIFECYCLE_EVENT.Destroy, () => {
+        this.on("destroy", () => {
             this.compInstance = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
             this.isDestroyed = true;
@@ -156,12 +156,12 @@ export class RouterView extends BaseComponent {
                         [componentName]: comp
                     };
                     this.name = componentName;
-                    this.waitFor(LIFECYCLE_EVENT.Update).then(res);
-                    this.waitFor(LIFECYCLE_EVENT.Error).then(rej);
+                    this.waitFor("update").then(res);
+                    this.waitFor("error").then(rej);
                 }
                 if (this.name && this.name === componentName) {
                     this.name = null;
-                    this.waitFor(LIFECYCLE_EVENT.Update).then(_ => {
+                    this.waitFor("update").then(_ => {
                         setName();
                     });
                 }

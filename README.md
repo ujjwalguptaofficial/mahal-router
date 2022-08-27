@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/mahal-router.svg)](https://badge.fury.io/js/mahal-router)
+[![TEST](https://github.com/ujjwalguptaofficial/mahal-router/actions/workflows/test.yml/badge.svg)](https://github.com/ujjwalguptaofficial/mahal-router/actions/workflows/test.yml)
+
 # mahal-router
 
 Official router plugin for [Mahal framework](https://github.com/ujjwalguptaofficial/mahal)

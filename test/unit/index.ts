@@ -13,7 +13,7 @@ describe('event test', () => {
     });
 
     function checkForEvent(event, length) {
-        expect(router['eventBus_']['_events'][event]).length(length);
+        expect(router['eventBus_']['_events_'][event]).length(length);
 
     }
 

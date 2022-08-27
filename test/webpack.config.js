@@ -1,5 +1,5 @@
 const path = require('path');
-const MahalPlugin = require('mahal-webpack-loader/lib/plugin');
+const MahalPlugin = require('@mahaljs/webpack-loader/lib/plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 console.log("ujjwal");
@@ -14,7 +14,7 @@ module.exports = {
     module: {
         rules: [{
             test: /\.mahal?$/,
-            loader: 'mahal-webpack-loader',
+            loader: '@mahaljs/webpack-loader',
 
             exclude: /node_modules/
         },

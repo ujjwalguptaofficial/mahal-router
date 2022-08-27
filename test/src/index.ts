@@ -1,4 +1,4 @@
-import { Timer, Mahal } from "mahal";
+import { Mahal } from "mahal";
 import Root from "./components/root.mahal";
 import { RouterPlugin, Router } from "mahal-router";
 import { routes } from "./routes";
@@ -6,7 +6,11 @@ import "flexboot";
 import * as $ from "jquery";
 
 window['jQuery'] = $;
-window['after'] = new Timer().timeout;
+window['after'] = function (timeoutValue) {
+    return new Promise((res) => {
+        setTimeout(res, timeoutValue);
+    })
+};
 
 const router = new Router(routes, {
     mode: "history"
@@ -25,7 +29,7 @@ router.on("afterEach", (next, prev, err) => {
     window['routeErr'] = err;
     console.log("afterEach", next);
 })
-const app = new Mahal(Root, '#app');
+const app = new Mahal(Root as any, '#app');
 
 app.extend.plugin(RouterPlugin, router);
 // app.extend.renderer = createRenderer;
