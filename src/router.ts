@@ -228,7 +228,6 @@ export class Router {
         route.query = route.query;
         this.nextPath_ = route;
         this.prevPath_ = merge({}, this.currentRoute);
-        // this.splittedPath_ = trimSlash(route.path).split("/");
 
         return this.eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,

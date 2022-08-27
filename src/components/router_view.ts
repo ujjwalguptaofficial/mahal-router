@@ -71,17 +71,6 @@ export class RouterView extends BaseComponent {
         const splittedPath: string[] = this.splittedPath;
         let isSameRoute = false;
 
-        // find if same route is being called
-        // if (!this.isFirstLoad) {
-        // splittedPath.every(q => {
-        //     if (q === this.pathname) {
-        //         isSameRoute = true;
-        //         return false;
-        //     }
-        //     return true;
-        // })
-        // }
-
         const samePathIndex = splittedPath.findIndex(q => q === this.pathname);
 
         if (samePathIndex >= 0) {
@@ -92,15 +81,12 @@ export class RouterView extends BaseComponent {
             return;
         }
 
-        // ignore if same route
-        // if (!isSameRoute) {
         const index = pathVisited.findIndex(q => q === this.pathname);
         if (index >= 0) {
             pathVisited.splice(index);
         }
         this.pathname = null;
         return this.loadComponent();
-        // }
     }
 
     get reqRoute(): IRoute {
@@ -123,24 +109,12 @@ export class RouterView extends BaseComponent {
                     pathToLoad
                 ];
             }
-            // const afterRouteLeave = (shouldNavigate) => {
-            // if (shouldNavigate === false) return;
             if (!isRuterViewEligible) {
                 this.name = null;
                 return res();
             }
             Object.assign(this.route, this.reqRoute);
             this.onCompEvaluated(matchedRoute).then(res);
-            // }
-            // if (this.compInstance) {
-            //     this.compInstance.emit(ROUTER_LIFECYCLE_EVENT.RouteLeaving, this.reqRoute, this.activeRoute).then(evtResult => {
-            //         const shouldNavigate = evtResult.length > 0 ? evtResult.pop() : true;
-            //         afterRouteLeave(shouldNavigate)
-            //     })
-            // }
-            // else {
-            // afterRouteLeave(true);
-            // }
         });
 
     }
@@ -169,11 +143,6 @@ export class RouterView extends BaseComponent {
                     setName();
                 }
             }
-            // const splittedPath: string[] = this.splittedPath;
-            // if (result.path === splittedPath[splittedPath.length - 1]) {
-            // this.router['_changeRoute_'](this.reqRoute);
-            // this.router['emitAfterEach_']();
-            // }
             comp = result.comp;
             pathVisited.push(result.path);
             this.pathname = result.path;
