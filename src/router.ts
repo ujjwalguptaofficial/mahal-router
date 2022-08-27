@@ -9,38 +9,38 @@ import { Route } from "./route";
 import { RouteNotFound } from "./components";
 
 export class Router {
-    private nextPath_: IRoute;
-    private prevPath_: IRoute;
-    private splittedPath_: string[];
-    private isNavigatedByBrowser_: boolean = false;
-    private eventBus_ = new EventBus();
+    private _nextPath_: IRoute;
+    private _prevPath_: IRoute;
+    private _splittedPath_: string[];
+    private _isNavigatedByBrowser_: boolean = false;
+    private _eventBus_ = new EventBus();
     private _isStart_ = true;
     private _matched_: { [key: string]: IRouteFindResult };
-    private routeManager_: RouteManager;
-    private option_: IRouterOption;
+    private _routeManager_: RouteManager;
+    private _option_: IRouterOption;
 
     history: History;
 
-    private isHistoryMode_ = false;
+    private _isHistoryMode_ = false;
 
     currentRoute = new Route();
 
     constructor(routes: RouteStore, option?: IRouterOption) {
-        this.option_ = option = option || {
+        this._option_ = option = option || {
             mode: ROUTER_MODE.History
         } as IRouterOption;
 
-        this.routeManager_ = new RouteManager(routes);
-        this.isHistoryMode_ = option.mode === ROUTER_MODE.History;
+        this._routeManager_ = new RouteManager(routes);
+        this._isHistoryMode_ = option.mode === ROUTER_MODE.History;
 
         this.history = getHistory(option.mode as any);
 
         if (option.mode === ROUTER_MODE.History) {
             window.addEventListener('popstate', (event) => {
-                this.isNavigatedByBrowser_ = true;
-                this.goto(this.routeFromUrl_(location))
+                this._isNavigatedByBrowser_ = true;
+                this.goto(this._routeFromUrl_(location))
             });
-            this.goto(this.routeFromUrl_(location));
+            this.goto(this._routeFromUrl_(location));
         }
     }
 
@@ -54,7 +54,7 @@ export class Router {
     goto(to: IRoute) {
         const name = to.name;
         if (name) {
-            const path = this.routeManager_.pathByName(to);
+            const path = this._routeManager_.pathByName(to);
             if (!path) {
                 if (process.env.NODE_ENV !== "production") {
                     console.warn(`No route found with name ${name}`);
@@ -69,7 +69,7 @@ export class Router {
         const matched: { [key: string]: IRouteFindResult } = {};
         let paths = [];
         splittedPath.every(_ => {
-            const result = this.routeManager_.findComponent(splittedPath, storedRoutes);
+            const result = this._routeManager_.findComponent(splittedPath, storedRoutes);
             if (result) {
                 matched[result.path] = result
                 storedRoutes.push(result.key);
@@ -89,7 +89,7 @@ export class Router {
         const isNotFound = storedRoutes.length == 0 || splittedPath.length !== storedRoutes.length;
 
         if (isNotFound) {
-            const result = this.routeManager_.findComponent(["*"], []) || {
+            const result = this._routeManager_.findComponent(["*"], []) || {
                 comp: RouteNotFound,
                 key: '*',
                 name: 'NotFound',
@@ -99,8 +99,8 @@ export class Router {
             to.name = result.name;
             to.query = to.query || {};
             to.param = result.param;
-            this.emitNotFound_(to);
-            this.splittedPath_ = ["*"];
+            this._emitNotFound_(to);
+            this._splittedPath_ = ["*"];
             matched["*"] = result;
         }
         else {
@@ -112,22 +112,22 @@ export class Router {
             to.param = param;
             const routePath = paths.pop();
             to.name = matched[routePath].name;
-            this.splittedPath_ = splittedPath;
+            this._splittedPath_ = splittedPath;
         }
 
         this._matched_ = matched;
 
-        return this.emitBeforeEach_(to).then(result => {
+        return this._emitBeforeEach_(to).then(result => {
             if (result.success) {
-                return this.emitNavigate_(to).then(errs => {
+                return this._emitNavigate_(to).then(errs => {
                     const err = errs.find(q => q != null);
                     if (!err) {
                         this._changeRoute_(to);
                     }
-                    this.emitAfterEach_(err);
+                    this._emitAfterEach_(err);
                     return err;
                 }).catch(error => {
-                    this.emitAfterEach_(error);
+                    this._emitAfterEach_(error);
                 })
             }
             else {
@@ -148,13 +148,13 @@ export class Router {
                     })
                 }
                 const errMessage = err.get();
-                this.emitAfterEach_(errMessage);
+                this._emitAfterEach_(errMessage);
                 return errMessage;
             }
         })
     }
 
-    private initRoute_(val: IRoute) {
+    private _initRoute_(val: IRoute) {
         const routeInstance = this.currentRoute;
         routeInstance.path = val.path;
         routeInstance.param = val.param || {};
@@ -162,14 +162,14 @@ export class Router {
         routeInstance.name = val.name;
     }
 
-    private routeFromUrl_(url: URL | Location): IRoute {
+    private _routeFromUrl_(url: URL | Location): IRoute {
         return {
             path: url.pathname,
             query: url.search && parseQuery(url.search)
         }
     }
 
-    private emitBeforeEach_(to) {
+    private _emitBeforeEach_(to) {
         return this.emit(ROUTER_LIFECYCLE_EVENT.BeforeEach, to).then(results => {
             const result = results.pop();
             if (result != null) {
@@ -190,16 +190,16 @@ export class Router {
 
 
     private _changeRoute_(route: IRoute) {
-        this.initRoute_(route);
-        if (!this.isHistoryMode_ || (!this.isNavigatedByBrowser_ && !this._isStart_)) {
+        this._initRoute_(route);
+        if (!this._isHistoryMode_ || (!this._isNavigatedByBrowser_ && !this._isStart_)) {
             this.history.pushState(
                 merge({ key: performance.now() }),
                 '',
-                this.routeManager_.resolve(route as any)
+                this._routeManager_.resolve(route as any)
             );
         }
         else {
-            this.isNavigatedByBrowser_ = this._isStart_ = false;
+            this._isNavigatedByBrowser_ = this._isStart_ = false;
         }
     }
 
@@ -212,34 +212,34 @@ export class Router {
     }
 
     on(event: RouterLifeCycleEvent, cb: Function) {
-        this.eventBus_.on(event, cb);
+        this._eventBus_.on(event, cb);
         return this;
     }
 
     off(event: string, cb: Function) {
-        this.eventBus_.off(event, cb);
+        this._eventBus_.off(event, cb);
     }
 
     emit(event: string, ...data) {
-        return this.eventBus_.emit(event, ...data);
+        return this._eventBus_.emit(event, ...data);
     }
 
-    private emitNavigate_(route: IRoute) {
+    private _emitNavigate_(route: IRoute) {
         route.query = route.query;
-        this.nextPath_ = route;
-        this.prevPath_ = merge({}, this.currentRoute);
+        this._nextPath_ = route;
+        this._prevPath_ = merge({}, this.currentRoute);
 
-        return this.eventBus_.emitLinear(
+        return this._eventBus_.emitLinear(
             ROUTER_LIFECYCLE_EVENT.Navigate,
             route
         );
     }
 
-    private emitAfterEach_(error?) {
-        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this.nextPath_, this.prevPath_, error);
+    private _emitAfterEach_(error?) {
+        this.emit(ROUTER_LIFECYCLE_EVENT.AfterEach, this._nextPath_, this._prevPath_, error);
     }
 
-    private emitNotFound_(to) {
+    private _emitNotFound_(to) {
         this.emit(ROUTER_LIFECYCLE_EVENT.RouteNotFound, to);
     }
 

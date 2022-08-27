@@ -90,11 +90,11 @@ export class RouterView extends BaseComponent {
     }
 
     get reqRoute(): IRoute {
-        return this.router['nextPath_'];
+        return this.router['_nextPath_'];
     }
 
     get activeRoute(): IRoute {
-        return this.router['prevPath_'];
+        return this.router['_prevPath_'];
     }
 
     loadComponent() {

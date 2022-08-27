@@ -12,6 +12,6 @@ export class BaseComponent extends Component {
     }
 
     get splittedPath() {
-        return this.router['splittedPath_'];
+        return this.router['_splittedPath_'];
     }
 }

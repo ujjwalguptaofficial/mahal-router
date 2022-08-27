@@ -28,7 +28,7 @@ export class RouterLink extends BaseComponent {
         };
 
         let slotElement: HTMLElement = children[0] || document.createElement('a');
-        (slotElement as HTMLLinkElement).href = this.router['routeManager_'].resolve(to);
+        (slotElement as HTMLLinkElement).href = this.router['_routeManager_'].resolve(to);
         slotElement.onclick = (e) => {
             e.preventDefault();
             let shouldPrevent;
