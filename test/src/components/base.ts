@@ -1,5 +1,5 @@
 import { Component } from "mahal";
-import { Router, Route } from "mahal-router";
+import { Router, Route } from "@mahaljs/router";
 
 export class BaseComponent extends Component {
     get router() {

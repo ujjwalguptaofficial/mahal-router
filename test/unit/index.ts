@@ -1,4 +1,4 @@
-import { createRoute, Router } from "mahal-router";
+import { createRoute, Router } from "@mahaljs/router";
 import { expect } from "chai";
 
 describe('event test', () => {

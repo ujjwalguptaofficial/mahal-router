@@ -11,7 +11,7 @@ dateCreated:
 </html>
 
 <script>
-import { IRoute } from "mahal-router";
+import { IRoute } from "@mahaljs/router";
 import { BaseComponent } from "./base";
 
 export default class extends BaseComponent {

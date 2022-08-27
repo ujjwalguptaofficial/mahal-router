@@ -1,6 +1,6 @@
 import { Mahal } from "mahal";
 import Root from "./components/root.mahal";
-import { RouterPlugin, Router } from "mahal-router";
+import { RouterPlugin, Router } from "@mahaljs/router";
 import { routes } from "./routes";
 import "flexboot";
 import * as $ from "jquery";

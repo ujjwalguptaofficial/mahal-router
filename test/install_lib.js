@@ -8,7 +8,7 @@ const packageInfo = JSON.parse(content);
 if (packageInfo) {
     const version = packageInfo.version;
     console.log('version', version);
-    execSync(`npm i ../mahal-router-${version}.tgz --no-save`);
+    execSync(`npm i ../mahaljs-router-${version}.tgz --no-save`);
 }
 else {
     throw "no package found";

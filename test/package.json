@@ -21,7 +21,7 @@
     "fortjs": "^2.0.0",
     "html-webpack-plugin": "^5.2.0",
     "jquery": "^3.6.0",
-    "mahal-router": "file:../mahal-router-1.1.1.tgz",
+    "@mahaljs/router": "file:../@mahaljs/router-1.1.1.tgz",
     "puppeteer": "^11.0.0"
   },
   "devDependencies": {

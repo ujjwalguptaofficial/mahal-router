@@ -1,4 +1,4 @@
-import { RouteStore, createRoute } from "mahal-router";
+import { RouteStore, createRoute } from "@mahaljs/router";
 import Start from "./components/start.mahal";
 import DoNotLeave from "./components/do_not_leave.mahal"
 import UserById from "./components/user_by_id.mahal";
