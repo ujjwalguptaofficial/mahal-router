@@ -8,7 +8,7 @@ Official router plugin for [Mahal framework](https://github.com/ujjwalguptaoffic
 # Install
 
 ```
-npm i mahal-router
+npm i @mahaljs/router
 ```
 
 # Setup
@@ -16,7 +16,7 @@ npm i mahal-router
 ```
 import { Timer, Mahal } from "mahal";
 import Root from "./components/root.mahal";
-import { RouterPlugin, Router } from "mahal-router";
+import { RouterPlugin, Router } from "@mahaljs/router";
 import { routes } from "./routes";
 
 const router = new Router(routes, {
