@@ -1,4 +1,4 @@
-import { IRoute, IRouterOption, IRouteFindResult, IError } from "./interfaces";
+import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
 import { ErrorHelper, getHistory, RouteManager } from "./helpers";
 import { merge } from "mahal";
 import { RouteStore, RouterLifeCycleEvent } from "./types";
