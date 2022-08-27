@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/@mahaljs%2Frouter.svg)](https://badge.fury.io/js/mahal-router)
+[![npm version](https://badge.fury.io/js/@mahaljs%2Frouter.svg)](https://badge.fury.io/js/@mahaljs%2Frouter)
 [![TEST](https://github.com/ujjwalguptaofficial/mahal-router/actions/workflows/test.yml/badge.svg)](https://github.com/ujjwalguptaofficial/mahal-router/actions/workflows/test.yml)
 
 # mahal-router
