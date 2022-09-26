@@ -1,4 +1,4 @@
-import { Reactive, merge, Component } from "mahal";
+import { reactive, merge, Component } from "mahal";
 import { BaseComponent } from "./base";
 import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
@@ -9,7 +9,7 @@ const pathVisited = [];
 
 export class RouterView extends BaseComponent {
 
-    @Reactive
+    @reactive
     name: String;
 
     pathname: string;

@@ -1,4 +1,4 @@
-import { Prop } from "mahal";
+import { prop } from "mahal";
 import { BaseComponent } from "./base";
 import { Route } from "../route";
 import { T_string_any } from "../types";
@@ -7,16 +7,16 @@ export class RouterLink extends BaseComponent {
 
     to: Route;
 
-    @Prop(String)
+    @prop(String)
     path: string;
 
-    @Prop(String)
+    @prop(String)
     name: string;
 
-    @Prop(Object)
+    @prop(Object)
     query: T_string_any;
 
-    @Prop(Object)
+    @prop(Object)
     param: T_string_any;
 
     render({ children }) {
