@@ -64,6 +64,15 @@ export class Router {
             }
             to.path = path;
         }
+
+        const path = to.path;
+
+        if (path == null) {
+            return Promise.reject(
+                `No route found for specified argument ${JSON.stringify(to)}`
+            );
+        }
+
         const splittedPath = trimSlash(to.path).split("/");
         const storedRoutes = [];
         const matched: { [key: string]: IRouteFindResult } = {};

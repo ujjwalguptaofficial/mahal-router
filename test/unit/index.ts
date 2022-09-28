@@ -58,6 +58,15 @@ describe('event test', () => {
         })
     })
 
+    it('go to with empty object', (done) => {
+        router.goto({}).catch(err => {
+            expect(err).equal(
+                "No route found for specified argument {}"
+            )
+            done();
+        })
+    })
+
     it('check 404 using path', (done) => {
         const onNotFound = (route) => {
             const expectedRoute = {
