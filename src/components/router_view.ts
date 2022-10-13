@@ -19,10 +19,10 @@ export class RouterView extends BaseComponent {
     isDestroyed = false;
 
     render(context: IRenderContext): HTMLElement {
-        const ce = context.createElement;
+        const ce = context.createEl.bind(this);
         const ctx = this;
-        return ce.call(this, 'div', [
-            ce.call(this, 'in-place', [], {
+        return ce('div', [
+            ce('in-place', [], {
                 attr: {
                     of: {
                         v: ctx.name,
@@ -42,7 +42,7 @@ export class RouterView extends BaseComponent {
                     }
                 },
             })
-        ], {});
+        ]);
     }
 
     onInit() {

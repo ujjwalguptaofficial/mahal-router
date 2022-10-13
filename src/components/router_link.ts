@@ -1,7 +1,9 @@
-import { prop } from "mahal";
+import { prop, replaceEl } from "mahal";
 import { BaseComponent } from "./base";
 import { Route } from "../route";
 import { T_string_any } from "../types";
+import { IRenderContext } from "mahal/dist/ts/interface";
+import { nextTick } from "process";
 
 export class RouterLink extends BaseComponent {
 
@@ -19,7 +21,17 @@ export class RouterLink extends BaseComponent {
     @prop(Object)
     param: T_string_any;
 
-    render({ children }) {
+    onInit() {
+        this.on('mount', this.onMount)
+    }
+
+    render(context: IRenderContext) {
+        return context.createEl.bind(this)(
+            'slot', []
+        )
+    }
+
+    onMount() {
         const to = {
             name: this.name,
             param: this.param,
@@ -27,7 +39,7 @@ export class RouterLink extends BaseComponent {
             query: this.query
         };
 
-        let slotElement: HTMLElement = children[0] || document.createElement('a');
+        let slotElement: HTMLElement = this.element || document.createElement('a');
         (slotElement as HTMLLinkElement).href = this.router['_routeManager_'].resolve(to);
         slotElement.onclick = (e) => {
             e.preventDefault();
@@ -43,6 +55,8 @@ export class RouterLink extends BaseComponent {
                 this.router[method](to as any);
             })
         };
-        return slotElement;
+        if (this.element !== slotElement) {
+            this.element.replaceWith(slotElement);
+        }
     }
 }

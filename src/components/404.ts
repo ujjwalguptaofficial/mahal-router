@@ -3,10 +3,10 @@ import { BaseComponent } from "./base";
 
 export class RouteNotFound extends BaseComponent {
     render(context: IRenderContext) {
-        const ce = context.createElement;
+        const ce = context.createEl;
         const ct = context.createTextNode;
         return ce.call(this, 'div', [
-            ct.call(this, 'Route does not exist | 404')
-        ], {});
+            ct('Route does not exist | 404')
+        ]);
     }
 }
