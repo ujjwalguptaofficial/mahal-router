@@ -23,10 +23,10 @@ export class RouterView extends BaseComponent {
         const ctx = this;
         return ce('div', [
             ce('in-place', [], {
-                attr: {
+                rAttr: {
                     of: {
-                        v: ctx.name,
-                        k: 'name'
+                        get v() { return ctx.name },
+                        k: ['name']
                     }
                 },
                 dir: {
@@ -108,12 +108,17 @@ export class RouterView extends BaseComponent {
                 matchedRoute = this.router['_matched_'][
                     pathToLoad
                 ];
+
+                if (!matchedRoute) {
+                    throw new Error(`Could not find route for path - ${this.reqRoute.path}`);
+                }
             }
             if (!isRuterViewEligible) {
                 this.name = null;
                 return res();
             }
             Object.assign(this.route, this.reqRoute);
+
             this.onCompEvaluated(matchedRoute).then(res);
         });
 

@@ -1,6 +1,6 @@
 {
   "name": "@mahaljs/router",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The official router for mahal framework.",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -39,11 +39,11 @@
   },
   "homepage": "https://github.com/ujjwalguptaofficial/mahal-router#readme",
   "devDependencies": {
-    "@mahaljs/webpack-loader": "^1.7.0",
+    "@mahaljs/webpack-loader": "^1.7.2",
     "@types/node": "^14.14.35",
     "copy-webpack-plugin": "^6.1.1",
     "del-cli": "^4.0.1",
-    "mahal": "^1.7.1",
+    "mahal": "^1.7.2",
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.2",
     "webpack": "^4.44.1",
@@ -52,7 +52,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "peerDependencies": {
-    "mahal": "^1.7.1"
+    "mahal": "^1.7.2"
   },
   "dependencies": {}
 }
