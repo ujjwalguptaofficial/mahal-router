@@ -38,7 +38,7 @@ export const routes: RouteStore = {
             },
             ...createRoute({
                 "path": "dashboard",
-                component:Dashboard,
+                component: Dashboard,
                 name: "user-dashboard",
             }),
             "/{userId}/{accountId}": {
@@ -56,6 +56,16 @@ export const routes: RouteStore = {
                 component: import("./components/particular_task.mahal")
             }
         }
+    }),
+    ...createRoute({
+        path: "/project",
+        component: import("./components/projects.mahal"),
+        name: "project",
+    }),
+    ...createRoute({
+        path: "/project/{id}",
+        component: import("./components/project_by_id.mahal"),
+        name: "project-by-id",
     }),
 }
 console.log("routes", routes)

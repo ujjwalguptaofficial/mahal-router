@@ -13,12 +13,14 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
     const splittedPathLength = splittedPath.length;
     let targetPath;
     let pathIndex;;
+    let paths = [];
     const resetPath = () => {
         pathIndex = 0;
         targetPath = splittedPath[pathIndex];
+        paths = [];
     }
     resetPath();
-    let paths = [];
+    const routesFound: IRouteFindResult[] = [];
     for (route in routes) {
         const routeslashSplit = route.split("/");
         if (splittedPathLength < routeslashSplit.length) return;
@@ -46,18 +48,27 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
             return isRouteFound;
         });
         if (isRouteFound) {
-            return {
+            const routeResult = {
                 path: paths.join("/"),
                 key: route,
                 comp: routes[route].component,
                 param: param,
                 name: routes[route].name
+            };
+            // absolute route found
+            if (splittedPathLength === routeslashSplit.length) {
+                return routeResult;
+            }
+            else { // continue searching for absolute route
+                routesFound.push(routeResult);
+                resetPath();
             }
         }
         else {
             resetPath();
         }
     }
+    return routesFound[0];
 };
 export class RouteManager {
     private routeStore_: RouteStore = {};
@@ -105,6 +116,11 @@ export class RouteManager {
             splittedPath.forEach(item => {
                 const regexMatch = item.match(regex1);
                 if (regexMatch) {
+                    if (!route.param) {
+                        return Promise.reject(
+                            `Expecting param - no param is provided in route ${JSON.stringify(route)}`
+                        );
+                    }
                     modifiedPaths.push(
                         route.param[regexMatch[1]]
                     );

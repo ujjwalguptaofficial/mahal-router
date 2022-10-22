@@ -62,32 +62,5 @@ describe('Task', function () {
 
     })
 
-    it("click on home", async () => {
-        await $click('.route-home');
-        await $after(100);
-        const location = await $location();
-        expect(location.pathname).equal("/context.html");
-        expect(location.href.includes("?")).equal(false);
-
-        expectedRoute = {
-            name: "home-context",
-            param: {
-
-            },
-            path: "/context.html",
-            query: {
-
-            }
-        }
-        await $testForRoute(expectedRoute, {
-            name: "particular_task",
-            param: {
-                "value": "Hello World"
-            },
-            path: "/task/Hello World",
-            query: {
-
-            }
-        }, expectedRoute);
-    })
+ 
 })

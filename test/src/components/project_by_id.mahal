@@ -1,0 +1,23 @@
+---
+name: project_by_id.mahal
+description:
+dateCreated: October 21, 2022
+---
+
+<html>
+<div class="project-by-id">Project by id {{id}}</div>
+</html>
+
+<script>
+import { Component } from "mahal";
+import { BaseComponent } from "./base";
+
+export default class extends BaseComponent {
+    get id() {
+        return this.route.param.id;
+    }
+}
+</script>
+
+<style>
+</style>

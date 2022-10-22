@@ -53,6 +53,11 @@ export class Router {
 
     goto(to: IRoute) {
         const name = to.name;
+
+
+        // to.param = to.param || {};
+        // to.query = to.query || {};
+
         if (name) {
             const path = this._routeManager_.pathByName(to);
             if (!path) {
