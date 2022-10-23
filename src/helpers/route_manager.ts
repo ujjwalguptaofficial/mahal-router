@@ -110,17 +110,29 @@ export class RouteManager {
 
     pathByName(route: IRoute) {
         let path = nameMap[route.name];
+        const result = {
+            path: path,
+            error: null
+        };
         if (path && path.match(regex1)) {
             const splittedPath = path.split("/");
             let modifiedPaths = [];
-            splittedPath.forEach(item => {
+            splittedPath.every(item => {
                 const regexMatch = item.match(regex1);
                 if (regexMatch) {
                     if (!route.param) {
-                        return Promise.reject(
-                            `Expecting param - no param is provided in route ${JSON.stringify(route)}`
-                        );
+                        result.error = `Expecting param - no param is provided in route ${JSON.stringify(route)}`
+                        return false;
                     }
+
+                    if (process.env.NODE_ENV !== "production") {
+                        const paramVariable = regexMatch[1];
+                        if (!route.param[paramVariable]) {
+                            result.error = `Expecting param '${paramVariable}' but is not provided`;
+                            return false;
+                        }
+                    }
+
                     modifiedPaths.push(
                         route.param[regexMatch[1]]
                     );
@@ -128,10 +140,11 @@ export class RouteManager {
                 else {
                     modifiedPaths.push(item);
                 }
+                return true;
             });
-            return modifiedPaths.join("/");
+            result.path = modifiedPaths.join("/");
         }
-        return path;
+        return result;
     }
 
     resolve(route: Route) {
@@ -140,7 +153,7 @@ export class RouteManager {
             path = route.path;
         }
         else if (route.name) {
-            path = this.pathByName(route);
+            path = this.pathByName(route) as any;
             if (!path) {
                 throw `Invalid route - no route found with name ${route.name}`;
             }

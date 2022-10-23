@@ -54,19 +54,9 @@ export class Router {
     goto(to: IRoute) {
         const name = to.name;
 
-
-        // to.param = to.param || {};
-        // to.query = to.query || {};
-
         if (name) {
-            const path = this._routeManager_.pathByName(to);
-            if (!path) {
-                if (process.env.NODE_ENV !== "production") {
-                    console.warn(`No route found with name ${name}`);
-                }
-
-                return Promise.resolve(null);
-            }
+            const { path, error } = this._routeManager_.pathByName(to);
+            if (error) return Promise.reject(error);
             to.path = path;
         }
 

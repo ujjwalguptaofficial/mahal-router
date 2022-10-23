@@ -8,6 +8,11 @@ describe('event test', () => {
             component: 'Start',
             name: "home",
         }),
+        ...createRoute({
+            path: "/project",
+            component: 'Project',
+            name: "project",
+        }),
     }, {
         mode: 'memory'
     });
@@ -86,26 +91,6 @@ describe('event test', () => {
         router.on("notFound", onNotFound);
 
         router.gotoPath("/dd").then(_ => {
-            expect(router.history).length(3);
-            done();
-        })
-    })
-
-    it('check 404 using route object', (done) => {
-        const onNotFound = (route) => {
-            const expectedRoute = {
-                name: "invalid_route"
-            };
-            // return done(route)
-            expect(route).eql(expectedRoute);
-            // router.off('navigate');
-            router.off('notFound', onNotFound);
-        };
-        router.on("notFound", onNotFound);
-
-        router.goto({
-            name: 'invalid_route'
-        }).then(_ => {
             expect(router.history).length(3);
             done();
         })
