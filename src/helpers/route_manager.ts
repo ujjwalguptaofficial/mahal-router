@@ -68,6 +68,8 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
             resetPath();
         }
     }
+    return routesFound.pop();
+    // return routesFound.length > 0 ? routesFound.pop() : null;
     return routesFound[0];
 };
 export class RouteManager {
@@ -101,7 +103,9 @@ export class RouteManager {
 
         let routes = this.routeStore_;
         loaded.forEach(item => {
+            // item.split("/").forEach(_ => {
             splittePath.shift();
+            // })
             routes = routes[item].children;
         });
 
@@ -114,7 +118,7 @@ export class RouteManager {
             path: path,
             error: null
         };
-        if (path && path.match(regex1)) {
+        if (path) {
             const splittedPath = path.split("/");
             let modifiedPaths = [];
             splittedPath.every(item => {
@@ -153,7 +157,7 @@ export class RouteManager {
             path = route.path;
         }
         else if (route.name) {
-            path = this.pathByName(route) as any;
+            path = this.pathByName(route).path;
             if (!path) {
                 throw `Invalid route - no route found with name ${route.name}`;
             }

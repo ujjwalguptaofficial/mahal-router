@@ -1,7 +1,7 @@
 import { createRoute, Router } from "@mahaljs/router";
 import { expect } from "chai";
 
-describe('event test', () => {
+describe('error test', () => {
     const router = new Router({
         ...createRoute({
             path: "/project",

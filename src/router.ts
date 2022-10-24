@@ -55,7 +55,18 @@ export class Router {
         const name = to.name;
 
         if (name) {
-            const { path, error } = this._routeManager_.pathByName(to);
+            const routeClone: IRoute = Object.assign(
+                {}, to
+            );
+            const currentRouteParam = this.currentRoute.param
+            if (currentRouteParam) {
+                routeClone.param = Object.assign(
+                    {},
+                    currentRouteParam,
+                    to.param || {},
+                )
+            }
+            const { path, error } = this._routeManager_.pathByName(routeClone);
             if (error) return Promise.reject(error);
             to.path = path;
         }
@@ -72,12 +83,17 @@ export class Router {
         const storedRoutes = [];
         const matched: { [key: string]: IRouteFindResult } = {};
         let paths = [];
-        splittedPath.every(_ => {
+        splittedPath.every((_, index) => {
             const result = this._routeManager_.findComponent(splittedPath, storedRoutes);
             if (result) {
                 matched[result.path] = result
                 storedRoutes.push(result.key);
                 paths.push(result.path);
+
+                // update splitted path
+                splittedPath.splice(index, result.path.split("/").length, result.path);
+                // splittedPath[index] = result.path;
+
                 return true;
             }
             return false;
@@ -109,12 +125,19 @@ export class Router {
         }
         else {
             to.query = to.query || {};
-            let param = {};
-            for (const key in matched) {
-                param = merge(param, matched[key].param);
-            }
-            to.param = param;
+            // let param = {};
+            // for (const key in matched) {
+            //     param = merge(param, matched[key].param);
+            // }
+            paths.forEach((path, index) => {
+                const childRoute = matched[paths[index + 1]];
+                if (childRoute) {
+                    const parentRoute = matched[path];
+                    childRoute.param = merge(childRoute.param, parentRoute.param);
+                }
+            });
             const routePath = paths.pop();
+            to.param = matched[routePath].param;
             to.name = matched[routePath].name;
             this._splittedPath_ = splittedPath;
         }

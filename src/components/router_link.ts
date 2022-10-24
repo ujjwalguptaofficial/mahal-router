@@ -1,9 +1,8 @@
-import { prop, replaceEl } from "mahal";
+import { prop } from "mahal";
 import { BaseComponent } from "./base";
 import { Route } from "../route";
 import { T_string_any } from "../types";
 import { IRenderContext } from "mahal/dist/ts/interface";
-import { nextTick } from "process";
 
 export class RouterLink extends BaseComponent {
 

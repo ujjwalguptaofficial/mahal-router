@@ -38,7 +38,7 @@ describe('Project', function () {
         await $after(100);
         const selector = '.project-by-id';
         const html = await $html(selector);
-        expect(html).equal('Project by id 1');
+        expect(html).includes('Project by id 1');
 
         expectedRoute = {
             name: "project-by-id",
@@ -72,7 +72,7 @@ describe('Project', function () {
         await $after(100);
         const selector = '.project-by-id';
         const html = await $html(selector);
-        expect(html).equal('Project by id 2');
+        expect(html).includes('Project by id 2');
 
         expectedRoute = {
             name: "project-by-id",
@@ -104,7 +104,7 @@ describe('Project', function () {
 
         const selector = '.project-by-id';
         const html = await $html(selector);
-        expect(html).equal('Project by id 1');
+        expect(html).includes('Project by id 1');
 
         expectedRoute = {
             name: "project-by-id",
@@ -138,7 +138,7 @@ describe('Project', function () {
         await $after(100);
         const selector = '.project-by-id';
         const html = await $html(selector);
-        expect(html).equal('Project by id 4');
+        expect(html).includes('Project by id 4');
 
         expectedRoute = {
             name: "project-by-id",
@@ -162,67 +162,36 @@ describe('Project', function () {
         }, expectedRoute);
     })
 
+    it("go to buy project from project id page", async () => {
+        await $routeGoto({
+            name: "buy-project"
+        });
+        await $after(100);
+        const selector = '.buy-project';
+        const html = await $html(selector);
+        expect(html).equal('Buy Project 4');
 
-    // it("go to another task", async () => {
-    //     const text = "Hello World";
-    //     await $routeGoto("/task/" + text);
-    //     await $after(100);
-    //     expect(await $text('div[comp="task"] h1')).equal("Task");
-    //     expect(text).equal(await $text('div[comp="task"] h3'));
-    //     const route = await $var('activeRoute');
-    //     expect(route.name).equal("particular_task");
+        expectedRoute = {
+            name: "buy-project",
+            param: {
+                id: '4'
+            },
+            path: "/project/4/buy",
+            query: {
 
-    //     expectedRoute = {
-    //         name: "particular_task",
-    //         param: {
-    //             "value": "Hello World"
-    //         },
-    //         path: "/task/Hello World",
-    //         query: {
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "project-by-id",
+            param: {
+                id: '4'
+            },
+            path: "/project/4",
+            query: {
 
-    //         }
-    //     }
-    //     await $testForRoute(expectedRoute, {
-    //         name: "particular_task",
-    //         param: {
-    //             "value": "Buy shoes"
-    //         },
-    //         path: "/task/Buy shoes",
-    //         query: {
-
-    //         }
-    //     }, expectedRoute);
-
-    // })
-
-    // it("click on home", async () => {
-    //     await $click('.route-home');
-    //     await $after(100);
-    //     const location = await $location();
-    //     expect(location.pathname).equal("/context.html");
-    //     expect(location.href.includes("?")).equal(false);
-
-    //     expectedRoute = {
-    //         name: "home-context",
-    //         param: {
-
-    //         },
-    //         path: "/context.html",
-    //         query: {
-
-    //         }
-    //     }
-    //     await $testForRoute(expectedRoute, {
-    //         name: "particular_task",
-    //         param: {
-    //             "value": "Hello World"
-    //         },
-    //         path: "/task/Hello World",
-    //         query: {
-
-    //         }
-    //     }, expectedRoute);
-    // })
+            }
+        }, expectedRoute);
+    })
 
     it("click on home", async () => {
         await $click('.route-home');
