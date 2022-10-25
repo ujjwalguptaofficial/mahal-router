@@ -59,6 +59,12 @@ before(async () => {
         }, selector);
     }
 
+    global.$routerViewSetLength = () => {
+        return page.evaluate(q => {
+            return router._activeRouterViewSet_.size;
+        });
+    }
+
     global.$routeBack = (selector) => {
         return page.evaluate(q => {
             return history.back();

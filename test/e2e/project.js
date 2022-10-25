@@ -31,6 +31,9 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(1);
     })
 
     it("click on particular project", async () => {
@@ -60,6 +63,9 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
 
     it("go to particular project", async () => {
@@ -94,6 +100,9 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
 
     it('go back by browser', async () => {
@@ -126,6 +135,9 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
 
     it("go to particular project after going back", async () => {
@@ -160,6 +172,9 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
 
     it("go to buy project from project id page", async () => {
@@ -191,7 +206,47 @@ describe('Project', function () {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
+
+    it("go to project", async () => {
+        await $routeGoto({
+            name: "project"
+        });
+        await $after(100);
+        const selector = 'div[comp="projects"]';
+        const html = await $html(selector);
+        expect(html.includes("Projects")).equal(true);
+
+        expect(await $length('div[comp="projects"] h1')).equal(1);
+
+        expectedRoute = {
+            name: "project",
+            param: {
+
+            },
+            path: "/project",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "buy-project",
+            param: {
+                id: '4'
+            },
+            path: "/project/4/buy",
+            query: {
+
+            }
+        }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(1);
+    })
+
 
     it("click on home", async () => {
         await $click('.route-home');
@@ -211,14 +266,17 @@ describe('Project', function () {
             }
         }
         await $testForRoute(expectedRoute, {
-            name: "buy-project",
+            name: "project",
             param: {
-                id: '4'
+
             },
-            path: "/project/4/buy",
+            path: "/project",
             query: {
 
             }
         }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
     })
 })
