@@ -82,6 +82,13 @@ before(async () => {
             return jQuery(q).text();
         }, selector);
     }
+
+    global.$attr = async (selector, attrName) => {
+        return await page.evaluate(q => {
+            return jQuery(q.selector).attr(q.attrName);
+        }, { selector, attrName });
+    }
+
     global.$html = async (selector) => {
         return await page.evaluate(q => {
             return jQuery(q).html();

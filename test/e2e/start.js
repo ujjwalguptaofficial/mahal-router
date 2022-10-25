@@ -23,6 +23,21 @@ describe('Start', function () {
         await $testForRoute(expectedRoute, {}, undefined)
     })
 
+
+    it('check for links rendered', async () => {
+        const attrOfHome = await $attr('.route-home', 'href');
+        expect(attrOfHome).equal('/context.html');
+
+        const attrOfLogin = await $attr('.route-login', 'href');
+        expect(attrOfLogin).equal('/user/login');
+
+        const attrOfAccount = await $attr('.account-page', 'href');
+        expect(attrOfAccount).equal('/user/1/2');
+
+        const attrOfProject = await $attr('.project', 'href');
+        expect(attrOfProject).equal('/project');
+    });
+
     it("go to same route", async () => {
         let history = await $history();
         const prevHistoryLength = history.length;
