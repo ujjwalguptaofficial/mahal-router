@@ -1,8 +1,7 @@
-export * from "./404";
-export * from "./base";
 export * from "./router_link";
-// export * from "./router_view";
 
 import RouterViewComponent from "./router_view.mahal";
+import NotFoundComponent from "./404.mahal";
 
 export const RouterView = RouterViewComponent;
+export const RouteNotFound = NotFoundComponent;

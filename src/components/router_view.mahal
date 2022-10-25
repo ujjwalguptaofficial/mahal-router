@@ -19,11 +19,6 @@ import { ErrorHelper } from "../helpers";
 
 const pathVisited = [];
 
-window["pathVisited"] = pathVisited;
-
-const routerView = [];
-window["routerView"] = routerView;
-
 export default class extends BaseComponent {
     @reactive
     name: String;
@@ -35,7 +30,7 @@ export default class extends BaseComponent {
     isDestroyed = false;
 
     onInit() {
-        routerView.push(this);
+        this.router["_activeRouterViewSet_"].add(this);
         this.waitFor("mount").then((_) => {
             if (!this.pathname) {
                 this.loadComponent();
@@ -49,9 +44,7 @@ export default class extends BaseComponent {
             this.compInstance = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
             this.isDestroyed = true;
-            console.log("destroyed");
-            const currentRoute = routerView.findIndex((q) => q === this);
-            routerView.splice(currentRoute, 1);
+            this.router["_activeRouterViewSet_"].delete(this);
         });
     }
 

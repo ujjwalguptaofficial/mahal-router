@@ -1,12 +1,12 @@
 import { IRoute, IRouterOption, IRouteFindResult } from "./interfaces";
 import { ErrorHelper, getHistory, RouteManager } from "./helpers";
-import { merge } from "mahal";
+import { Component, merge } from "mahal";
 import { RouteStore, RouterLifeCycleEvent } from "./types";
 import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { parseQuery, trimSlash } from "./utils";
 import { Route } from "./route";
-import { RouteNotFound } from "./components";
+import { RouteNotFound, RouterView } from "./components";
 
 export class Router {
     private _nextPath_: IRoute;
@@ -43,6 +43,8 @@ export class Router {
             this.goto(this._routeFromUrl_(location));
         }
     }
+
+    private _activeRouterViewSet_ = new Set<Component>();
 
     gotoPath(path: string) {
         const route = {
