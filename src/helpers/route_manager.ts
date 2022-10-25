@@ -97,19 +97,18 @@ export class RouteManager {
         this.routeStore_ = val;
     }
 
-    findComponent(splittePath: string[], loaded: string[]) {
-        // immutable array
-        splittePath = Array.from(splittePath);
-
+    findComponent(splittedPath: string[], loaded: string[]) {
         let routes = this.routeStore_;
         loaded.forEach(item => {
-            // item.split("/").forEach(_ => {
-            splittePath.shift();
-            // })
             routes = routes[item].children;
         });
 
-        return findComponent(routes, splittePath);
+        const result = findComponent(routes, splittedPath.slice(loaded.length));
+        if (result) {
+            // join route with multiple shash into one
+            splittedPath.splice(loaded.length, result.path.split("/").length, result.path);
+        }
+        return result;
     }
 
     pathByName(route: IRoute) {

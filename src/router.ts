@@ -92,10 +92,6 @@ export class Router {
                 storedRoutes.push(result.key);
                 paths.push(result.path);
 
-                // update splitted path
-                splittedPath.splice(index, result.path.split("/").length, result.path);
-                // splittedPath[index] = result.path;
-
                 return true;
             }
             return false;
