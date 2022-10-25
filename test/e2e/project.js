@@ -211,11 +211,11 @@ describe('Project', function () {
             }
         }
         await $testForRoute(expectedRoute, {
-            name: "project-by-id",
+            name: "buy-project",
             param: {
                 id: '4'
             },
-            path: "/project/4",
+            path: "/project/4/buy",
             query: {
 
             }

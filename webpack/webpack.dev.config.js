@@ -17,7 +17,7 @@ function getConfigForTaget(target) {
         output: {
             path: path.join(__dirname, "../dist"),
             filename: target.name,
-            library: 'MahalRouter',
+            library: target.type === 'var' ? 'MahalRouter' : undefined,
             libraryTarget: target.type
         },
         plugins: [

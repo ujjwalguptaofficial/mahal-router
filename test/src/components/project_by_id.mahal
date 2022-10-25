@@ -8,7 +8,7 @@ dateCreated: October 21, 2022
 <div class="project-by-id">
 	Project by id {{id}}
 	<button @click="buy">Buy</button>
-    <router-view></router-view>
+    <router-view class="project-by-id-router-view"></router-view>
 </div>
 </html>
 

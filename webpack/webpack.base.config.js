@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 const banner = require('../build_helper/licence');
 const CopyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
-
+const MahalPlugin = require('@mahaljs/webpack-loader/lib/plugin');
 
 module.exports = {
     entry: './src/index.ts',
@@ -14,6 +14,14 @@ module.exports = {
     ],
     module: {
         rules: [
+            {
+                test: /\.mahal?$/,
+                // loader: 'mahal-webpack-loader',
+                use: {
+                    loader: require.resolve('@mahaljs/webpack-loader')
+                },
+                exclude: /node_modules/
+            },
             {
                 test: /\.ts?$/,
                 use: {
@@ -27,9 +35,12 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts']
+        extensions: ['.ts', '.js', '.css', '.mahal', '.scss'],
     },
     plugins: [
+        new MahalPlugin({
+            lang: 'ts'
+        }),
         new webpack.BannerPlugin(banner),
         new CopyPlugin({
             patterns: [

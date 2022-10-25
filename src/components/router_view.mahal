@@ -1,19 +1,30 @@
+---
+name: router_view.mahal
+description:
+dateCreated: October 25, 2022
+---
+
+<html>
+<div>
+	<in-place :of="name" :ref(compInstance) />
+</div>
+</html>
+
+<script>
 import { reactive, merge, Component } from "mahal";
 import { BaseComponent } from "./base";
 import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
-import { IRenderContext } from "mahal/dist/ts/interface";
 import { ErrorHelper } from "../helpers";
 
 const pathVisited = [];
 
-window['pathVisited'] = pathVisited;
+window["pathVisited"] = pathVisited;
 
 const routerView = [];
-window['routerView'] = routerView;
+window["routerView"] = routerView;
 
-export class RouterView extends BaseComponent {
-
+export default class extends BaseComponent {
     @reactive
     name: String;
 
@@ -23,36 +34,9 @@ export class RouterView extends BaseComponent {
 
     isDestroyed = false;
 
-    render(context: IRenderContext): HTMLElement {
-        const ce = context.createEl.bind(this);
-        const ctx = this;
-        return ce('div', [
-            ce('in-place', [], {
-                rAttr: {
-                    of: {
-                        get v() { return ctx.name },
-                        k: ['name']
-                    }
-                },
-                dir: {
-                    model: {
-                        get value() {
-                            return [ctx.compInstance]
-                        },
-                        set value(values) {
-                            ctx.compInstance = values[0];
-                        },
-                        props: ['ref'],
-                        params: [ctx.compInstance]
-                    }
-                },
-            })
-        ]);
-    }
-
     onInit() {
         routerView.push(this);
-        this.waitFor("mount").then(_ => {
+        this.waitFor("mount").then((_) => {
             if (!this.pathname) {
                 this.loadComponent();
             }
@@ -65,14 +49,13 @@ export class RouterView extends BaseComponent {
             this.compInstance = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
             this.isDestroyed = true;
-            console.log('destroyed');
-            const currentRoute = routerView.findIndex(q => q === this);
+            console.log("destroyed");
+            const currentRoute = routerView.findIndex((q) => q === this);
             routerView.splice(currentRoute, 1);
         });
     }
 
     onNavigate() {
-
         if (this.isDestroyed) {
             return;
         }
@@ -80,7 +63,9 @@ export class RouterView extends BaseComponent {
         const splittedPath: string[] = this.splittedPath;
         let isSameRoute = false;
 
-        const samePathIndex = splittedPath.findIndex(q => q === this.pathname);
+        const samePathIndex = splittedPath.findIndex(
+            (q) => q === this.pathname
+        );
 
         if (samePathIndex >= 0) {
             isSameRoute = true;
@@ -90,7 +75,7 @@ export class RouterView extends BaseComponent {
             return;
         }
 
-        const index = pathVisited.findIndex(q => q === this.pathname);
+        const index = pathVisited.findIndex((q) => q === this.pathname);
         if (index >= 0) {
             pathVisited.splice(index);
         }
@@ -99,11 +84,11 @@ export class RouterView extends BaseComponent {
     }
 
     get reqRoute(): IRoute {
-        return this.router['_nextPath_'];
+        return this.router["_nextPath_"];
     }
 
     get activeRoute(): IRoute {
-        return this.router['_prevPath_'];
+        return this.router["_prevPath_"];
     }
 
     loadComponent() {
@@ -114,12 +99,12 @@ export class RouterView extends BaseComponent {
         return new Promise<void>((res) => {
             if (isRuterViewEligible) {
                 const pathToLoad = splittedPath.slice(pathVisited.length)[0];
-                matchedRoute = this.router['_matched_'][
-                    pathToLoad
-                ];
+                matchedRoute = this.router["_matched_"][pathToLoad];
 
                 if (!matchedRoute) {
-                    throw new Error(`Could not find route for path - ${this.reqRoute.path}`);
+                    throw new Error(
+                        `Could not find route for path - ${this.reqRoute.path}`
+                    );
                 }
             }
             if (!isRuterViewEligible) {
@@ -130,7 +115,6 @@ export class RouterView extends BaseComponent {
 
             this.onCompEvaluated(matchedRoute).then(res);
         });
-
     }
 
     onCompEvaluated(result: IRouteFindResult) {
@@ -141,28 +125,30 @@ export class RouterView extends BaseComponent {
                 const componentName = comp.name || "anonymous";
                 const setName = () => {
                     this.children = {
-                        [componentName]: comp
+                        [componentName]: comp,
                     };
                     this.name = componentName;
                     this.waitFor("update").then(res);
                     this.waitFor("error").then(rej);
-                }
+                };
                 if (this.name && this.name === componentName) {
                     this.name = null;
-                    this.waitFor("update").then(_ => {
+                    this.waitFor("update").then((_) => {
                         setName();
                     });
-                }
-                else {
+                } else {
                     setName();
                 }
-            }
+            };
             comp = result.comp;
             pathVisited.push(result.path);
             this.pathname = result.path;
             this.route.param = merge({}, result.param);
             changeComponent(true);
-
         });
     }
 }
+</script>
+
+<style>
+</style>
