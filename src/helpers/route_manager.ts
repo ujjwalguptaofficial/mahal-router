@@ -70,8 +70,6 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
         }
     }
     return routesFound.pop();
-    // return routesFound.length > 0 ? routesFound.pop() : null;
-    return routesFound[0];
 };
 export class RouteManager {
     private routeStore_: RouteStore = {};

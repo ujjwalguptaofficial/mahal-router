@@ -10,7 +10,8 @@ module.exports = function (config) {
             // "src/**/*.ts",
             "unit/index.ts", // *.tsx for React Jsx
             "unit/error.ts", // *.tsx for React Jsx
-            "unit/router_view_warning.ts" // *.tsx for React Jsx
+            "unit/router_view_warning.ts", // *.tsx for React Jsx
+            "unit/route_testing.ts" // *.tsx for React Jsx
         ],
         preprocessors: {
             "**/*.ts": "webpack",
