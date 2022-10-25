@@ -1,0 +1,18 @@
+---
+name: temp.mahal
+description:
+dateCreated: October 25, 2022
+---
+
+<html>
+<div>Temp</div>
+</html>
+
+<script>
+import { Component } from "mahal";
+
+export default class extends Component {}
+</script>
+
+<style>
+</style>

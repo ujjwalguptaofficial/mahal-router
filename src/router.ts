@@ -132,7 +132,7 @@ export class Router {
                 if (childRoute) {
                     const parentRoute = matched[path];
                     childRoute.param = merge(childRoute.param, parentRoute.param);
-                }
+                } isNotFound
             });
             const routePath = paths.pop();
             to.param = matched[routePath].param;
@@ -148,6 +148,15 @@ export class Router {
                     const err = errs.find(q => q != null);
                     if (!err) {
                         this._changeRoute_(to);
+
+                        // check for router view and if not then log warning to console
+                        if (process.env.NODE_ENV !== "production") {
+
+                            if (this._activeRouterViewSet_.size < this._splittedPath_.length) {
+                                // console.warn('is not found', to.path);
+                                console.warn(`No router view found for path - '${this._splittedPath_[this._splittedPath_.length - 1]}'`);
+                            }
+                        }
                     }
                     this._emitAfterEach_(err);
                     return err;

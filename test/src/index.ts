@@ -4,8 +4,40 @@ import { RouterPlugin, Router } from "@mahaljs/router";
 import { routes } from "./routes";
 import "flexboot";
 import * as $ from "jquery";
+import { spy } from "sinon";
 
 window['jQuery'] = $;
+
+function checkForRouterViewWarning(path: string) {
+    const consoleSpy = spy(console, "warn");
+
+    return new Promise((res, rej) => {
+        // check for consoles
+
+        setTimeout(() => {
+            consoleSpy.restore();
+            // debugger;
+            if (consoleSpy.args.length !== 1) {
+                res(false);
+            }
+
+            const args0 = consoleSpy.args[0];
+            if (args0.length !== 1) {
+                res(false);
+            }
+
+            if (args0[0] !== `No router view found for path - '${path}'`) {
+                res(false);
+            }
+
+            res(true);
+        }, 1100);
+    })
+
+}
+
+window['checkForRouterViewWarning'] = checkForRouterViewWarning;
+
 window['after'] = function (timeoutValue) {
     return new Promise((res) => {
         setTimeout(res, timeoutValue);
@@ -29,12 +61,22 @@ router.on("afterEach", (next, prev, err) => {
     window['routeErr'] = err;
     console.log("afterEach", next);
 })
-const app = new Mahal(Root as any, '#app');
 
-app.extend.plugin(RouterPlugin, router);
+export function createApp(routerInstance: Router) {
+    const app = new Mahal(Root as any, '#app');
+    app.extend.plugin(RouterPlugin, routerInstance);
+    return app.create().catch(err => {
+        console.log("err", err)
+    })
+
+}
+
+
 // app.extend.renderer = createRenderer;
 
-app.create();
+// if (process.env.BUILD_ENV !== "test") {
+createApp(router);
+// }
 
 window.onerror = function (message, source, lineno, colno, error) {
     window['error'] = message;

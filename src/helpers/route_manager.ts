@@ -23,49 +23,50 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
     const routesFound: IRouteFindResult[] = [];
     for (route in routes) {
         const routeslashSplit = route.split("/");
-        if (splittedPathLength < routeslashSplit.length) return;
-        let isRouteFound = false;
+        if (splittedPathLength >= routeslashSplit.length) {
+            let isRouteFound = false;
 
-        routeslashSplit.every(key => {
-            if (key === targetPath) {
-                isRouteFound = true;
-                paths.push(key);
-            }
-            else {
-                const regMatch1 = key.match(regex1);
-                if (regMatch1 != null) {
-                    param[regMatch1[1]] = targetPath;
+            routeslashSplit.every(key => {
+                if (key === targetPath) {
                     isRouteFound = true;
-                    paths.push(key.replace(regex1, targetPath));
+                    paths.push(key);
                 }
                 else {
-                    isRouteFound = false;
+                    const regMatch1 = key.match(regex1);
+                    if (regMatch1 != null) {
+                        param[regMatch1[1]] = targetPath;
+                        isRouteFound = true;
+                        paths.push(key.replace(regex1, targetPath));
+                    }
+                    else {
+                        isRouteFound = false;
+                    }
+                }
+                if (isRouteFound) {
+                    targetPath = splittedPath[++pathIndex];
+                }
+                return isRouteFound;
+            });
+            if (isRouteFound) {
+                const routeResult = {
+                    path: paths.join("/"),
+                    key: route,
+                    comp: routes[route].component,
+                    param: param,
+                    name: routes[route].name
+                };
+                // absolute route found
+                if (splittedPathLength === routeslashSplit.length) {
+                    return routeResult;
+                }
+                else { // continue searching for absolute route
+                    routesFound.push(routeResult);
+                    resetPath();
                 }
             }
-            if (isRouteFound) {
-                targetPath = splittedPath[++pathIndex];
-            }
-            return isRouteFound;
-        });
-        if (isRouteFound) {
-            const routeResult = {
-                path: paths.join("/"),
-                key: route,
-                comp: routes[route].component,
-                param: param,
-                name: routes[route].name
-            };
-            // absolute route found
-            if (splittedPathLength === routeslashSplit.length) {
-                return routeResult;
-            }
-            else { // continue searching for absolute route
-                routesFound.push(routeResult);
+            else {
                 resetPath();
             }
-        }
-        else {
-            resetPath();
         }
     }
     return routesFound.pop();

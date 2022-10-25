@@ -120,6 +120,11 @@ before(async () => {
             return document.querySelectorAll(q).length;
         }, selector);
     }
+    global.$checkForRouterViewWarning = (path) => {
+        return page.evaluate(q => {
+            return window.checkForRouterViewWarning(q)
+        }, path);
+    }
     global.$location = async () => {
         return await page.evaluate(q => {
             return location;

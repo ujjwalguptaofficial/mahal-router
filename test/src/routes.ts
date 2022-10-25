@@ -74,5 +74,17 @@ export const routes: RouteStore = {
             }),
         }
     }),
+    ...createRoute({
+        path: "/temp",
+        component: import("./components/temp.mahal"),
+        name: "temp",
+        children: {
+            ...createRoute({
+                path: "/child",
+                component: import("./components/buy-project.mahal"),
+                name: "temp-child",
+            }),
+        }
+    }),
 }
 console.log("routes", routes)

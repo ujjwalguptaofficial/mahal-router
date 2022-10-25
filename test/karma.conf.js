@@ -9,7 +9,8 @@ module.exports = function (config) {
         files: [
             // "src/**/*.ts",
             "unit/index.ts", // *.tsx for React Jsx
-            "unit/error.ts" // *.tsx for React Jsx
+            "unit/error.ts", // *.tsx for React Jsx
+            "unit/router_view_warning.ts" // *.tsx for React Jsx
         ],
         preprocessors: {
             "**/*.ts": "webpack",
@@ -18,14 +19,24 @@ module.exports = function (config) {
         webpack: {
             mode: "development",
             module: {
-                rules: [{
-                    test: /\.tsx?$/,
-                    use: 'ts-loader',
-                    exclude: /node_modules/
-                }]
+                rules: [
+                    {
+                        test: /\.tsx?$/,
+                        use: 'ts-loader',
+                        exclude: /node_modules/
+                    },
+                    {
+                        test: /\.mahal?$/,
+                        // loader: 'mahal-webpack-loader',
+                        use: {
+                            loader: require.resolve('@mahaljs/webpack-loader')
+                        },
+                        exclude: /node_modules/
+                    },
+                ]
             },
             resolve: {
-                extensions: ['.tsx', '.ts', '.js']
+                extensions: ['.ts', '.js', '.css', '.mahal', '.scss'],
             },
             output: {
                 filename: 'bundle.js',
@@ -35,6 +46,11 @@ module.exports = function (config) {
                 // new webpack.DefinePlugin({
                 //     'process.env.NODE_ENV': "'test'"
                 // })
+
+                new webpack.DefinePlugin({
+                    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+                    'process.env.BUILD_ENV': "'test'"
+                })
             ],
             devtool: 'inline-source-map'
         },
@@ -61,7 +77,7 @@ module.exports = function (config) {
                 ]
             }
         },
-        autoWatch: false,
+        autoWatch: true,
         singleRun: true,
         concurrency: Infinity,
         browserNoActivityTimeout: 20000,
