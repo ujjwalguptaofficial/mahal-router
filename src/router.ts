@@ -6,7 +6,7 @@ import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT, ROUTER_MODE } from "./enums";
 import { EventBus } from "mahal";
 import { parseQuery, trimSlash } from "./utils";
 import { Route } from "./route";
-import { RouteNotFound, RouterView } from "./components";
+import { RouteNotFound } from "./components";
 
 export class Router {
     private _nextPath_: IRoute;
@@ -151,9 +151,7 @@ export class Router {
 
                         // check for router view and if not then log warning to console
                         if (process.env.NODE_ENV !== "production") {
-
                             if (this._activeRouterViewSet_.size < this._splittedPath_.length) {
-                                // console.warn('is not found', to.path);
                                 console.warn(`No router view found for path - '${this._splittedPath_[this._splittedPath_.length - 1]}'`);
                             }
                         }
