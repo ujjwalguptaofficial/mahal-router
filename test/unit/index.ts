@@ -28,14 +28,15 @@ describe('event test', () => {
                 name: 'home',
                 query: {},
                 param: {},
-                path: '/'
+                path: '/',
+                meta: undefined
             })
             router.off('navigate', cb);
             checkForEvent('navigate', 0);
-
         };
         router.on("navigate", cb);
         checkForEvent('navigate', 1);
+        let routeResult;
         router.goto({
             name: 'home'
         }).then(result => {
@@ -51,7 +52,8 @@ describe('event test', () => {
                 name: 'home',
                 query: {},
                 param: {},
-                path: '/'
+                path: '/',
+                meta: undefined
             })
             router.off('navigate', cb);
         };

@@ -35,6 +35,7 @@ before(async () => {
 
     global.$testForRoute = async (nextRoute, prevRoute, nextRouteFromBeforeEach) => {
         let route = await $var('activeRoute');
+        console.log(route);
         expect(route).eql(nextRoute);
 
         let prevRouteFromVar = await $var('prevRoute');

@@ -23,6 +23,23 @@ describe('routes test', () => {
         expect(router.currentRoute.name).equal('project');
     })
 
+    it('meta', async () => {
+        const router = new Router({
+            ...createRoute({
+                path: "/project",
+                component: 'Project',
+                name: "project",
+                meta: {
+                    requireLogin: true
+                }
+            }),
+        }, {
+            mode: 'memory'
+        });
+
+        await router.goto({ name: 'project' });
+        expect(router.currentRoute.meta.requireLogin).equal(true);
+    })
 
 })
 

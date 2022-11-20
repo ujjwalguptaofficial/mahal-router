@@ -112,7 +112,8 @@ export class Router {
                 key: '*',
                 name: 'NotFound',
                 path: to.path,
-                param: to.param || {}
+                param: to.param || {},
+                meta: to.meta
             };
             to.name = result.name;
             to.query = to.query || {};
@@ -123,10 +124,6 @@ export class Router {
         }
         else {
             to.query = to.query || {};
-            // let param = {};
-            // for (const key in matched) {
-            //     param = merge(param, matched[key].param);
-            // }
             paths.forEach((path, index) => {
                 const childRoute = matched[paths[index + 1]];
                 if (childRoute) {
@@ -137,6 +134,7 @@ export class Router {
             const routePath = paths.pop();
             to.param = matched[routePath].param;
             to.name = matched[routePath].name;
+            to.meta = matched[routePath].meta;
             this._splittedPath_ = splittedPath;
         }
 
@@ -192,6 +190,7 @@ export class Router {
         routeInstance.param = val.param || {};
         routeInstance.query = val.query || {};
         routeInstance.name = val.name;
+        routeInstance.meta = val.meta;
     }
 
     private _routeFromUrl_(url: URL | Location): IRoute {

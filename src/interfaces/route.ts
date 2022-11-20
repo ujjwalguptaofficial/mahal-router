@@ -5,5 +5,6 @@ export interface IRoute {
     name?: string;
     query?: T_string_any;
     param?: T_string_any;
-    state?: T_string_any
+    state?: T_string_any;
+    meta?: any
 }

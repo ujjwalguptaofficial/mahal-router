@@ -25,6 +25,9 @@ describe('Task', function () {
             path: "/user/dashboard",
             query: {
 
+            },
+            meta: {
+                requireLogin: true
             }
         }, expectedRoute);
 
@@ -62,5 +65,5 @@ describe('Task', function () {
 
     })
 
- 
+
 })

@@ -35,7 +35,8 @@ export class RouterLink extends BaseComponent {
             name: this.name,
             param: this.param,
             path: this.path,
-            query: this.query
+            query: this.query,
+            meta: undefined
         };
 
         let slotElement: HTMLElement = this.element || document.createElement('a');

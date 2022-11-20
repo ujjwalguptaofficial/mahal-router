@@ -94,13 +94,13 @@ describe('Start', function () {
             name: "user-login",
             param: {},
             path: "/user/login",
-            query: {}
+            query: {},
         }
         await $testForRoute(expectedRoute, {
             name: "home",
             param: {},
             path: "/",
-            query: {}
+            query: {},
         }, expectedRoute)
 
         await $click('.btn-login');
@@ -124,15 +124,19 @@ describe('Start', function () {
             path: "/user/dashboard",
             query: {
                 name: 'ujjwal'
+            },
+            meta: {
+                requireLogin: true
             }
         }
         await $testForRoute(expectedRoute, {
             name: "user-login",
             param: {},
             path: "/user/login",
-            query: {}
+            query: {},
         }, expectedRoute)
     })
+
 
     it("go to invalid path", async () => {
         let history = await $history();
@@ -151,7 +155,7 @@ describe('Start', function () {
             path: "invalid",
             query: {
 
-            }
+            },
         }
         await $testForRoute(expectedRoute, {
             name: "user-dashboard",
@@ -159,6 +163,9 @@ describe('Start', function () {
             path: "/user/dashboard",
             query: {
                 name: 'ujjwal'
+            },
+            meta: {
+                requireLogin: true
             }
         }, expectedRoute)
 
@@ -325,6 +332,9 @@ describe('Start', function () {
             path: "/user/dashboard",
             query: {
 
+            },
+            meta: {
+                requireLogin: true
             }
         }
         await $testForRoute(expectedRoute, {

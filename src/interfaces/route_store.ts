@@ -4,5 +4,6 @@ export interface IRouteMap {
     name?: string;
     component: any;
     children?: RouteStore;
+    meta?: any
 }
 

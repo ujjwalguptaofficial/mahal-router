@@ -48,13 +48,15 @@ const findComponent = (routes: RouteStore, splittedPath: string[]): IRouteFindRe
                 return isRouteFound;
             });
             if (isRouteFound) {
+                const foundRoute = routes[route];
                 const routeResult = {
                     path: paths.join("/"),
                     key: route,
-                    comp: routes[route].component,
+                    comp: foundRoute.component,
                     param: param,
-                    name: routes[route].name
-                };
+                    name: foundRoute.name,
+                    meta: foundRoute.meta
+                } as IRouteFindResult;
                 // absolute route found
                 if (splittedPathLength === routeslashSplit.length) {
                     return routeResult;

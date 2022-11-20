@@ -1,4 +1,3 @@
-import { trimSlash, parseQuery } from "./utils";
 import { T_string_string } from "./types";
 import { IRoute } from "./interfaces";
 
@@ -15,4 +14,5 @@ export class Route implements IRoute {
     param: T_string_string;
     query: T_string_string;
     name: string;
+    meta: any;
 }

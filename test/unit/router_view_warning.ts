@@ -44,7 +44,8 @@ describe('Router view warning test', () => {
                 name: 'temp',
                 param: {},
                 path: "/temp",
-                query: {}
+                query: {},
+                meta: undefined
             } as IRoute);
             debugger;
             console.log('router view size', router['_activeRouterViewSet_'].size);
@@ -60,7 +61,8 @@ describe('Router view warning test', () => {
             name: 'temp-child',
             param: {},
             path: "/temp/child",
-            query: {}
+            query: {},
+            meta: undefined
         } as IRoute);
 
         // await new Promise((res, rej) => {

@@ -40,6 +40,9 @@ export const routes: RouteStore = {
                 "path": "dashboard",
                 component: Dashboard,
                 name: "user-dashboard",
+                meta: {
+                    requireLogin: true
+                }
             }),
             "/{userId}/{accountId}": {
                 component: UserById,
