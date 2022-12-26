@@ -6,7 +6,7 @@ dateCreated: October 25, 2022
 
 <html>
 <div>
-	<in-place :of="name" :ref(compInstance) />
+	<in-place :of="name" />
 </div>
 </html>
 
@@ -25,8 +25,6 @@ export default class extends BaseComponent {
 
     pathname: string;
 
-    compInstance: Component;
-
     isDestroyed = false;
 
     onInit() {
@@ -41,7 +39,6 @@ export default class extends BaseComponent {
             this.router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
         });
         this.on("destroy", () => {
-            this.compInstance = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
             this.isDestroyed = true;
             this.router["_activeRouterViewSet_"].delete(this);
