@@ -40,7 +40,9 @@ export class Router {
                 this._isNavigatedByBrowser_ = true;
                 this.goto(this._routeFromUrl_(location))
             });
+            // Promise.resolve().then(_ => {
             this.goto(this._routeFromUrl_(location));
+            // })
         }
     }
 
@@ -142,6 +144,9 @@ export class Router {
 
         return this._emitBeforeEach_(to).then(result => {
             if (result.success) {
+                // error occured in emit navigate is treated as error and emiited in afterEach
+                // error is propagated to afterEach but in case emitbeforeEach after each is not called
+                // there are cases where everything needs to logged in afterEach and in this case navigate is helpful
                 return this._emitNavigate_(to).then(errs => {
                     const err = errs.find(q => q != null);
                     if (!err) {
