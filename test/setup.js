@@ -30,9 +30,8 @@ before(async () => {
         alias: "/",
         path: "./bin"
     }]
-    Fort.port = 4001;
     await Fort.create();
-    await page.goto("http://localhost:4001/");
+    await page.goto("http://localhost:4000/");
 
     global.$testForRoute = async (nextRoute, prevRoute, nextRouteFromBeforeEach) => {
         let route = await $var('activeRoute');
