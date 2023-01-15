@@ -100,11 +100,11 @@ export default class extends BaseComponent {
                     );
                 }
             }
+            Object.assign(this.route, this.reqRoute);
             if (!isRuterViewEligible) {
                 this.name = null;
                 return res();
             }
-            Object.assign(this.route, this.reqRoute);
 
             this.onCompEvaluated(matchedRoute).then(res);
         });

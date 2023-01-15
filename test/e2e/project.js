@@ -259,7 +259,8 @@ describe('Project', function () {
         expectedRoute = {
             name: "buy-project",
             param: {
-                id: '4'
+                id: '4',
+                "sellId": "2"
             },
             path: "/project/4/buy/2",
             query: {
