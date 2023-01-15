@@ -68,6 +68,73 @@ describe('Project', function () {
         expect(routerViewSetLength).equal(2);
     })
 
+    it("go back", async () => {
+        await $routeBack();
+        await $after(100);
+        const selector = 'div[comp="projects"]';
+        const html = await $html(selector);
+        expect(html.includes("Projects")).equal(true);
+
+        expect(await $length('div[comp="projects"] h1')).equal(1);
+
+        expectedRoute = {
+            name: "project",
+            param: {
+
+            },
+            path: "/project",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "project-by-id",
+            param: {
+                id: '1'
+            },
+            path: "/project/1",
+            query: {
+
+            }
+        }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(1);
+    })
+
+
+    it("click on particular project", async () => {
+        await $click('div[comp="projects"] button:nth-child(2)')
+        await $after(100);
+        const selector = '.project-by-id';
+        const html = await $html(selector);
+        expect(html).includes('Project by id 1');
+
+        expectedRoute = {
+            name: "project-by-id",
+            param: {
+                id: '1'
+            },
+            path: "/project/1",
+            query: {
+
+            }
+        }
+        await $testForRoute(expectedRoute, {
+            name: "project",
+            param: {
+
+            },
+            path: "/project",
+            query: {
+
+            }
+        }, expectedRoute);
+
+        const routerViewSetLength = await $routerViewSetLength()
+        expect(routerViewSetLength).equal(2);
+    })
+
     it("go to particular project", async () => {
         await $routeGoto({
             name: "project-by-id",
@@ -179,19 +246,22 @@ describe('Project', function () {
 
     it("go to buy project from project id page", async () => {
         await $routeGoto({
-            name: "buy-project"
+            name: "buy-project",
+            param: {
+                sellId: 2
+            }
         });
         await $after(100);
         const selector = '.buy-project';
         const html = await $html(selector);
-        expect(html).equal('Buy Project 4');
+        expect(html).equal('\tBuy Project 4 with sellId 2');
 
         expectedRoute = {
             name: "buy-project",
             param: {
                 id: '4'
             },
-            path: "/project/4/buy",
+            path: "/project/4/buy/2",
             query: {
 
             }
@@ -235,9 +305,10 @@ describe('Project', function () {
         await $testForRoute(expectedRoute, {
             name: "buy-project",
             param: {
-                id: '4'
+                id: '4',
+                sellId: "2"
             },
-            path: "/project/4/buy",
+            path: "/project/4/buy/2",
             query: {
 
             }

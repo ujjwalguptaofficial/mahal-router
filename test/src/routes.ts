@@ -71,7 +71,7 @@ export const routes: RouteStore = {
         name: "project-by-id",
         children: {
             ...createRoute({
-                path: "/buy",
+                path: "/buy/{sellId}",
                 component: import("./components/buy-project.mahal"),
                 name: "buy-project",
             }),

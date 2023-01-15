@@ -5,7 +5,9 @@ dateCreated: October 21, 2022
 ---
 
 <html>
-<div class="buy-project">Buy Project {{id}}</div>
+<div class="buy-project">
+	Buy Project {{id}} with sellId {{sellId}}
+</div>
 </html>
 
 <script>
@@ -14,8 +16,11 @@ import { BaseComponent } from "./base";
 
 export default class extends BaseComponent {
     get id() {
-        debugger;
         return this.route.param.id;
+    }
+
+    get sellId() {
+        return this.route.param.sellId;
     }
 }
 </script>

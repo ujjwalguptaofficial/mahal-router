@@ -1,33 +1,35 @@
 
 <html>
-    <div>
-        <route-to name="home-context" class="route-home">
-            <a class="btn">Home</a>
-        </route-to>
-        <route-to name="user">
-            <a class="btn">User</a>
-        </route-to>
-        <route-to class="route-login" name="user-login">
-            <a class="btn">Login</a>
-        </route-to>
-        <route-to class="account-page" name="user-account" :param="{userId:1, accountId:2}">
-            <a class="btn">Account page</a>
-        </route-to>
-        <route-to class="route-invalid" path="invalid">
-            <a class="btn">Invalid</a>
-        </route-to>
-        <route-to class="route-do-not-leave" name="do-not-leave">
-            <a class="btn">Do not leave</a>
-        </route-to>
-        <route-to class="project" name="project">
-            <a class="btn">projects</a>
-        </route-to>
-         <router-view />
-    </div>
+<div>
+	<route-to name="home-context" class="route-home">
+		<a class="btn">Home</a>
+	</route-to>
+	<route-to name="user">
+		<a class="btn">User</a>
+	</route-to>
+	<route-to class="route-login" name="user-login">
+		<a class="btn">Login</a>
+	</route-to>
+	<route-to class="account-page" name="user-account" :param="{userId:1, accountId:2}">
+		<a class="btn">Account page</a>
+	</route-to>
+	<route-to class="route-invalid" path="invalid">
+		<a class="btn">Invalid</a>
+	</route-to>
+	<route-to class="route-do-not-leave" name="do-not-leave">
+		<a class="btn">Do not leave</a>
+	</route-to>
+	<route-to class="project" name="project">
+		<a class="btn">projects</a>
+	</route-to>
+	<router-view />
+</div>
 </html>
 <script>
 import { Component } from "mahal";
-export default class Root extends Component{
-        
+export default class Root extends Component {
+    onInit() {
+        window["app"] = this;
+    }
 }
 </script>
