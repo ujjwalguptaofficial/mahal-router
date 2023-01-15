@@ -53,6 +53,7 @@ export const routes: RouteStore = {
     ...createRoute({
         path: "/task",
         component: import("./components/task.mahal"),
+        name: "task",
         children: {
             "/{value}": {
                 name: "particular_task",

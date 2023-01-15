@@ -11,7 +11,7 @@ dateCreated: October 25, 2022
 </html>
 
 <script>
-import { reactive, merge, Component } from "mahal";
+import { reactive, merge } from "mahal";
 import { BaseComponent } from "./base";
 import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
@@ -59,8 +59,11 @@ export default class extends BaseComponent {
 
         if (samePathIndex >= 0) {
             isSameRoute = true;
-            if (samePathIndex === splittedPath.length - 1) {
-                return new ErrorHelper(ERROR_TYPE.SameRoute).get();
+            if (
+                splittedPath.length === pathVisited.length &&
+                samePathIndex === splittedPath.length - 1
+            ) {
+                return new ErrorHelper(ERROR_TYPE.SameRoute).throw();
             }
             return;
         }
