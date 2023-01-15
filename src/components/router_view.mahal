@@ -59,7 +59,10 @@ export default class extends BaseComponent {
 
         if (samePathIndex >= 0) {
             isSameRoute = true;
-            if (samePathIndex === splittedPath.length - 1) {
+            if (
+                splittedPath.length === pathVisited.length &&
+                samePathIndex === splittedPath.length - 1
+            ) {
                 return new ErrorHelper(ERROR_TYPE.SameRoute).get();
             }
             return;

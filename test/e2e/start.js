@@ -58,6 +58,10 @@ describe('Start', function () {
         await $testForRoute(expectedRoute, expectedRoute, expectedRoute)
         history = await $history();
         expect(prevHistoryLength).equal(history.length);
+        await $testForError({
+            message: 'navigation cancelled because of same route.',
+            type: 'same_route'
+        });
     })
 
     it("reload && check history length", async () => {
