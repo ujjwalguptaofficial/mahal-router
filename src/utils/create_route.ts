@@ -1,10 +1,11 @@
+import { IRouteMeta } from "../interfaces";
 import { RouteStore } from "../types";
 interface RouteDefinition {
     name?: string;
     path: string;
     component: any;
     children?: any
-    meta?: any
+    meta?: IRouteMeta
 }
 export const createRoute = (param: RouteDefinition): RouteStore => {
     return {

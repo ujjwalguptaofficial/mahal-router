@@ -79,6 +79,8 @@ export class Router {
                 el = document.createElement(
                     key === "title" ? "title" : "meta"
                 );
+                el.setAttribute(key, value);
+                document.head.appendChild(el);
             }
             if (key === "title") {
                 el.innerHTML = content;
