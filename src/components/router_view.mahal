@@ -121,7 +121,10 @@ export default class extends BaseComponent {
                         [componentName]: comp,
                     };
                     this.name = componentName;
-                    this.waitFor("update").then(res);
+                    this.waitFor("update").then(() => {
+                        this.router.createMetaTag(result.meta?.clientMeta);
+                        res();
+                    });
                     this.waitFor("error").then(rej);
                 };
                 if (this.name && this.name === componentName) {
