@@ -280,6 +280,23 @@ describe('Project', function () {
 
         const routerViewSetLength = await $routerViewSetLength()
         expect(routerViewSetLength).equal(2);
+
+        const projectId = expectedRoute.param.id;
+        await $checkForTitle(`Buy Project: ${projectId}`);
+        await $checkForMeta([
+            {
+                name: "keywords",
+                content: "project, buy, sell",
+            },
+            {
+                name: "description",
+                content: `Buy Project ${projectId}`,
+            },
+            {
+                property: "og:type",
+                content: "website",
+            }
+        ]);
     })
 
     it("go to project", async () => {

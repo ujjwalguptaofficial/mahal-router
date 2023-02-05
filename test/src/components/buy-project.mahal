@@ -22,6 +22,26 @@ export default class extends BaseComponent {
     get sellId() {
         return this.route.param.sellId;
     }
+
+    onInit() {
+        this.router.createMetaTag({
+            title: `Buy Project: ${this.id}`,
+            tags: [
+                {
+                    name: "keywords",
+                    content: "project, buy, sell",
+                },
+                {
+                    name: "description",
+                    content: `Buy Project ${this.id}`,
+                },
+                {
+                    property: "og:type",
+                    content: "website",
+                },
+            ],
+        });
+    }
 }
 </script>
 

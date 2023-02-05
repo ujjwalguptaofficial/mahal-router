@@ -164,7 +164,7 @@ before(async () => {
                 return $attr(`meta[name='${tag.name}']`, 'content')
             }
             else if (tag.property) {
-                return $attr(`meta[name='${tag.name}']`, 'content')
+                return $attr(`meta[property='${tag.property}']`, 'content')
             }
         });
         const results = await Promise.all(tagsPromise)

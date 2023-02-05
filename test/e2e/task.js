@@ -73,6 +73,16 @@ describe('Task', function () {
             }
         }, expectedRoute);
 
+        const task = expectedRoute.param.value;
+        await $checkForTitle(`Task: ${task}`);
+        await $checkForMeta([{
+            name: "keywords",
+            content: "task, tasks",
+        },
+        {
+            name: "description",
+            content: `This is a task ${task} page`,
+        }]);
     })
 
 
