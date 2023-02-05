@@ -153,6 +153,26 @@ before(async () => {
             debugger;
         });
     }
+    global.$checkForTitle = async (expectedTitle) => {
+        const html = await $html('title');
+        expect(expectedTitle).equal(html);
+    }
+    global.$checkForMeta = async (tags) => {
+        const tagsPromise = tags.map(tag => {
+            let contentValue;
+            if (tag.name) {
+                return $attr(`meta[name='${tag.name}']`, 'content')
+            }
+            else if (tag.property) {
+                return $attr(`meta[name='${tag.name}']`, 'content')
+            }
+        });
+        const results = await Promise.all(tagsPromise)
+
+        tags.forEach((tag, index) => {
+            expect(tag.content).equal(results[index]);
+        })
+    }
 });
 
 

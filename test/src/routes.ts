@@ -16,6 +16,17 @@ export const routes: RouteStore = {
         path: "/",
         component: Start,
         name: "home",
+        meta: {
+            clientMeta: {
+                title: 'Home Page',
+                tags: [
+                    {
+                        name: "description",
+                        content: "Home page description"
+                    }
+                ]
+            }
+        }
     }),
     ...createRoute({
         path: "/context.html",

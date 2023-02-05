@@ -17,10 +17,23 @@ describe('Start', function () {
             name: "home",
             param: {},
             path: "/",
-            query: {}
+            query: {},
+            meta: {
+                clientMeta: {
+                    title: 'Home Page',
+                    tags: [
+                        {
+                            name: "description",
+                            content: "Home page description"
+                        }
+                    ]
+                }
+            }
         }
 
-        await $testForRoute(expectedRoute, {}, undefined)
+        await $testForRoute(expectedRoute, {}, undefined);
+        await $checkForTitle(expectedRoute.meta.clientMeta.title);
+        await $checkForMeta(expectedRoute.meta.clientMeta.tags);
     })
 
 
@@ -52,7 +65,18 @@ describe('Start', function () {
             name: "home",
             param: {},
             path: "/",
-            query: {}
+            query: {},
+            meta: {
+                clientMeta: {
+                    title: 'Home Page',
+                    tags: [
+                        {
+                            name: "description",
+                            content: "Home page description"
+                        }
+                    ]
+                }
+            }
         }
 
         await $testForRoute(expectedRoute, expectedRoute, expectedRoute)
@@ -75,7 +99,18 @@ describe('Start', function () {
             name: "home",
             param: {},
             path: "/",
-            query: {}
+            query: {},
+            meta: {
+                clientMeta: {
+                    title: 'Home Page',
+                    tags: [
+                        {
+                            name: "description",
+                            content: "Home page description"
+                        }
+                    ]
+                }
+            }
         }
 
         await $testForRoute(expectedRoute, {}, undefined)
@@ -105,6 +140,17 @@ describe('Start', function () {
             param: {},
             path: "/",
             query: {},
+            meta: {
+                clientMeta: {
+                    title: 'Home Page',
+                    tags: [
+                        {
+                            name: "description",
+                            content: "Home page description"
+                        }
+                    ]
+                }
+            }
         }, expectedRoute)
 
         await $click('.btn-login');
