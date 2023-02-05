@@ -1,3 +1,5 @@
+const { routesMeta } = require("./routes_meta")
+
 describe('Task', function () {
 
     it("click on a task", async () => {
@@ -26,9 +28,7 @@ describe('Task', function () {
             query: {
 
             },
-            meta: {
-                requireLogin: true
-            }
+            meta: routesMeta.dashboard
         }, expectedRoute);
 
     })

@@ -11,6 +11,11 @@ export const routes: RouteStore = {
         path: "/*",
         component: NotFound,
         name: "not_found",
+        meta: {
+            clientMeta: {
+                title: "Invalid Page"
+            }
+        }
     }),
     ...createRoute({
         path: "/",
@@ -52,7 +57,20 @@ export const routes: RouteStore = {
                 component: Dashboard,
                 name: "user-dashboard",
                 meta: {
-                    requireLogin: true
+                    requireLogin: true,
+                    clientMeta: {
+                        title: 'Dashboard Page',
+                        tags: [
+                            {
+                                name: "description",
+                                content: "Dashboard page description"
+                            },
+                            {
+                                name: "keywords",
+                                content: "dashboard, user"
+                            }
+                        ]
+                    }
                 }
             }),
             "/{userId}/{accountId}": {

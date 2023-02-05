@@ -1,5 +1,6 @@
 // import { expect } from "chai";
 // import * as $ from "jquery";
+const { routesMeta } = require("./routes_meta")
 
 describe('Start', function () {
 
@@ -86,6 +87,9 @@ describe('Start', function () {
             message: 'navigation cancelled because of same route.',
             type: 'same_route'
         });
+
+        await $checkForTitle(expectedRoute.meta.clientMeta.title);
+        await $checkForMeta(expectedRoute.meta.clientMeta.tags);
     })
 
     it("reload && check history length", async () => {
@@ -114,6 +118,9 @@ describe('Start', function () {
         }
 
         await $testForRoute(expectedRoute, {}, undefined)
+
+        await $checkForTitle(expectedRoute.meta.clientMeta.title);
+        await $checkForMeta(expectedRoute.meta.clientMeta.tags);
     });
 
     it("login", async () => {
@@ -135,7 +142,7 @@ describe('Start', function () {
             path: "/user/login",
             query: {},
         }
-        await $testForRoute(expectedRoute, {
+        const homeRoute = {
             name: "home",
             param: {},
             path: "/",
@@ -151,7 +158,11 @@ describe('Start', function () {
                     ]
                 }
             }
-        }, expectedRoute)
+        };
+        await $testForRoute(expectedRoute, homeRoute, expectedRoute);
+
+        await $checkForTitle(homeRoute.meta.clientMeta.title);
+        await $checkForMeta(homeRoute.meta.clientMeta.tags);
 
         await $click('.btn-login');
         await $after(100);
@@ -175,9 +186,7 @@ describe('Start', function () {
             query: {
                 name: 'ujjwal'
             },
-            meta: {
-                requireLogin: true
-            }
+            meta: routesMeta.dashboard
         }
         await $testForRoute(expectedRoute, {
             name: "user-login",
@@ -185,6 +194,9 @@ describe('Start', function () {
             path: "/user/login",
             query: {},
         }, expectedRoute)
+
+        await $checkForTitle(expectedRoute.meta.clientMeta.title);
+        await $checkForMeta(expectedRoute.meta.clientMeta.tags);
     })
 
 
@@ -214,13 +226,14 @@ describe('Start', function () {
             query: {
                 name: 'ujjwal'
             },
-            meta: {
-                requireLogin: true
-            }
+            meta: routesMeta.dashboard
         }, expectedRoute)
 
         history = await $history();
         expect(prevHistoryLength + 1).equal(history.length);
+
+        await $checkForTitle("Invalid Page");
+        await $checkForMeta(routesMeta.dashboard.clientMeta.tags);
     })
 
     it("go to user_by_id route path", async () => {
@@ -383,9 +396,7 @@ describe('Start', function () {
             query: {
 
             },
-            meta: {
-                requireLogin: true
-            }
+            meta: routesMeta.dashboard
         }
         await $testForRoute(expectedRoute, {
             name: "user-account",
