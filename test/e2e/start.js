@@ -268,6 +268,9 @@ describe('Start', function () {
 
             }
         }, expectedRoute);
+
+        await $checkForTitle("Invalid Page");
+        await $checkForMeta(routesMeta.dashboard.clientMeta.tags);
     })
 
     it("go to user_by_id by route link", async () => {
@@ -409,6 +412,9 @@ describe('Start', function () {
 
             }
         }, expectedRoute);
+
+        await $checkForTitle(routesMeta.dashboard.clientMeta.title);
+        await $checkForMeta(routesMeta.dashboard.clientMeta.tags);
     })
 
 

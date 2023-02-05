@@ -10,5 +10,21 @@ export default class extends BaseComponent {
     get task() {
         return this.route.param["value"];
     }
+
+    onInit() {
+        this.router.createMetaTag({
+            title: `Task: ${this.task}`,
+            tags: [
+                {
+                    name: "keywords",
+                    content: "task, tasks",
+                },
+                {
+                    name: "description",
+                    content: `This is a task ${this.task} page`,
+                },
+            ],
+        });
+    }
 }
 </script>

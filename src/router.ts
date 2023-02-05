@@ -49,54 +49,60 @@ export class Router {
     private _activeRouterViewSet_ = new Set<Component>();
 
     createMetaTag(clientMeta: IClientAppMeta = {}) {
-        const clientMetaFromRoute = this.currentRoute.meta?.clientMeta;
-        clientMeta.tags = clientMeta.tags || [];
-        if (clientMetaFromRoute) {
-            if (!clientMeta.title) {
-                clientMeta.title = clientMetaFromRoute.title;
-            }
+        try {
+            const clientMetaFromRoute = this.currentRoute.meta?.clientMeta;
+            clientMeta.tags = clientMeta.tags || [];
+            if (clientMetaFromRoute) {
+                if (!clientMeta.title) {
+                    clientMeta.title = clientMetaFromRoute.title;
+                }
 
-            const tagsToMerge = (clientMetaFromRoute.tags || []).filter(tag => {
-                const foundMeta = clientMeta.tags.find(q => (q.name === tag.name || q.property === tag.property));
-                if (!foundMeta) {
-                    return tag;
+                const tagsToMerge = (clientMetaFromRoute.tags || []).filter(tag => {
+                    const foundMeta = clientMeta.tags.find(q => (q.name === tag.name || q.property === tag.property));
+                    if (!foundMeta) {
+                        return tag;
+                    }
+                });
+
+                clientMeta.tags.push(...tagsToMerge);
+            }
+            if (!clientMeta) return;
+            const setTag = (key: string, value: string, content: string) => {
+                if (!content || !key) {
+                    return;
+                }
+
+                content = decodeURIComponent(content);
+
+                let el =
+                    key === "title"
+                        ? document.querySelector("title")
+                        : document.querySelector(`meta[${key}="${value}"]`);
+                if (!el) {
+                    el = document.createElement(
+                        key === "title" ? "title" : "meta"
+                    );
+                    el.setAttribute(key, value);
+                    document.head.appendChild(el);
+                }
+                if (key === "title") {
+                    el.innerHTML = content;
+                } else {
+                    el.setAttribute("content", content);
+                }
+                return true;
+            };
+            setTag("title", null, clientMeta.title);
+            clientMeta.tags.forEach((tag) => {
+                if (tag.name) {
+                    setTag("name", tag.name, tag.content);
+                } else if (tag.property) {
+                    setTag("property", tag.property, tag.content);
                 }
             });
-
-            clientMeta.tags.push(...tagsToMerge);
+        } catch (error) {
+            console.error(error);
         }
-        if (!clientMeta) return;
-        const setTag = (key: string, value: string, content: string) => {
-            if (!content || !key) {
-                return;
-            }
-
-            let el =
-                key === "title"
-                    ? document.querySelector("title")
-                    : document.querySelector(`meta[${key}="${value}"]`);
-            if (!el) {
-                el = document.createElement(
-                    key === "title" ? "title" : "meta"
-                );
-                el.setAttribute(key, value);
-                document.head.appendChild(el);
-            }
-            if (key === "title") {
-                el.innerHTML = content;
-            } else {
-                el.setAttribute("content", content);
-            }
-            return true;
-        };
-        setTag("title", null, clientMeta.title);
-        clientMeta.tags.forEach((tag) => {
-            if (tag.name) {
-                setTag("name", tag.name, tag.content);
-            } else if (tag.property) {
-                setTag("property", tag.property, tag.content);
-            }
-        });
     }
 
     gotoPath(path: string) {
