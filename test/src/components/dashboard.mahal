@@ -10,6 +10,7 @@
 		<p>{{index}}</p>
 		<p class="margin-left-5px">{{item}}</p>
 	</div>
+	<!-- <router-view /> -->
 </div>
 </html>
 <script>

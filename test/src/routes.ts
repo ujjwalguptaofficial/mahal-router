@@ -44,6 +44,25 @@ export const routes: RouteStore = {
         name: "do-not-leave",
     }),
     ...createRoute({
+        path: "/account",
+        component: import("./components/user.mahal"),
+        name: "account",
+        children: {
+            ...createRoute({
+                "path": "profile",
+                component: import("./components/profile.mahal"),
+                name: "profile",
+                children: {
+                    ...createRoute({
+                        "path": "edit-profile",
+                        component: import("./components/projects.mahal"),
+                        name: "edit-profile",
+                    }),
+                }
+            }),
+        }
+    }),
+    ...createRoute({
         path: "/user",
         component: import("./components/user.mahal"),
         name: "user",
@@ -71,7 +90,8 @@ export const routes: RouteStore = {
                             }
                         ]
                     }
-                }
+                },
+
             }),
             "/{userId}/{accountId}": {
                 component: UserById,

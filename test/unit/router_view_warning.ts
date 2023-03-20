@@ -47,7 +47,6 @@ describe('Router view warning test', () => {
                 query: {},
                 meta: undefined
             } as IRoute);
-            debugger;
             console.log('router view size', router['_activeRouterViewSet_'].size);
             expect(router['_activeRouterViewSet_'].size).equal(1);
             done();
