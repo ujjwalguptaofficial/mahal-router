@@ -48,6 +48,9 @@ export class Router {
 
     private _activeRouterViewSet_ = new Set<Component>();
 
+    private _pathVisited_ = [];
+
+
     createMetaTag(clientMeta: IClientAppMeta = {}) {
         try {
             const clientMetaFromRoute = this.currentRoute.meta?.clientMeta;

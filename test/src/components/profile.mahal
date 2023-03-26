@@ -7,14 +7,31 @@ dateCreated: March 19, 2023
 <html>
 <div>
 	<h1>Profile</h1>
-	<router-view />
+	<router-view :if(isLoaded) />
 </div>
 </html>
 
 <script>
-import { Component } from "mahal";
+import { Component, reactive } from "mahal";
 
-export default class extends Component {}
+export default class extends Component {
+    @reactive
+    isLoaded = true;
+
+    onInit() {
+        // this.isLoaded = false;
+        // setTimeout(() => {
+        //     this.isLoaded = true;
+        // }, 100);
+
+        this.global.router.on("navigate", () => {
+            this.isLoaded = false;
+            setTimeout(() => {
+                this.isLoaded = true;
+            }, 100);
+        });
+    }
+}
 </script>
 
 <style>

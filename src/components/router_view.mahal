@@ -17,8 +17,6 @@ import { ERROR_TYPE, ROUTER_LIFECYCLE_EVENT } from "../enums";
 import { IRouteFindResult, IRoute } from "../interfaces";
 import { ErrorHelper } from "../helpers";
 
-const pathVisited = [];
-
 export default class extends BaseComponent {
     @reactive
     name: String;
@@ -38,7 +36,12 @@ export default class extends BaseComponent {
         this.waitFor("create").then(() => {
             this.router.on(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
         });
+        const pathVisited = this.router["_pathVisited_"];
         this.on("destroy", () => {
+            const index = pathVisited.findIndex((q) => q === this.pathname);
+            if (index >= 0) {
+                pathVisited.splice(index);
+            }
             this.pathname = null;
             this.name = null;
             this.router.off(ROUTER_LIFECYCLE_EVENT.Navigate, onNavigate);
@@ -58,6 +61,8 @@ export default class extends BaseComponent {
         const samePathIndex = splittedPath.findIndex(
             (q) => q === this.pathname
         );
+
+        const pathVisited = this.router["_pathVisited_"];
 
         if (samePathIndex >= 0) {
             isSameRoute = true;
@@ -88,6 +93,7 @@ export default class extends BaseComponent {
 
     loadComponent() {
         const splittedPath: string[] = this.splittedPath;
+        const pathVisited = this.router["_pathVisited_"];
         // if the router view is eligible for changing the component
         const isRuterViewEligible = pathVisited.length < splittedPath.length;
         let matchedRoute;
@@ -114,6 +120,8 @@ export default class extends BaseComponent {
 
     onCompEvaluated(result: IRouteFindResult) {
         let comp;
+        const pathVisited = this.router["_pathVisited_"];
+
         return new Promise<void>((res, rej) => {
             const changeComponent = (val) => {
                 if (!val) return res();
@@ -147,6 +155,3 @@ export default class extends BaseComponent {
     }
 }
 </script>
-
-<style>
-</style>

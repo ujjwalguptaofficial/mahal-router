@@ -58,6 +58,11 @@ export const routes: RouteStore = {
                         component: import("./components/projects.mahal"),
                         name: "edit-profile",
                     }),
+                    ...createRoute({
+                        "path": "/{id}",
+                        component: import("./components/projects.mahal"),
+                        name: "profile-by-id",
+                    }),
                 }
             }),
         }
