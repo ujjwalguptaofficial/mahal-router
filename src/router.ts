@@ -44,6 +44,11 @@ export class Router {
             this.goto(this._routeFromUrl_(location));
             // })
         }
+        else {
+            this.goto({
+                path: "/"
+            })
+        }
     }
 
     private _activeRouterViewSet_ = new Set<Component>();
