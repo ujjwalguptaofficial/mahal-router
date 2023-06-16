@@ -50,9 +50,10 @@ describe('error test', () => {
             done('there should be error thrown')
         }).catch(err => {
             // console.error('error', err);
-            expect(err).equal(
-                `Expecting param - no param is provided in route ${JSON.stringify(route)}`
-            )
+            // expect(err).equal(
+            //     `Expecting param - no param is provided in route ${JSON.stringify(route)}`
+            // )
+            expect(err).equal(`Expecting param 'id' but is not provided`);
             done();
         })
     })

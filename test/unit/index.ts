@@ -41,7 +41,7 @@ describe('event test', () => {
             name: 'home'
         }).then(result => {
             expect(result).equal(undefined);
-            expect(router.history).length(1);
+            expect(router.history).length(2);
             done();
         })
     })
@@ -60,7 +60,7 @@ describe('event test', () => {
         router.on("navigate", cb);
         router.gotoPath("/").then(result => {
             expect(result).equal(undefined);
-            expect(router.history).length(2);
+            expect(router.history).length(3);
             done();
         })
     })
@@ -93,7 +93,7 @@ describe('event test', () => {
         router.on("notFound", onNotFound);
 
         router.gotoPath("/dd").then(_ => {
-            expect(router.history).length(3);
+            expect(router.history).length(4);
             done();
         })
     })

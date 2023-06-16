@@ -1,6 +1,6 @@
 {
   "name": "@mahaljs/router",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "The official router for mahal framework.",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -16,7 +16,7 @@
     "build:prod": "webpack --config webpack/webpack.prod.config.js",
     "install:lib": "npm i ../mahal/mahal-0.8.0.tgz --no-save",
     "build:test": "npm run build:pack && npm run test",
-    "dev:test": " npm run test",
+    "dev:test": "npm run test",
     "prod:test": "npm run test",
     "test": "cd test && npm run install:lib && npm run build:test",
     "dev": "cd test && npm run install:dev",
@@ -39,12 +39,12 @@
   },
   "homepage": "https://github.com/ujjwalguptaofficial/mahal-router#readme",
   "devDependencies": {
-    "@mahaljs/test-utils": "^1.8.1",
-    "@mahaljs/webpack-loader": "^1.8.6",
+    "@mahaljs/test-utils": "^1.9.0",
+    "@mahaljs/webpack-loader": "^1.9.0",
     "@types/node": "^14.14.35",
     "copy-webpack-plugin": "^6.1.1",
     "del-cli": "^4.0.1",
-    "mahal": "^1.9.0",
+    "mahal": "^1.9.1",
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.2",
     "webpack": "^5.67.0",
@@ -54,6 +54,6 @@
     "webpack-node-externals": "^2.5.2"
   },
   "peerDependencies": {
-    "mahal": "^1.9.0"
+    "mahal": "^1.9.1"
   }
 }
